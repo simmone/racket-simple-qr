@@ -3,37 +3,31 @@
 (require racket/draw)
 
 (provide (contract-out
-          [locate-brick (-> #:matrix exact-nonnegative-integer?
-                            #:brick_width exact-nonnegative-integer?
-                            #:row exact-nonnegative-integer?
-                            #:col exact-nonnegative-integer?
-                            (values exact-nonnegative-integer? exact-nonnegative-integer?))]
-          [white-block (-> #:dc (is-a?/c bitmap%)
-                           #:x exact-nonnegative-integer?
-                           #:y exact-nonnegative-integer?
-                           #:width exact-nonnegative-integer?
-                           #:height exact-nonnegative-integer?
+          [locate-brick (-> exact-nonnegative-integer?
+                            pair?
+                            pair?)]
+          [white-block (-> any/c
+                           pair?
+                           pair?
                            void?)]
-          [black-block (-> #:dc (is-a?/c bitmap%)
-                           #:x exact-nonnegative-integer?
-                           #:y exact-nonnegative-integer?
-                           #:width exact-nonnegative-integer?
-                           #:height exact-nonnegative-integer?
+          [black-block (-> any/c
+                           pair?
+                           pair?
                            void?)]
           ))
 
-(define (white-block #:dc dc #:x x #:y y #:width width #:height height)
+(define (white-block dc place_pair size_pair)
   (send dc set-pen "white" 1 'solid)
-  (send dc set-block "white" 'solid)
+  (send dc set-brush "white" 'solid)
 
-  (send dc draw-rectangle x y width height))
+  (send dc draw-rectangle (car place_pair) (cdr place_pair) (car size_pair) (cdr size_pair)))
 
-(define (black-block #:dc dc #:x x #:y y #:width width #:height height)
+(define (black-block dc place_pair size_pair)
   (send dc set-pen "black" 1 'solid)
-  (send dc set-block "black" 'solid)
+  (send dc set-brush "black" 'solid)
 
-  (send dc draw-rectangle x y width height))
+  (send dc draw-rectangle (car place_pair) (cdr place_pair) (car size_pair) (cdr size_pair)))
 
-(define (locate-brick #:matrix matrix #:brick_width brick_width #:row row #:col col)
-  (values 1 1)
-  )
+(define (locate-brick brick_width place_pair)
+  (cons (+ brick_width (* (sub1 (cdr place_pair)) brick_width))
+        (+ brick_width (* (sub1 (car place_pair)) brick_width))))

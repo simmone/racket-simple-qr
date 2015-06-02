@@ -1,5 +1,7 @@
 #lang racket
 
+(require racket/draw)
+
 (require "func.rkt")
 
 (let* ([matrix 5]
@@ -11,7 +13,9 @@
   
   (define dc (new bitmap-dc% [bitmap target]))
   (send dc set-smoothing 'smoothed)
-  (white-brush dc 0 0 canvas_width canvas_width)
+  (white-block dc '(0 . 0) (cons canvas_width canvas_width))
+
+  (black-block dc (locate-brick brick_width '(3 . 3)) (cons brick_width brick_width))
 
   (send target save-file "box.png" 'png)
 

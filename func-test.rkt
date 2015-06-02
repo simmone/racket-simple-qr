@@ -10,23 +10,30 @@
 
    (test-case 
     "test-locate-brick"
+    
+    (let ([place_pair (locate-brick 1 (cons 1 1))])
+      (check-equal? (car place_pair) 1)
+      (check-equal? (cdr place_pair) 1))
 
-    (let-values ([(x y) (locate-brick #:matrix 1 #:brick_width 1 #:row 1 #:col 1)])
-      (check-equal? x 0)
-      (check-equal? y 0))
+    (let ([place_pair (locate-brick 2 (cons 1 1))])
+      (check-equal? (car place_pair) 2)
+      (check-equal? (cdr place_pair) 2))
 
-    (let-values ([(x y) (locate-brick #:matrix 5 #:brick_width 2 #:row 1 #:col 1)])
-      (check-equal? x 0)
-      (check-equal? y 0))
+    (let ([place_pair (locate-brick 2 (cons 2 2))])
+      (check-equal? (car place_pair) 4)
+      (check-equal? (cdr place_pair) 4))
 
-    (let-values ([(x y) (locate-brick #:matrix 5 #:brick_width 2 #:row 2 #:col 2)])
-      (check-equal? x 2)
-      (check-equal? y 2))
+    (let ([place_pair (locate-brick 2 (cons 5 5))])
+      (check-equal? (car place_pair) 10)
+      (check-equal? (cdr place_pair) 10))
 
-    (let-values ([(x y) (locate-brick #:matrix 5 #:brick_width 2 #:row 5 #:col 5)])
-      (check-equal? x 8)
-      (check-equal? y 8))
+    (let ([place_pair (locate-brick 3 (cons 5 5))])
+      (check-equal? (car place_pair) 15)
+      (check-equal? (cdr place_pair) 15))
 
+    (let ([place_pair (locate-brick 3 (cons 5 7))])
+      (check-equal? (car place_pair) 21)
+      (check-equal? (cdr place_pair) 15))
     )
    
    ))
