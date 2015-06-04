@@ -43,7 +43,19 @@
    (test-case
     "test-transform-points"
 
-    
+    (let* ([points_list
+            '((1 . 2) (3 . 4) (4 . 3))]
+           [transformed_points_list #f])
+      
+      (set! transformed_points_list
+            (transform-points-list points_list '(1 . 1)))
+      (check-equal? transformed_points_list '((1 . 2) (3 . 4) (4 . 3)))
+
+      (set! transformed_points_list
+            (transform-points-list points_list '(1 . 2)))
+      (check-equal? transformed_points_list '((1 . 3) (3 . 5) (4 . 4)))
+
+      ))
    
    ))
 
