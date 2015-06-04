@@ -14,6 +14,13 @@
                            pair?
                            pair?
                            void?)]
+          [locate-finder-pattern (->
+                                  exact-nonnegative-integer?
+                                  exact-nonnegative-integer?                                  
+                                  (values
+                                   pair?
+                                   pair?
+                                   pair?))]
           ))
 
 (define (white-block dc place_pair size_pair)
@@ -31,3 +38,6 @@
 (define (locate-brick brick_width place_pair)
   (cons (+ brick_width (* (sub1 (cdr place_pair)) brick_width))
         (+ brick_width (* (sub1 (car place_pair)) brick_width))))
+
+(define (locate-finder-pattern version module_width)
+  (values '(1 . 1) '(1 . 1) '(1 . 1)))
