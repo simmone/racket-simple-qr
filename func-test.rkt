@@ -35,9 +35,9 @@
 
     (let-values ([(left_top right_top left_bottom)
                   (locate-finder-pattern 50 20)])
-      (check-equal? left_top '(0 . 0))
-      (check-equal? right_top '(0 . 0))
-      (check-equal? left_bottom '(0 . 0)))
+      (check-equal? left_top '(20 . 20))
+      (check-equal? right_top '(840 . 20))
+      (check-equal? left_bottom '(20 . 840)))
     )
    
    ))
