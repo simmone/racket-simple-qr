@@ -39,6 +39,11 @@
       (check-equal? right_top '(840 . 20))
       (check-equal? left_bottom '(20 . 840)))
     )
+
+   (test-case
+    "test-transform-points"
+
+    
    
    ))
 
