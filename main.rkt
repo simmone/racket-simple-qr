@@ -14,6 +14,7 @@
   (define dc (new bitmap-dc% [bitmap target]))
   (send dc set-smoothing 'smoothed)
 
+  ;; draw the background, help to count module
   (let loop-row ([row 1])
     (when (<= row version)
           (let loop-col ([col 1])
@@ -33,6 +34,8 @@
     
 
   (draw-finder-pattern dc version module_width)
+
+  (draw-separator dc version module_width)  
 
   (send target save-file "box.png" 'png)
 

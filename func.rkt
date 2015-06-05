@@ -23,6 +23,10 @@
                                    exact-nonnegative-integer?
                                    exact-nonnegative-integer?
                                    void?)]
+          [draw-separator (-> any/c
+                              exact-nonnegative-integer?
+                              exact-nonnegative-integer?
+                              void?)]
           ))
 
 (define (draw-module dc color place_pair module_width)
@@ -65,4 +69,26 @@
         (draw-module dc "black" (locate-brick module_width point_pair) module_width))
       (transform-points-list (third *finder_pattern_points*) start_point)))
    (locate-finder-pattern version)))
+
+(define (draw-separator dc version module_width)
+  (let* ([finder_pattern_start_points (locate-finder-pattern version)]
+         [top_left_point (first finder_pattern_start_points)]
+         [top_right_point (second finder_pattern_start_points)]
+         [bottom_left_point (third finder_pattern_start_points)]
+         [new_top_right_point (cons (sub1 (car top_right_point)) (cdr top_right_point))]
+         [new_bottom_point (cons (car bottom_left_point) (sub1 (cdr bottom_left_point)))])
+    (for-each
+     (lambda (point_pair)
+       (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+     (transform-points-list (first *separator_points*) top_left_point))
+
+     (for-each
+      (lambda (point_pair)
+        (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+      (transform-points-list (second *separator_points*) new_top_right_point))
+
+     (for-each
+      (lambda (point_pair)
+        (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+      (transform-points-list (third *separator_points*) new_bottom_point))))
 
