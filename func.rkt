@@ -8,11 +8,8 @@
           [locate-brick (-> exact-nonnegative-integer?
                             pair?
                             pair?)]
-          [white-block (-> any/c
-                           pair?
-                           exact-nonnegative-integer?
-                           void?)]
-          [black-block (-> any/c
+          [draw-module (-> (is-a?/c bitmap-dc%)
+                           (or/c (is-a?/c color%) string?)
                            pair?
                            exact-nonnegative-integer?
                            void?)]
@@ -28,15 +25,9 @@
                                    void?)]
           ))
 
-(define (white-block dc place_pair module_width)
-  (send dc set-pen "white" 1 'solid)
-  (send dc set-brush "white" 'solid)
-
-  (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
-
-(define (black-block dc place_pair module_width)
-  (send dc set-pen "black" 1 'solid)
-  (send dc set-brush "black" 'solid)
+(define (draw-module dc color place_pair module_width)
+  (send dc set-pen color 1 'solid)
+  (send dc set-brush color 'solid)
 
   (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
 
@@ -61,17 +52,17 @@
    (lambda (start_point)
      (for-each
       (lambda (point_pair)
-        (black-block dc (locate-brick module_width point_pair) module_width))
+        (draw-module dc "black" (locate-brick module_width point_pair) module_width))
       (transform-points-list (first *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (white-block dc (locate-brick module_width point_pair) module_width))
+        (draw-module dc "white" (locate-brick module_width point_pair) module_width))
       (transform-points-list (second *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (black-block dc (locate-brick module_width point_pair) module_width))
+        (draw-module dc "black" (locate-brick module_width point_pair) module_width))
       (transform-points-list (third *finder_pattern_points*) start_point)))
    (locate-finder-pattern version)))
 

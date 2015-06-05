@@ -10,11 +10,27 @@
        )
 
   (define target (make-bitmap canvas_width canvas_width))
-  
+
   (define dc (new bitmap-dc% [bitmap target]))
   (send dc set-smoothing 'smoothed)
 
-  (white-block dc '(0 . 0) canvas_width)
+  (let loop-row ([row 1])
+    (when (<= row version)
+          (let loop-col ([col 1])
+            (when (<= col version)
+                  (if (= (remainder col 2) 1)
+                      (draw-module dc "pink" (locate-brick module_width (cons row col)) module_width)
+                      (draw-module dc "orchid" (locate-brick module_width (cons row col)) module_width))
+                  (loop-col (add1 col))))
+
+          (let loop-col ([col 1])
+            (when (<= col version)
+                  (when (= (remainder row 2) 0)
+                        (draw-module dc "orchid" (locate-brick module_width (cons row col)) module_width))
+                  (loop-col (add1 col))))
+                  
+            (loop-row (add1 row))))
+    
 
   (draw-finder-pattern dc version module_width)
 
