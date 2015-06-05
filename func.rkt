@@ -10,22 +10,22 @@
                             pair?)]
           [white-block (-> any/c
                            pair?
-                           pair?
+                           exact-nonnegative-integer?
                            void?)]
           [black-block (-> any/c
                            pair?
-                           pair?
+                           exact-nonnegative-integer?
                            void?)]
           [locate-finder-pattern (->
                                   exact-nonnegative-integer?
-                                  exact-nonnegative-integer?
-                                  (values
-                                   pair?
-                                   pair?
-                                   pair?))]
+                                  list?)]
           [transform-points-list (-> list?
                                      pair?
                                      list?)]
+          [draw-finder-pattern (-> any/c
+                                   exact-nonnegative-integer?
+                                   exact-nonnegative-integer?
+                                   void?)]
           ))
 
 (define (white-block dc place_pair module_width)
@@ -41,14 +41,14 @@
   (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
 
 (define (locate-brick module_width place_pair)
-  (cons (+ module_width (* (sub1 (cdr place_pair)) module_width))
-        (+ module_width (* (sub1 (car place_pair)) module_width))))
+  (cons (* (sub1 (cdr place_pair)) module_width)
+        (* (sub1 (car place_pair)) module_width)))
 
-(define (locate-finder-pattern version module_width)
-  (values
-   (cons module_width module_width)
-   (cons (- (* version module_width) module_width (* 7 module_width)) module_width)
-   (cons module_width (- (* version module_width) module_width (* 7 module_width)))))
+(define (locate-finder-pattern version)
+  (list
+   '(1 . 1)
+   (cons (add1 (- version 7)) 1)
+   (cons 1 (add1 (- version 7)))))
 
 (define (transform-points-list points_list start_point_pair)
   (map
@@ -56,20 +56,22 @@
      (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
     points_list))
 
-(define (draw-finder-pattern dc module_width)
+(define (draw-finder-pattern dc version module_width)
   (for-each
-   (lambda (point_pair)
-     (black-block dc (locate-brick module_width point_pair) module_width))
-   (first *finder_pattern_points*))
+   (lambda (start_point)
+     (for-each
+      (lambda (point_pair)
+        (black-block dc (locate-brick module_width point_pair) module_width))
+      (transform-points-list (first *finder_pattern_points*) start_point))
 
-  (for-each
-   (lambda (point_pair)
-     (white-block dc (locate-brick module_width point_pair) module_width))
-   (second *finder_pattern_points*))
+     (for-each
+      (lambda (point_pair)
+        (white-block dc (locate-brick module_width point_pair) module_width))
+      (transform-points-list (second *finder_pattern_points*) start_point))
 
-  (for-each
-   (lambda (point_pair)
-     (black-block dc (locate-brick module_width point_pair) module_width))
-   (third *finder_pattern_points*))
-  )
+     (for-each
+      (lambda (point_pair)
+        (black-block dc (locate-brick module_width point_pair) module_width))
+      (transform-points-list (third *finder_pattern_points*) start_point)))
+   (locate-finder-pattern version)))
 

@@ -12,32 +12,31 @@
     "test-locate-brick"
     
     (let ([place_pair (locate-brick 1 (cons 1 1))])
-      (check-equal? place_pair '(1 . 1)))
+      (check-equal? place_pair '(0 . 0)))
 
     (let ([place_pair (locate-brick 2 (cons 1 1))])
-      (check-equal? place_pair '(2 . 2)))
+      (check-equal? place_pair '(0 . 0)))
 
     (let ([place_pair (locate-brick 2 (cons 2 2))])
-      (check-equal? place_pair '(4 . 4)))
+      (check-equal? place_pair '(2 . 2)))
 
     (let ([place_pair (locate-brick 2 (cons 5 5))])
-      (check-equal? place_pair '(10 . 10)))
+      (check-equal? place_pair '(8 . 8)))
 
     (let ([place_pair (locate-brick 3 (cons 5 5))])
-      (check-equal? place_pair '(15 . 15)))
+      (check-equal? place_pair '(12 . 12)))
 
     (let ([place_pair (locate-brick 3 (cons 5 7))])
-      (check-equal? place_pair '(21 . 15)))
+      (check-equal? place_pair '(18 . 12)))
     )
 
    (test-case
     "test-locate-finder-pattern"
 
-    (let-values ([(left_top right_top left_bottom)
-                  (locate-finder-pattern 50 20)])
-      (check-equal? left_top '(20 . 20))
-      (check-equal? right_top '(840 . 20))
-      (check-equal? left_bottom '(20 . 840)))
+    (let ([start_points (locate-finder-pattern 21)])
+      (check-equal? (first start_points) '(1 . 1))
+      (check-equal? (second start_points) '(15 . 1))
+      (check-equal? (third start_points) '(1 . 15)))
     )
 
    (test-case
