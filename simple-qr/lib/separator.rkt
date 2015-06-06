@@ -1,30 +1,13 @@
 #lang racket
 
-(provide (contract-out
-          [*finder_pattern_points* list?]
-          [*separator_points* list?]
-          ))
+(require "func.rkt")
 
-;; list1 - 7x7 - black
-;; list2 - 5x5 - white
-;; list3 - 3x3 - black
-(define *finder_pattern_points*
-  '(
-    ((1 . 1) (1 . 2) (1 . 3) (1 . 4) (1 . 5) (1 . 6) (1 . 7)
-     (2 . 1)                                         (2 . 7)
-     (3 . 1)                                         (3 . 7)
-     (4 . 1)                                         (4 . 7)
-     (5 . 1)                                         (5 . 7)
-     (6 . 1)                                         (6 . 7)
-     (7 . 1) (7 . 2) (7 . 3) (7 . 4) (7 . 5) (7 . 6) (7 . 7))
-    (        (2 . 2) (2 . 3) (2 . 4) (2 . 5) (2 . 6)
-             (3 . 2)                         (3 . 6)
-             (4 . 2)                         (4 . 6)
-             (5 . 2)                         (5 . 6)
-             (6 . 2) (6 . 3) (6 . 4) (6 . 5) (6 . 6))
-    (                (3 . 3) (3 . 4) (3 . 5)
-                     (4 . 3) (4 . 4) (4 . 5)
-                     (5 . 3) (5 . 4) (5 . 5))))
+(provide (contract-out
+          [draw-separator (-> any/c
+                              exact-nonnegative-integer?
+                              exact-nonnegative-integer?
+                              void?)]
+          ))
 
 (define *separator_points*
   '(
@@ -52,5 +35,26 @@
      (6 . 1)
      (7 . 1)
      (8 . 1) (8 . 2) (8 . 3) (8 . 4) (8 . 5) (8 . 6) (8 . 7) (8 . 8))))
-    
-    
+
+(define (draw-separator dc version module_width)
+  (let* ([finder_pattern_start_points (locate-finder-pattern version)]
+         [top_left_point (first finder_pattern_start_points)]
+         [top_right_point (second finder_pattern_start_points)]
+         [bottom_left_point (third finder_pattern_start_points)]
+         [new_top_right_point (cons (sub1 (car top_right_point)) (cdr top_right_point))]
+         [new_bottom_point (cons (car bottom_left_point) (sub1 (cdr bottom_left_point)))])
+    (for-each
+     (lambda (point_pair)
+       (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+     (transform-points-list (first *separator_points*) top_left_point))
+
+     (for-each
+      (lambda (point_pair)
+        (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+      (transform-points-list (second *separator_points*) new_top_right_point))
+
+     (for-each
+      (lambda (point_pair)
+        (draw-module dc "white" (locate-brick module_width point_pair) module_width))
+      (transform-points-list (third *separator_points*) new_bottom_point))))
+

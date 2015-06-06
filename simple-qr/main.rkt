@@ -2,7 +2,9 @@
 
 (require racket/draw)
 
-(require "func.rkt")
+(require "lib/func.rkt")
+(require "lib/finder-pattern.rkt")
+(require "lib/separator.rkt")
 
 (let* ([version 21]
        [module_width 20]
