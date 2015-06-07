@@ -18,35 +18,40 @@
 
 (define (locate-timing-pattern-joints modules)
   (let ([joint (+ 9 (- modules 16 1))])
-    (list (cons (cons 9  7) (cons joint 7))
-          (cons (cons 7  9) (cons 7 joint)))))
+    (list (list (cons 9  7) (cons joint 7))
+          (list (cons 7  9) (cons 7 joint)))))
 
 (define (draw-timing-pattern dc modules module_width)
-  (let* ([joints (locate-timing-pattern-joints modules)]
-         [horizontal_joints (car joints)]
-         [vertical_joints (cdr joints)]
-         [horizontal_points (get-points-between (car horizontal_joints) (cdr horizontal_joints) #:direction 'horizontal)]
-         [vertical_points (get-points-between (car vertical_joints) (cdr vertical_joints) #:direction 'vertical)])
+  (let ([joints #f]
+        [vertical_joints #f]
+        [horizontal_joints #f]
+        [horizontal_points #f]
+        [vertical_points #f])
+  
+    (set! joints (locate-timing-pattern-joints modules))
+    (set! vertical_joints (car joints))
+    (set! horizontal_joints (cadr joints))
+    (let ([horizontal_start_point (first horizontal_joints)]
+          [horizontal_end_point (second horizontal_joints)]
+          [vertical_start_point (first vertical_joints)]
+          [vertical_end_point (second vertical_joints)])
+      (set! horizontal_points (get-points-between horizontal_start_point horizontal_end_point #:direction 'horizontal))
+      (set! vertical_points (get-points-between vertical_start_point vertical_end_point #:direction 'vertical)))
 
-    (printf "~a\n" modules)
-    (printf "~a\n" joints)
-    (printf "~a\n" vertical_joints)
-    
-    (let loop ([points vertical_joints])
+    (let loop ([points vertical_points])
       (when (not (null? points))
             (let ([point (car points)])
-              (printf "~a\n" point)
               (if (= (remainder (car point) 2) 1)
-                  (draw-module dc "black" point module_width)
-                  (draw-module dc "white" point module_width)))
+                  (draw-module dc "black" (locate-brick module_width point) module_width)
+                  (draw-module dc "white" (locate-brick module_width point) module_width)))
             (loop (cdr points))))
 
-    (let loop ([points horizontal_joints])
+    (let loop ([points horizontal_points])
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (cdr point) 2) 1)
-                  (draw-module dc "black" point module_width)
-                  (draw-module dc "white" point module_width)))
+                  (draw-module dc "black" (locate-brick module_width point) module_width)
+                  (draw-module dc "white" (locate-brick module_width point) module_width)))
             (loop (cdr points))))))
     
     

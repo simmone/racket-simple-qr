@@ -7,7 +7,7 @@
 (require "lib/separator.rkt")
 (require "lib/timing-pattern.rkt")
 
-(let* ([version 5]
+(let* ([version 10]
        [modules (version->modules version)]
        [module_width 10]
        [canvas_width (* modules module_width)]
@@ -16,7 +16,6 @@
   (define target (make-bitmap canvas_width canvas_width))
 
   (define dc (new bitmap-dc% [bitmap target]))
-  (send dc set-smoothing 'smoothed)
 
   ;; draw the background, help to count module
   (let loop-row ([row 1])
