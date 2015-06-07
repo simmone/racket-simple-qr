@@ -19,6 +19,11 @@
           [transform-points-list (-> list?
                                      pair?
                                      list?)]
+          [get-points-between (->
+                               pair?
+                               pair?
+                               #:direction (or/c 'horizontal 'vertical)
+                               list?)]
           ))
 
 (define (version->modules version)
@@ -46,4 +51,8 @@
   (map
    (lambda (point)
      (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
-    points_list))
+   points_list))
+
+(define (get-points-between start_point end_point #:direction direction)
+  '()
+  )
