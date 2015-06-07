@@ -27,7 +27,7 @@
                      (4 . 3) (4 . 4) (4 . 5)
                      (5 . 3) (5 . 4) (5 . 5))))
 
-(define (draw-finder-pattern dc version module_width)
+(define (draw-finder-pattern dc modules module_width)
   (for-each
    (lambda (start_point)
      (for-each
@@ -44,4 +44,4 @@
       (lambda (point_pair)
         (draw-module dc "black" (locate-brick module_width point_pair) module_width))
       (transform-points-list (third *finder_pattern_points*) start_point)))
-   (locate-finder-pattern version)))
+   (locate-finder-pattern modules)))

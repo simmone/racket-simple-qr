@@ -36,8 +36,8 @@
      (7 . 1)
      (8 . 1) (8 . 2) (8 . 3) (8 . 4) (8 . 5) (8 . 6) (8 . 7) (8 . 8))))
 
-(define (draw-separator dc version module_width)
-  (let* ([finder_pattern_start_points (locate-finder-pattern version)]
+(define (draw-separator dc modules module_width)
+  (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [top_right_point (second finder_pattern_start_points)]
          [bottom_left_point (third finder_pattern_start_points)]
