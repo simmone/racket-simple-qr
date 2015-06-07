@@ -5,6 +5,7 @@
 (require "lib/func.rkt")
 (require "lib/finder-pattern.rkt")
 (require "lib/separator.rkt")
+(require "lib/timing-pattern.rkt")
 
 (let* ([version 5]
        [modules (version->modules version)]
@@ -32,13 +33,14 @@
                   (when (= (remainder row 2) 0)
                         (draw-module dc "orchid" (locate-brick module_width (cons row col)) module_width))
                   (loop-col (add1 col))))
-                  
+
             (loop-row (add1 row))))
-    
 
   (draw-finder-pattern dc modules module_width)
 
-  (draw-separator dc modules module_width)  
+  (draw-separator dc modules module_width)
+
+  (draw-timing-pattern dc modules module_width)
 
   (send target save-file "box.png" 'png)
 
