@@ -6,8 +6,9 @@
 (require "lib/finder-pattern.rkt")
 (require "lib/separator.rkt")
 (require "lib/timing-pattern.rkt")
+(require "lib/alignment-pattern.rkt")
 
-(let* ([version 10]
+(let* ([version 7]
        [modules (version->modules version)]
        [module_width 10]
        [canvas_width (* modules module_width)]
@@ -40,6 +41,8 @@
   (draw-separator dc modules module_width)
 
   (draw-timing-pattern dc modules module_width)
+
+  (draw-alignment-pattern dc version module_width)
 
   (send target save-file "box.png" 'png)
 
