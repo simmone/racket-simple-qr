@@ -14,6 +14,7 @@
           [draw-alignment-pattern (-> any/c
                                       exact-nonnegative-integer?
                                       exact-nonnegative-integer?
+                                      hash?
                                       void?)]
           ))
 
@@ -90,25 +91,34 @@
                                    (unquote-splicing result1_list))))
          result1_list))))
 
-(define (draw-alignment-pattern dc version module_width)
+(define (draw-alignment-pattern dc version module_width points_exists_map)
   (for-each
    (lambda (center_point_origin)
      (let ([center_point (cons (add1 (car center_point_origin)) (add1 (cdr center_point_origin)))])
-       (let ([alignment-points (get-alignment-pattern-points center_point)])
-         (for-each
-          (lambda (point_pair)
-            (draw-module dc "black" (locate-brick module_width point_pair) module_width))
-          (first alignment-points))
+       (let ([alignment_points (get-alignment-pattern-points center_point)])
+         ;; find if occupied with exists points
+         (when (andmap
+                (lambda (point)
+                  (or (not (hash-has-key? points_exists_map point))
+                      (and (hash-has-key? points_exists_map point) (string=? (hash-ref points_exists_map point) "timing"))))
+                (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() alignment_points))
+               (for-each
+                (lambda (point_pair)
+                  (draw-module dc "black" (locate-brick module_width point_pair) module_width)
+                  (hash-set! points_exists_map point_pair "alignment"))
+                (first alignment_points))
 
-         (for-each
-          (lambda (point_pair)
-            (draw-module dc "white" (locate-brick module_width point_pair) module_width))
-          (second alignment-points))
+               (for-each
+                (lambda (point_pair)
+                  (draw-module dc "white" (locate-brick module_width point_pair) module_width)
+                  (hash-set! points_exists_map point_pair "alignment"))
+                (second alignment_points))
 
-         (for-each
-          (lambda (point_pair)
-            (draw-module dc "black" (locate-brick module_width point_pair) module_width))
-          (third alignment-points)))))
+               (for-each
+                (lambda (point_pair)
+                  (draw-module dc "black" (locate-brick module_width point_pair) module_width)
+                  (hash-set! points_exists_map point_pair "alignment"))
+                (third alignment_points))))))
      (get-center-point-sets (hash-ref *alignment_pattern_map* version))))
 
   

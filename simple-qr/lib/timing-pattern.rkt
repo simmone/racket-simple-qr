@@ -12,6 +12,7 @@
                                 (is-a?/c bitmap-dc%)
                                 exact-nonnegative-integer?
                                 exact-nonnegative-integer?
+                                hash?
                                 void?)]
                                 
           ))
@@ -21,7 +22,7 @@
     (list (list (cons 9  7) (cons joint 7))
           (list (cons 7  9) (cons 7 joint)))))
 
-(define (draw-timing-pattern dc modules module_width)
+(define (draw-timing-pattern dc modules module_width points_exists_map)
   (let ([joints #f]
         [vertical_joints #f]
         [horizontal_joints #f]
@@ -41,6 +42,7 @@
     (let loop ([points vertical_points])
       (when (not (null? points))
             (let ([point (car points)])
+              (hash-set! points_exists_map point "timing")
               (if (= (remainder (car point) 2) 1)
                   (draw-module dc "black" (locate-brick module_width point) module_width)
                   (draw-module dc "white" (locate-brick module_width point) module_width)))
@@ -49,11 +51,8 @@
     (let loop ([points horizontal_points])
       (when (not (null? points))
             (let ([point (car points)])
+              (hash-set! points_exists_map point "timing")
               (if (= (remainder (cdr point) 2) 1)
                   (draw-module dc "black" (locate-brick module_width point) module_width)
                   (draw-module dc "white" (locate-brick module_width point) module_width)))
             (loop (cdr points))))))
-    
-    
-                 
-

@@ -36,13 +36,15 @@
 
             (loop-row (add1 row))))
 
-  (draw-finder-pattern dc modules module_width)
+  (let ([points_exists_map (make-hash)])
+    (draw-finder-pattern dc modules module_width points_exists_map)
 
-  (draw-separator dc modules module_width)
+    (draw-separator dc modules module_width points_exists_map)
 
-  (draw-timing-pattern dc modules module_width)
+    (draw-timing-pattern dc modules module_width points_exists_map)
 
-  (draw-alignment-pattern dc version module_width)
+    (draw-alignment-pattern dc version module_width points_exists_map)
+    )
 
   (send target save-file "box.png" 'png)
 
