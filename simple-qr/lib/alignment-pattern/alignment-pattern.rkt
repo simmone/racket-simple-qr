@@ -2,7 +2,7 @@
 
 (require racket/draw)
 
-(require "func.rkt")
+(require "../func/func.rkt")
 
 (provide (contract-out
           [get-alignment-pattern-points (->

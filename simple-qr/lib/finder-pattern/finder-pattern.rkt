@@ -1,6 +1,6 @@
 #lang racket
 
-(require "func.rkt")
+(require "../func/func.rkt")
 
 (provide (contract-out
           [draw-finder-pattern (-> any/c
