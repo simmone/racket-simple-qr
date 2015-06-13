@@ -18,7 +18,7 @@
     (check-equal? (get-version 100 "A" "L") 4)
     (check-equal? (get-version 2100 "B" "L") 34)
     (check-equal? (get-version 7089 "N" "L") 40)
-    (check-equal? (get-version 1664 "B" "Q") 40)
+    (check-exn exn:fail? (lambda () (get-version 1664 "B" "Q")))
     )
 
    ))
