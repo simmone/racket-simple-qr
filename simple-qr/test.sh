@@ -6,4 +6,5 @@ echo "func/character-count";cd; cd $HOME_DIR/lib/func/character-count;racket cha
 echo "timing-pattern";cd; cd $HOME_DIR/lib/timing-pattern;racket timing-pattern-test.rkt
 echo "alignment-pattern";cd; cd $HOME_DIR/lib/alignment-pattern;racket alignment-pattern-test.rkt
 echo "data-encoding";cd; cd $HOME_DIR/lib/data-encoding;racket data-encoding-test.rkt
+echo "func/required-bits";cd; cd $HOME_DIR/lib/func/required-bits;racket required-bits-test.rkt
 
