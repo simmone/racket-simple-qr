@@ -51,6 +51,20 @@
     (check-equal? (encode-n "1234567") "1111011111001000111")
     )
     
+   (test-case
+    "test-string-split-two"
+
+    (check-equal? (string-split-two "A") '("A"))
+    (check-equal? (string-split-two "AB") '("AB"))
+    (check-equal? (string-split-two "ABC") '("AB" "C"))
+    (check-equal? (string-split-two "ABCD") '("AB" "CD"))
+    )
+
+   (test-case
+    "test-encode-a"
+    
+    (check-equal? (encode-a "HEA") "01100001011001010")
+    )
 
    ))
 
