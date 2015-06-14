@@ -1,10 +1,10 @@
 #lang racket
 
 (provide (contract-out
-          [get-character-count (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
+          [get-character-bit-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
           ))
 
-(define (get-character-count version mode)
+(define (get-character-bit-width version mode)
   (cond
    [(and (>= version 1) (<= version 9))
     (cond
