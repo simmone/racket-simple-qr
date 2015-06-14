@@ -66,6 +66,12 @@
     (check-equal? (encode-a "HEA") "01100001011001010")
     )
 
+   (test-case
+    "test-get-required-bits-width"
+    
+    (check-equal? (get-required-bits-width 2 "M") 224)
+    )
+
    ))
 
 (run-tests test-data-encoding)

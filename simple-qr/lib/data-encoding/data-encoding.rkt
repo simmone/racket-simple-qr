@@ -9,11 +9,13 @@
           [encode-n (-> string? string?)]
           [string-split-two (-> string? list?)]
           [encode-a (-> string? string?)]
+          [get-required-bits-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
           ))
 
 (require "../func/global.rkt")
 (require "../func/capacity/capacity-func.rkt")
 (require "../func/character-count/character-bit-width.rkt")
+(require "../func/required-bits/required-bits.rkt")
 
 (require racket/format)
 
@@ -72,3 +74,6 @@
                     [value (+ (* num_1_value 45) num_2_value)])
                (printf "~a" (~r value #:base 2 #:min-width 11 #:pad-string "0")))))
        (string-split-two str)))))
+
+(define (get-required-bits-width version mode)
+  (* 8 (hash-ref *required_bits_table* (string-append (number->string version) "-" mode))))

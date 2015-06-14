@@ -3,6 +3,7 @@
 (provide (contract-out
           [*required_bits_table* hash?]
           ))
+
 (define *required_bits_table*
   '#hash(
          ("1-L" . 19)
