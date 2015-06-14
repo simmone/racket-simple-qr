@@ -1,12 +1,13 @@
 #lang racket
 
-(require racket/draw)
-
-(require "lib/func.rkt")
 (require "lib/finder-pattern.rkt")
 (require "lib/separator.rkt")
 (require "lib/timing-pattern.rkt")
 (require "lib/alignment-pattern.rkt")
+(require "lib/func.rkt")
+(require "lib/fuc/func.rkt")
+
+(require racket/draw)
 
 (let* ([version 7]
        [modules (version->modules version)]
