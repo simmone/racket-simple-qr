@@ -4,25 +4,14 @@
 
 (provide (contract-out
           [version->modules (-> exact-nonnegative-integer? exact-nonnegative-integer?)]
-          [locate-brick (-> exact-nonnegative-integer?
-                            pair?
-                            pair?)]
-          [locate-finder-pattern (->
-                                  exact-nonnegative-integer?
-                                  list?)]
-          [draw-module (-> (is-a?/c bitmap-dc%)
-                           (or/c (is-a?/c color%) string?)
-                           pair?
-                           exact-nonnegative-integer?
-                           void?)]
-          [transform-points-list (-> list?
-                                     pair?
-                                     list?)]
-          [get-points-between (->
-                               pair?
-                               pair?
-                               #:direction (or/c 'horizontal 'vertical)
-                               list?)]
+          [locate-brick (-> exact-nonnegative-integer? pair? pair?)]
+          [locate-finder-pattern (-> exact-nonnegative-integer? list?)]
+          [draw-module (-> (is-a?/c bitmap-dc%) (or/c (is-a?/c color%) string?) pair? exact-nonnegative-integer? void?)]
+          [transform-points-list (-> list? pair? list?)]
+          [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
+          [add-terminator (-> string? exact-nonnegative-integer? string?)]
+          [add-multi-eight (-> string? string?)]
+          [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
           ))
 
 (define (version->modules version)
@@ -80,3 +69,31 @@
                  (set! points `(,@points ,(cons cor (cdr start_point))))))
            vars)
           points))))
+
+(define (add-terminator content limit_length)
+  (let* ([content_length (string-length content)]
+         [gap (- limit_length content_length)])
+    (if (<= gap 0)
+        content
+        (if (<= gap 4)
+            (~a content #:min-width (+ content_length gap) #:right-pad-string "0")
+            (~a content #:min-width (+ content_length 4) #:right-pad-string "0")))))
+
+(define (add-multi-eight content)
+  (let* ([content_length (string-length content)]
+         [eight_length (* 8 (ceiling (/ content_length 8)))])
+    (~a content #:min-width eight_length #:right-pad-string "0")))
+
+(define (repeat-right-pad-string content limit_length pad_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_content content])
+        (if (>= (string-length loop_content) limit_length)
+            (printf "~a" loop_content)
+            (let loop_inner ([inner_loop_content loop_content]
+                             [pad_list (string->list pad_str)])
+              (if (not (null? pad_list))
+                  (if (>= (string-length inner_loop_content) limit_length)
+                      (printf "~a" inner_loop_content)
+                      (loop_inner (format "~a~a" inner_loop_content (car pad_list)) (cdr pad_list)))
+                  (loop inner_loop_content))))))))

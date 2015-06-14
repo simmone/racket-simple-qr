@@ -92,6 +92,39 @@
     
     )
 
+   (test-case
+    "test-add-terminator"
+    
+    (check-equal? (add-terminator "1234" 4) "1234")
+    (check-equal? (add-terminator "1234" 5) "12340")
+    (check-equal? (add-terminator "1234" 6) "123400")
+    (check-equal? (add-terminator "1234" 7) "1234000")
+    (check-equal? (add-terminator "1234" 8) "12340000")
+    (check-equal? (add-terminator "1234" 9) "12340000")
+    (check-equal? (add-terminator "1234" 10) "12340000")
+    (check-equal? (add-terminator "1234" 10) "12340000")
+    )
+
+   (test-case
+    "test-add-multi-eight"
+    
+    (check-equal? (add-multi-eight "1234") "12340000")
+    (check-equal? (add-multi-eight "123456") "12345600")
+    (check-equal? (add-multi-eight "1234567") "12345670")
+    (check-equal? (add-multi-eight "12345678") "12345678")
+    (check-equal? (add-multi-eight "123456789") "1234567890000000")
+    (check-equal? (add-multi-eight "12345678123456789") "123456781234567890000000")
+    )
+
+   (test-case
+    "test-repeat-right-pad-string"
+    
+    (check-equal? (repeat-right-pad-string "123" 10 "456") "1234564564")
+    (check-equal? (repeat-right-pad-string "123" 11 "456") "12345645645")
+    (check-equal? (repeat-right-pad-string "123" 12 "456") "123456456456")
+    (check-equal? (repeat-right-pad-string "123" 10 "1234567890") "1231234567")
+    )
+
    ))
 
 (run-tests test-func)
