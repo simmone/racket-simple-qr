@@ -72,6 +72,13 @@
     (check-equal? (get-required-bits-width 2 "M") 224)
     )
 
+   (test-case
+    "test-data-encode"
+    
+    (check-equal? (data-encode "HELLO WORLD")
+                  "00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100")
+    )
+
    ))
 
 (run-tests test-data-encoding)

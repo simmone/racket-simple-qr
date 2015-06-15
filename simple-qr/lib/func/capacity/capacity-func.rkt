@@ -17,4 +17,3 @@
             (caar loop_list)
             (loop (cdr loop_list)))
         (error (string-append "no such version: mode[" mode "]error_level[" error_level "]char_count[" (number->string char_count) "]")))))
-          

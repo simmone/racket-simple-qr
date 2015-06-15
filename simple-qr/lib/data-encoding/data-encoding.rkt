@@ -10,10 +10,13 @@
           [string-split-two (-> string? list?)]
           [encode-a (-> string? string?)]
           [get-required-bits-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
+          [data-encode (-> string? string?)]
           ))
 
 (require "../func/global.rkt")
+(require "../func/func.rkt")
 (require "../func/capacity/capacity-func.rkt")
+(require "../func/capacity/capacity-dic.rkt")
 (require "../func/character-count/character-bit-width.rkt")
 (require "../func/required-bits/required-bits.rkt")
 
@@ -75,5 +78,40 @@
                (printf "~a" (~r value #:base 2 #:min-width 11 #:pad-string "0")))))
        (string-split-two str)))))
 
-(define (get-required-bits-width version mode)
-  (* 8 (hash-ref *required_bits_table* (string-append (number->string version) "-" mode))))
+(define (get-required-bits-width version error_level)
+  (* 8 (hash-ref *required_bits_table* (string-append (number->string version) "-" error_level))))
+
+(define (data-encode content)
+  (let ([mode "A"]
+        [error_level "Q"]
+        [character_count #f]
+        [version #f]
+        [mode_indicator #f]
+        [character_count_indicator #f]
+        [capacity_count #f]
+        [encoded_data #f]
+        [encoded_data_stage1 #f]
+        [encoded_data_stage2 #f]
+        [encoded_data_stage3 #f]
+        [encoded_data_stage4 #f])
+    
+    (set! character_count (string-length content))
+    (set! version (get-version content mode error_level))
+    (set! capacity_count (get-required-bits-width version error_level))
+    (set! mode_indicator (get-mode-indicator mode))
+    (set! character_count_indicator (get-character-count-indicator character_count version mode))
+    (set! encoded_data (encode-b content))
+
+    ;; stage1: data origin
+    (set! encoded_data_stage1 (string-append mode_indicator character_count_indicator encoded_data))
+
+    ;; stage2: add terminator
+    (set! encoded_data_stage2 (add-terminator encoded_data_stage1 capacity_count))
+
+    ;; stage3: add multiple eight
+    (set! encoded_data_stage3 (add-multi-eight encoded_data_stage2))
+
+    ;; stage4: repeat padding
+    (set! encoded_data_stage4 (repeat-right-pad-string encoded_data_stage3 capacity_count "1110110000010001"))
+
+    encoded_data_stage4))
