@@ -10,7 +10,9 @@
           [string-split-two (-> string? list?)]
           [encode-a (-> string? string?)]
           [get-required-bits-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
-          [data-encode (-> string? string?)]
+          [data-encode (->* (string?) 
+                            (#:mode string? #:error_level string?)
+                            string?)]
           ))
 
 (require "../func/global.rkt")
@@ -81,10 +83,8 @@
 (define (get-required-bits-width version error_level)
   (* 8 (hash-ref *required_bits_table* (string-append (number->string version) "-" error_level))))
 
-(define (data-encode content)
-  (let ([mode "A"]
-        [error_level "Q"]
-        [character_count #f]
+(define (data-encode content #:mode [mode "B"] #:error_level [error_level "H"])
+  (let ([character_count #f]
         [version #f]
         [mode_indicator #f]
         [character_count_indicator #f]
