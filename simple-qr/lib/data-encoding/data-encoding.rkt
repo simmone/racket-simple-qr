@@ -20,7 +20,7 @@
 (require "../func/capacity/capacity-func.rkt")
 (require "../func/capacity/capacity-dic.rkt")
 (require "../func/character-count/character-bit-width.rkt")
-(require "../func/code-info/code-info.rkt")
+(require "../func/code-info/code-info-func.rkt")
 
 (require racket/format)
 
@@ -81,7 +81,7 @@
        (string-split-two str)))))
 
 (define (get-required-bits-width version error_level)
-  (* 8 (hash-ref *required_bits_table* (string-append (number->string version) "-" error_level))))
+  (* 8 (get-bits-width version error_level)))
 
 (define (data-encode content #:mode [mode "B"] #:error_level [error_level "H"])
   (let ([character_count #f]

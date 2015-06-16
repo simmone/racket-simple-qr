@@ -2,14 +2,14 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "code-info.rkt")
+(require rackunit "code-info-dic.rkt")
 
-(define test-code-info
+(define test-code-info-dic
   (test-suite 
-   "test-code-info"
+   "test-code-info-dic"
 
    (test-case
-    "test-code-info"
+    "test-code-info-dic"
 
     (check-equal? (hash-ref *required_bits_table* "40-Q") 1666)
 
@@ -20,4 +20,4 @@
 
    ))
 
-(run-tests test-code-info)
+(run-tests test-code-info-dic)

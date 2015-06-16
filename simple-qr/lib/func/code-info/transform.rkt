@@ -3,7 +3,7 @@
 (require racket/string)
 
 (with-output-to-file 
- "code-info.rkt" #:exists 'replace
+ "code-info-dic.rkt" #:exists 'replace
  (lambda ()
    (let-values ([(bits_list ec_list group_list)
                  (with-input-from-file "error_dic_table.txt"
