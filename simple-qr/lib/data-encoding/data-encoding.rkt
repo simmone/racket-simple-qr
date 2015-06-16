@@ -20,7 +20,7 @@
 (require "../func/capacity/capacity-func.rkt")
 (require "../func/capacity/capacity-dic.rkt")
 (require "../func/character-count/character-bit-width.rkt")
-(require "../func/required-bits/required-bits.rkt")
+(require "../func/code-info/code-info.rkt")
 
 (require racket/format)
 
