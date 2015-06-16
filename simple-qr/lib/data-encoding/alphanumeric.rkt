@@ -1,11 +1,8 @@
 #lang racket
 
 (provide (contract-out
-          [*mode_bit_table* hash?]
-          [*alphanumeric_num_table* hash?]
+          [get-alphanumeric-num (-> string? exact-nonnegative-integer?)]
           ))
-
-(define *mode_bit_table* '#hash(("N" . "0001") ("A" . "0010") ("B" . "0100") ("K" . "1000") ("E" . "0111")))
 
 (define *alphanumeric_num_table*
   '#hash(
@@ -54,3 +51,7 @@
          ("." . 42)
          ("/" . 43)
          (":" . 44)))
+
+(define (get-alphanumeric-num mode)
+  (hash-ref *alphanumeric_num_table* mode))
+

@@ -15,7 +15,7 @@
                             string?)]
           ))
 
-(require "../func/global.rkt")
+(require "alphanumeric.rkt")
 (require "../func/func.rkt")
 (require "../func/capacity/capacity-func.rkt")
 (require "../func/capacity/capacity-dic.rkt")
@@ -24,11 +24,13 @@
 
 (require racket/format)
 
-(define (get-version content mode error_level)
-  (get-version-origin (string-length content) mode error_level))
+(define *mode_bit_table* '#hash(("N" . "0001") ("A" . "0010") ("B" . "0100") ("K" . "1000") ("E" . "0111")))
 
 (define (get-mode-indicator mode)
   (hash-ref *mode_bit_table* mode))
+
+(define (get-version content mode error_level)
+  (get-version-origin (string-length content) mode error_level))
 
 (define (get-character-count-indicator character_count version mode)
   (~r character_count #:base 2 #:min-width (get-character-bit-width version mode) #:pad-string "0"))
@@ -71,11 +73,11 @@
       (for-each
        (lambda (num_pair)
          (if (= (string-length num_pair) 1)
-             (printf "~a" (~r (hash-ref *alphanumeric_num_table* num_pair) #:base 2 #:min-width 6 #:pad-string "0"))
+             (printf "~a" (~r (get-alphanumeric-num num_pair) #:base 2 #:min-width 6 #:pad-string "0"))
              (let* ([num_1 (substring num_pair 0 1)]
                     [num_2 (substring num_pair 1 2)]
-                    [num_1_value (hash-ref *alphanumeric_num_table* num_1)]
-                    [num_2_value (hash-ref *alphanumeric_num_table* num_2)]
+                    [num_1_value (get-alphanumeric-num num_1)]
+                    [num_2_value (get-alphanumeric-num num_2)]
                     [value (+ (* num_1_value 45) num_2_value)])
                (printf "~a" (~r value #:base 2 #:min-width 11 #:pad-string "0")))))
        (string-split-two str)))))
