@@ -12,6 +12,7 @@
           [add-terminator (-> string? exact-nonnegative-integer? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
+          [split-bit-string-to-decimal (-> string? list?)]
           ))
 
 (define (version->modules version)
@@ -97,3 +98,12 @@
                       (printf "~a" inner_loop_content)
                       (loop_inner (format "~a~a" inner_loop_content (car pad_list)) (cdr pad_list)))
                   (loop inner_loop_content))))))))
+
+(define (split-bit-string-to-decimal bit_str)
+  (reverse
+   (let loop ([loop_str bit_str]
+              [result_list '()])
+     (if (not (string=? loop_str ""))
+         (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
+         result_list))))
+

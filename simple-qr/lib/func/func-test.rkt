@@ -125,6 +125,14 @@
     (check-equal? (repeat-right-pad-string "123" 10 "1234567890") "1231234567")
     )
 
+   (test-case
+    "test-split-bit-string-to-decimal"
+    
+    (check-equal?
+     (split-bit-string-to-decimal 
+      "00100000010110110000101101111000110100010111001011011100010011010100001101000000111011000001000111101100000100011110110000010001")
+     '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)))
+
    ))
 
 (run-tests test-func)
