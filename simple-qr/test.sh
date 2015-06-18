@@ -8,4 +8,5 @@ echo "alignment-pattern";cd; cd $HOME_DIR/lib/alignment-pattern;racket alignment
 echo "data-encoding";cd; cd $HOME_DIR/lib/data-encoding;racket data-encoding-test.rkt
 echo "func/code-info/code-info-dic";cd; cd $HOME_DIR/lib/func/code-info;racket code-info-dic-test.rkt
 echo "func/code-info/code-info-func";cd; cd $HOME_DIR/lib/func/code-info;racket code-info-func-test.rkt
+echo "func/poly";cd; cd $HOME_DIR/lib/func/poly;racket poly-func-test.rkt
 
