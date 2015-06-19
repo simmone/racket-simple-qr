@@ -16,6 +16,13 @@
     )
 
    (test-case
+    "test-poly-multiply"
+    
+    (check-equal? (poly-multiply-x "a2x1+a3x0" 5) "a2x6+a3x5")
+    (check-equal? (poly-multiply-x "a2x1+a3x0+a4x8" 10) "a2x11+a3x10+a4x18")
+    )
+
+   (test-case
     "test-error-code"
     
     (error-code '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 1 "M")
