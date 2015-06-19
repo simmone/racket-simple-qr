@@ -4,6 +4,7 @@
           [error-code (-> list? exact-nonnegative-integer? string? string?)]
           [to-message-poly (-> list? string?)]
           [poly-multiply-x (-> string? exact-nonnegative-integer? string?)]
+          [poly-align-on-x (-> string? string? string?)]
           ))
 
 (require "../func/code-log/code-log-func.rkt")
@@ -20,7 +21,7 @@
                     (printf "+"))
               (loop (cdr loop_list)))))))
 
-;; (a1b2+a3b4)*b2 = a1b4+a3b6
+;; (a1x2+a3x4)*x2 = a1x4+a3x6
 (define (poly-multiply-x poly_str x_log)
   (with-output-to-string
     (lambda ()
@@ -34,6 +35,13 @@
                   (printf "+"))
               (loop (cdr loop_list)))))))
 
+;; a0x2+a1x9 align a0x10 = a0x10+a1x17
+(define (poly-align-on-x poly ref_poly)
+  (let* ([poly_first_item (car (regexp-split #rx"\\+" poly))]
+         [ref_poly_first_item (car (regexp-split #rx"\\+" ref_poly))]
+         [poly_x (string->number (second (regexp-match #rx"a[0-9]+x([0-9+]+)" poly_first_item)))]
+         [ref_poly_x (string->number (second (regexp-match #rx"a[0-9]+x([0-9+]+)" ref_poly_first_item)))])
+    (poly-multiply-x poly (- ref_poly_x poly_x))))
 
 (define (error-code number_list version error_level)
   (let ([error_code ""]
@@ -41,6 +49,7 @@
         [origin_message_poly #f]
         [origin_generator_poly #f]
         [message_poly #f]
+        [generator_poly #f]
         )
 
     (printf "error-code step by step\n")
@@ -58,5 +67,8 @@
 
     (set! message_poly (poly-multiply-x origin_message_poly ec_count))
     (printf "st4: message_poly=[~a]\n" message_poly)
+    
+    (set! generator_poly (poly-align-on-x origin_generator_poly message_poly))
+    (printf "st5: generator_poly=[~a]\n" generator_poly)
     
     error_code))

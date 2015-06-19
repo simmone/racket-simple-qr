@@ -23,6 +23,13 @@
     )
 
    (test-case
+    "test-poly-align-on-x"
+    
+    (check-equal? (poly-align-on-x "a1x1+a2x4" "a0x7") "a1x7+a2x10")
+    (check-equal? (poly-align-on-x "a1x1+a2x4" "a0x7+a4x8") "a1x7+a2x10")
+    )
+
+   (test-case
     "test-error-code"
     
     (error-code '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 1 "M")
