@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out 
-          [error-code (-> list? exact-nonnegative-integer? string? string?)]
+          [error-code (-> list? exact-nonnegative-integer? string? list?)]
           [to-message-poly (-> list? string?)]
           ))
 
@@ -21,44 +21,60 @@
               (loop (cdr loop_list)))))))
 
 (define (error-code number_list version error_level)
-  (let ([error_code ""]
-        [ec_count #f]
-        [origin_message_poly #f]
-        [origin_generator_poly #f]
-        [message_poly #f]
-        [message_poly_count #f]
-        [generator_poly #f]
+  (let ([ec_count #f]
+        [origin_poly_message #f]
+        [origin_poly_generator #f]
+        [poly_message #f]
+        [poly_message_count #f]
+        [poly_generator #f]
         )
 
-    (printf "error-code step by step\n")
+    ; (printf "error-code step by step\n")
 
-    (printf "source=[~a]\n" number_list)
+    ; (printf "source=[~a]\n" number_list)
 
     (set! ec_count (get-ec-count version error_level))
-    (printf "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count)
+    ; (printf "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count)
 
-    (set! origin_message_poly (to-message-poly number_list))
-    (printf "st2: origin_message_poly=[~a]\n" origin_message_poly)
+    (set! origin_poly_message (to-message-poly number_list))
+    ; (printf "st2: origin_poly_message=[~a]\n" origin_poly_message)
 
-    (set! origin_generator_poly (get-poly ec_count))
-    (printf "st3: origin_generator_poly=[~a]\n" origin_generator_poly)
+    (set! origin_poly_generator (get-poly ec_count))
+    ; (printf "st3: origin_poly_generator=[~a]\n" origin_poly_generator)
 
-    (set! message_poly (poly-multiply-x origin_message_poly ec_count))
-    (set! message_poly_count (length (regexp-split #rx"\\+" message_poly)))
-    (printf "st4: message_poly=[~a] message_poly_count=[~a]\n" message_poly message_poly_count)
+    (set! poly_message (poly-multiply-x origin_poly_message ec_count))
+    (set! poly_message_count (length (regexp-split #rx"\\+" poly_message)))
+    ; (printf "st4: poly_message=[~a] poly_message_count=[~a]\n" poly_message poly_message_count)
     
-    (set! generator_poly (poly-align-on-x origin_generator_poly message_poly))
-    (printf "st5: generator_poly=[~a]\n" generator_poly)
+    (set! poly_generator (poly-align-on-x origin_poly_generator poly_message))
+    ; (printf "st5: poly_generator=[~a]\n" poly_generator)
     
-    (printf "start poly long division\n")
-    (let loop ([loop_poly generator_poly]
+    (let loop ([loop_poly_generator poly_generator]
+               [loop_poly_message poly_message]
                [count 1])
-      (when (<= count message_poly_count)
-            (printf "step:~a generator=~a\n" count loop_poly)
-      
-            (let ([loop_poly_aligned (poly-align-on-a loop_poly message_poly)])
-              (printf "step:~a loop_poly_aligned=~a\n" count loop_poly_aligned)
-              (printf "step:~a loop_poly_aligned_value=~a\n" count loop_poly_aligned)
-              (loop loop_poly_aligned (add1 count)))))
+      (if (<= count poly_message_count)
+          (begin
+            ; (printf "step:~a message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator)
 
-    error_code))
+            (let ([loop_poly_generator_aligned_a #f]
+                  [loop_poly_generator_aligned_v #f]
+                  [loop_poly_message_v #f]
+                  [loop_poly_message_result_v #f])
+      
+              (set! loop_poly_generator_aligned_a (poly-align-on-a loop_poly_generator loop_poly_message))
+              ; (printf "step:~a loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a)
+
+              (set! loop_poly_generator_aligned_v (poly-a-to-v loop_poly_generator_aligned_a))
+              ; (printf "step:~a loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v)
+
+              (set! loop_poly_message_v (poly-a-to-v loop_poly_message))
+              ; (printf "step:~a loop_poly_message_v=~a\n" count loop_poly_message_v)
+
+              (when (= (length (regexp-split #rx"\\+" loop_poly_message_v)) 10)
+                    (set! loop_poly_message_v (poly-append-zero loop_poly_message_v)))
+
+              (set! loop_poly_message_result_v (poly-xor loop_poly_message_v loop_poly_generator_aligned_v))
+              ; (printf "step:~a loop_poly_message_v=~a\n" count loop_poly_message_result_v)
+
+              (loop (poly-multiply-x loop_poly_generator -1) (poly-v-to-a loop_poly_message_result_v) (add1 count))))
+          (poly-get-codeword (poly-a-to-v loop_poly_message))))))

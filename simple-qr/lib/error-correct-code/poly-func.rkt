@@ -1,13 +1,16 @@
 #lang racket
 
 (provide (contract-out 
-          [poly-multiply-x (-> string? exact-nonnegative-integer? string?)]
+          [poly-multiply-x (-> string? exact-integer? string?)]
           [poly-align-on-x (-> string? string? string?)]
-          [poly-multiply-a (-> string? exact-nonnegative-integer? string?)]
+          [poly-multiply-a (-> string? exact-integer? string?)]
           [poly-align-on-a (-> string? string? string?)]
-          [poly-a-to-value (-> string? string?)]
-          [poly-value-to-a (-> string? string?)]
+          [poly-a-to-v (-> string? string?)]
+          [poly-v-to-a (-> string? string?)]
           [poly-xor (-> string? string? string?)]
+          [poly-cdr (-> string? string?)]
+          [poly-append-zero (-> string? string?)]
+          [poly-get-codeword (-> string? list?)]
           ))
 
 (require "../func/code-log/code-log-func.rkt")
@@ -58,7 +61,7 @@
          [ref_poly_a (string->number (second (regexp-match #rx"a([0-9]+)x[0-9+]+" ref_poly_first_item)))])
     (poly-multiply-a poly (- ref_poly_a poly_a))))
 
-(define (poly-a-to-value poly_str)
+(define (poly-a-to-v poly_str)
   (with-output-to-string
     (lambda ()
       (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
@@ -71,7 +74,7 @@
                   (printf "+"))
               (loop (cdr loop_list)))))))
 
-(define (poly-value-to-a poly_str)
+(define (poly-v-to-a poly_str)
   (with-output-to-string
     (lambda ()
       (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
@@ -103,7 +106,36 @@
                   (let ([result_index (bitwise-xor message_a_index generator_a_index)])
                     (when (not (= result_index 0))
                           (printf "~ax~a" result_index message_x_index)
-
+                        
                           (when (> (length message_loop_list) 1)
                                 (printf "+")))))
                 (loop (cdr message_loop_list) (if (null? generator_loop_list) '() (cdr generator_loop_list)))))))))
+
+(define (poly-cdr msg)
+ (second (regexp-match #rx"^a[0-9]+x[0-9]+\\+(.*$)" msg)))
+
+(define (poly-append-zero poly_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
+        (when (not (null? loop_list))
+              (let* ([result (regexp-match #rx"([0-9]+)x([0-9]+)" (car loop_list))]
+                     [a_index (list-ref result 1)]
+                     [x_index (list-ref result 2)])
+                (printf "~ax~a" a_index x_index)
+
+                (if (> (length loop_list) 1)
+                    (printf "+")
+                    (printf "+0x~a" (sub1 (string->number x_index)))))
+
+              (loop (cdr loop_list)))))))
+
+(define (poly-get-codeword poly_str)
+  (reverse
+   (let loop ([loop_list (regexp-split #rx"\\+" poly_str)]
+              [result_list '()])
+     (if (not (null? loop_list))
+           (loop
+            (cdr loop_list)
+            (cons (string->number (second (regexp-match #rx"([0-9]+)x[0-9]+" (car loop_list)))) result_list))
+           result_list))))
