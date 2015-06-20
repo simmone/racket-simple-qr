@@ -13,6 +13,7 @@
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
+          [split-decimal-list-on-contract (-> list? vector? list?)]
           ))
 
 (define (version->modules version)
@@ -107,3 +108,34 @@
          (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
          result_list))))
 
+(define (split-decimal-list-on-contract num_list contract_vec)
+  (let ([group1_block_count (car (vector-ref contract_vec 0))]
+        [group1_count_per_block (cdr (vector-ref contract_vec 0))]
+        [group2_block_count (car (vector-ref contract_vec 1))]
+        [group2_count_per_block (cdr (vector-ref contract_vec 1))]
+        [remain_list #f])
+
+    (list
+     (let loop ([loop_list num_list]
+                [loop_block_count group1_block_count]
+                [loop_count group1_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (begin
+             (set! remain_list loop_list)
+             (reverse result_list))
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group1_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list))))
+
+     (let loop ([loop_list remain_list]
+                [loop_block_count group2_block_count]
+                [loop_count group2_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (reverse result_list)
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group2_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list)))))))
