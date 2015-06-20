@@ -7,6 +7,8 @@
           [poly-align-on-x (-> string? string? string?)]
           [poly-multiply-a (-> string? exact-nonnegative-integer? string?)]
           [poly-align-on-a (-> string? string? string?)]
+          [poly-a-to-value (-> string? string?)]
+          [poly-value-to-a (-> string? string?)]
           ))
 
 (require "../func/code-log/code-log-func.rkt")
@@ -67,6 +69,32 @@
          [ref_poly_a (string->number (second (regexp-match #rx"a([0-9]+)x[0-9+]+" ref_poly_first_item)))])
     (poly-multiply-a poly (- ref_poly_a poly_a))))
 
+(define (poly-a-to-value poly_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
+        (when (not (null? loop_list))
+              (let* ([result (regexp-match #rx"a([0-9]+)x([0-9]+)" (car loop_list))]
+                     [a_index (list-ref result 1)]
+                     [x_index (list-ref result 2)])
+                (printf "~ax~a" (a->value (string->number a_index)) x_index))
+              (when (> (length loop_list) 1)
+                  (printf "+"))
+              (loop (cdr loop_list)))))))
+
+(define (poly-value-to-a poly_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
+        (when (not (null? loop_list))
+              (let* ([result (regexp-match #rx"([0-9]+)x([0-9]+)" (car loop_list))]
+                     [a_index (list-ref result 1)]
+                     [x_index (list-ref result 2)])
+                (printf "a~ax~a" (value->a (string->number a_index)) x_index))
+              (when (> (length loop_list) 1)
+                  (printf "+"))
+              (loop (cdr loop_list)))))))
+
 (define (error-code number_list version error_level)
   (let ([error_code ""]
         [ec_count #f]
@@ -105,6 +133,7 @@
       
             (let ([loop_poly_aligned (poly-align-on-a loop_poly message_poly)])
               (printf "step:~a loop_poly_aligned=~a\n" count loop_poly_aligned)
+              (printf "step:~a loop_poly_aligned_value=~a\n" count loop_poly_aligned)
               (loop loop_poly_aligned (add1 count)))))
 
     error_code))

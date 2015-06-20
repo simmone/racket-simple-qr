@@ -48,6 +48,16 @@
     )
 
    (test-case
+    "test-poly-value-to-a, a-to-value"
+    
+    (check-equal? (poly-a-to-value "a5x25+a1x24+a72x23+a51x22+a66x21+a123x20+a75x19+a69x18+a99x17+a37x16+a50x15")
+                  "32x25+2x24+101x23+10x22+97x21+197x20+15x19+47x18+134x17+74x16+5x15")
+
+    (check-equal? (poly-value-to-a "32x25+2x24+101x23+10x22+97x21+197x20+15x19+47x18+134x17+74x16+5x15")
+                  "a5x25+a1x24+a72x23+a51x22+a66x21+a123x20+a75x19+a69x18+a99x17+a37x16+a50x15")
+    )
+
+   (test-case
     "test-error-code"
     
 ;    (error-code '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17) 1 "M")
