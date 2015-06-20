@@ -2,11 +2,11 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "poly-func.rkt")
+(require rackunit "poly-dic-func.rkt")
 
-(define test-poly-func
+(define test-poly-dic-func
   (test-suite 
-   "test-poly-func"
+   "test-poly-dic-func"
 
    (test-case
     "test-get-ploy"
@@ -17,4 +17,4 @@
 
    ))
 
-(run-tests test-poly-func)
+(run-tests test-poly-dic-func)
