@@ -20,34 +20,29 @@
         [data_group #f]
         )
 
-    (printf "bit_data=[~a]\n" bit_data)
+    ; (printf "bit_data=[~a]\n" bit_data)
     
     (set! decimal_list (split-bit-string-to-decimal bit_data))
-    (printf "decimal_list=[~a]\n" decimal_list)
+    ; (printf "decimal_list=[~a]\n" decimal_list)
     
     (set! split_contract (get-group-width version error_level))
-    (printf "split_contract=[~a]\n" split_contract)
+    ; (printf "split_contract=[~a]\n" split_contract)
     
     (set! origin_data_group (split-decimal-list-on-contract decimal_list split_contract))
-    (printf "data_group=[~a]\n" data_group)
+    ; (printf "data_group=[~a]\n" origin_data_group)
     
-    (set! data_group
-          (list
-           (map
-            (lambda (block_list)
-              (printf "block_list:[~a]\n error_code:[~a]\n" block_list (error-code block_list version error_level))
-              (list block_list
-                    (error-code block_list version error_level)))
-            (car origin_data_group))
+    (list
+     (map
+      (lambda (block_list)
+        (list block_list
+              (error-code block_list version error_level)))
+      (car origin_data_group))
 
-          (map
-           (lambda (block_list)
-             (list block_list
-                   (error-code block_list version error_level)))
-           (cadr origin_data_group))))
-
-    data_group))
-
+     (map
+      (lambda (block_list)
+        (list block_list
+              (error-code block_list version error_level)))
+      (cadr origin_data_group)))))
 
 (define (get-encoded-data-group data #:mode [mode "B"] #:error_level [error_level "H"])
   (let ([version #f]
@@ -55,7 +50,7 @@
         )
 
     (set! version (get-version data mode error_level))
-    (printf "version=[~a] mode=[~a] error_level=[~a]\n" version mode error_level)
+    ; (printf "version=[~a] mode=[~a] error_level=[~a]\n" version mode error_level)
     
     (set! bit_data (data-encode data #:mode mode #:error_level error_level))
 
