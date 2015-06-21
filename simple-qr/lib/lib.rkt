@@ -5,6 +5,7 @@
           [get-encoded-data-group (->* (string?) 
                                        (#:mode string? #:error_level string?)
                                        list?)]
+          [interleave-data-group (-> list? list?)]
           ))
 
 (require "data-encoding/data-encoding.rkt")
@@ -56,4 +57,17 @@
 
     (get-encoded-data-group-from-bit-string bit_data version error_level)
     ))
+
+(define (interleave-data-group data_group)
+  (let ([data_list
+         (quasiquote
+          (
+           (unquote-splicing (map car (car data_group)))
+           (unquote-splicing (map car (cadr data_group)))))]
+        [ec_list
+         (quasiquote
+          (
+          (unquote-splicing (map cadr (car data_group)))
+          (unquote-splicing (map cadr (cadr data_group)))))])
+    `(,@(interleave-list data_list) ,@(interleave-list ec_list))))
 

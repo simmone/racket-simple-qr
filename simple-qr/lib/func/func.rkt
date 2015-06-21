@@ -14,6 +14,8 @@
           [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
           [split-decimal-list-on-contract (-> list? vector? list?)]
+          [interleave-list (-> list? list?)]
+          [decimal-list-to-string (-> list? string?)]
           ))
 
 (define (version->modules version)
@@ -139,3 +141,25 @@
            (if (= loop_count 1)
                (loop (cdr loop_list) (sub1 loop_block_count) group2_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
                (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list)))))))
+
+(define (interleave-list data_list)
+  (let loop ([count 0]
+             [result_list '()])
+    (let ([temp_list '()])
+      (for-each
+       (lambda (item_list)
+         (when (<= count (sub1 (length item_list)))
+               (set! temp_list `(,@temp_list ,(list-ref item_list count)))))
+       data_list)
+      
+      (if (null? temp_list)
+          result_list
+          (loop (add1 count) `(,@result_list ,@temp_list))))))
+
+(define (decimal-list-to-string decimal_list)
+  (with-output-to-string
+    (lambda ()
+      (for-each
+       (lambda (num)
+         (printf "~a" (~r num #:base 2 #:min-width 8 #:pad-string "0")))
+       decimal_list))))
