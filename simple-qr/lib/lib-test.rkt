@@ -11,7 +11,7 @@
    (test-case
     "test-get-encoded-data-group-from-bit-string"
 
-    (check-equal? (get-encoded-data-group 
+    (check-equal? (get-encoded-data-group-from-bit-string
                    (string-append
                     "0100001101010101010001101000011001010111001001100101010111000010"
                     "0111011100110010000001100001001000000110011001110010011011110110"
@@ -35,14 +35,13 @@
                      )))
     )
 
-
-   (test-case
-    "test-get-encoded-data-group"
-
-    (check-equal? (get-encoded-data-group "HELLO WORLD" #:mode "B" #:error_level "Q")
-                  "")
-    )
-
+;   (test-case
+;    "test-get-encoded-data-group"
+;
+;    (check-equal? (get-encoded-data-group "HELLO WORLD" #:mode "B" #:error_level "Q")
+;                  "")
+;    )
+;
    ))
 
 (run-tests test-lib)

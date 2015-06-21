@@ -94,22 +94,30 @@
             [generator_list (regexp-split #rx"\\+" generator_poly)])
         (let loop ([message_loop_list message_term_list]
                    [generator_loop_list generator_list])
-          (when (not (null? message_loop_list))
-                (let* ([message_result (regexp-match #rx"([0-9]+)x([0-9]+)" (car message_loop_list))]
-                       [message_a_index (string->number (list-ref message_result 1))]
-                       [message_x_index (string->number (list-ref message_result 2))]
-                       [generator_a_index 0])
+          (when (or (not (null? message_loop_list)) (not (null? generator_loop_list)))
+                (let ([message_a_index #f]
+                      [generator_a_index #f]
+                      [x_index #f])
+                  (when (not (null? message_loop_list))
+                        (let ([message_result (regexp-match #rx"([0-9]+)x([0-9]+)" (car message_loop_list))])
+                          (set! message_a_index (string->number (list-ref message_result 1)))
+                          (set! x_index (string->number (list-ref message_result 2)))))
+
                   (when (not (null? generator_loop_list))
                         (let ([generator_result (regexp-match #rx"([0-9]+)x([0-9]+)" (car generator_loop_list))])
-                          (set! generator_a_index (string->number (list-ref generator_result 1)))))
+                          (set! generator_a_index (string->number (list-ref generator_result 1)))
+                          (set! x_index (string->number (list-ref generator_result 2)))))
+
+                  (when (null? message_loop_list) (set! message_a_index 0))
+                  (when (null? generator_loop_list) (set! generator_a_index 0))
 
                   (let ([result_index (bitwise-xor message_a_index generator_a_index)])
                     (when (not (= result_index 0))
-                          (printf "~ax~a" result_index message_x_index)
+                          (printf "~ax~a" result_index x_index)
                         
-                          (when (> (length message_loop_list) 1)
+                          (when (or (> (length generator_loop_list) 1) (> (length message_loop_list) 1))
                                 (printf "+")))))
-                (loop (cdr message_loop_list) (if (null? generator_loop_list) '() (cdr generator_loop_list)))))))))
+                (loop (if (null? message_loop_list) '() (cdr message_loop_list)) (if (null? generator_loop_list) '() (cdr generator_loop_list)))))))))
 
 (define (poly-cdr msg)
  (second (regexp-match #rx"^a[0-9]+x[0-9]+\\+(.*$)" msg)))

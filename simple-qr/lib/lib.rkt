@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-          [get-encoded-data-group-from-bit-string (-> string? string? string? list?)]
+          [get-encoded-data-group-from-bit-string (-> string? exact-nonnegative-integer? string? list?)]
           [get-encoded-data-group (->* (string?) 
                                        (#:mode string? #:error_level string?)
                                        list?)]
@@ -10,10 +10,13 @@
 (require "data-encoding/data-encoding.rkt")
 (require "func/func.rkt")
 (require "func/code-info/code-info-func.rkt")
+(require "error-correct-code/error-correct-code.rkt")
 
 (define (get-encoded-data-group-from-bit-string bit_data version error_level)
-  (let ([decimal_list #f]
+  (let ([encoded_data #f]
+        [decimal_list #f]
         [split_contract #f]
+        [origin_data_group #f]
         [data_group #f]
         )
 
@@ -25,18 +28,30 @@
     (set! split_contract (get-group-width version error_level))
     (printf "split_contract=[~a]\n" split_contract)
     
-    (set! data_group (split-decimal-list-on-contract decimal_list split_contract))
+    (set! origin_data_group (split-decimal-list-on-contract decimal_list split_contract))
     (printf "data_group=[~a]\n" data_group)
     
+    (set! data_group
+          (list
+           (map
+            (lambda (block_list)
+              (printf "block_list:[~a]\n error_code:[~a]\n" block_list (error-code block_list version error_level))
+              (list block_list
+                    (error-code block_list version error_level)))
+            (car origin_data_group))
+
+          (map
+           (lambda (block_list)
+             (list block_list
+                   (error-code block_list version error_level)))
+           (cadr origin_data_group))))
+
     data_group))
 
 
 (define (get-encoded-data-group data #:mode [mode "B"] #:error_level [error_level "H"])
   (let ([version #f]
-        [encoded_data #f]
-        [decimal_list #f]
-        [split_contract #f]
-        [data_group #f]
+        [bit_data #f]
         )
 
     (set! version (get-version data mode error_level))
