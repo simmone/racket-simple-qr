@@ -1,11 +1,11 @@
 #lang racket
 
-(require "lib/finder-pattern.rkt")
-(require "lib/separator.rkt")
-(require "lib/timing-pattern.rkt")
-(require "lib/alignment-pattern.rkt")
-(require "lib/func.rkt")
-(require "lib/fuc/func.rkt")
+(require "lib/finder-pattern/finder-pattern.rkt")
+(require "lib/separator/separator.rkt")
+(require "lib/timing-pattern/timing-pattern.rkt")
+(require "lib/alignment-pattern/alignment-pattern.rkt")
+(require "lib/lib.rkt")
+(require "lib/func/func.rkt")
 
 (require racket/draw)
 
