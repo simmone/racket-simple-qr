@@ -4,6 +4,7 @@
 (require "lib/separator/separator.rkt")
 (require "lib/timing-pattern/timing-pattern.rkt")
 (require "lib/alignment-pattern/alignment-pattern.rkt")
+(require "lib/dark-module/dark-module.rkt")
 (require "lib/lib.rkt")
 (require "lib/func/func.rkt")
 
@@ -45,6 +46,8 @@
     (draw-timing-pattern dc modules module_width points_exists_map)
 
     (draw-alignment-pattern dc version module_width points_exists_map)
+
+    (draw-dark-module dc version module_width points_exists_map)
     )
 
   (send target save-file "box.png" 'png)
