@@ -2,6 +2,7 @@
 
 (require "lib/finder-pattern/finder-pattern.rkt")
 (require "lib/separator/separator.rkt")
+(require "lib/format-information/format-information.rkt")
 (require "lib/timing-pattern/timing-pattern.rkt")
 (require "lib/alignment-pattern/alignment-pattern.rkt")
 (require "lib/dark-module/dark-module.rkt")
@@ -44,6 +45,8 @@
     (draw-separator dc modules module_width points_exists_map)
 
     (draw-timing-pattern dc modules module_width points_exists_map)
+
+    (draw-format-information dc modules module_width points_exists_map)
 
     (draw-alignment-pattern dc version module_width points_exists_map)
 
