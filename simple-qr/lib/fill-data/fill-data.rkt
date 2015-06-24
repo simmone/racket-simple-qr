@@ -2,7 +2,26 @@
 
 (provide (contract-out 
           [snake-modules (->* (exact-nonnegative-integer?) (#:skip_points_hash hash?) list?)]
+          [draw-data (-> any/c
+                         exact-nonnegative-integer?
+                         list?
+                         list?
+                         hash?
+                         void?)]
           ))
+
+(require "../func/func.rkt")
+
+(define (draw-data dc module_width data_list trace_list points_exists_map)
+  (let loop ([loop_data_list data_list]
+             [loop_trace_list trace_list])
+    (when (not (null? loop_data_list))
+          (let ([bit_data (car loop_data_list)]
+                [point_pair (car loop_trace_list)])
+            (if (char=? bit_data #\1)
+                (draw-module dc "black" (locate-brick module_width point_pair) module_width)
+                (draw-module dc "white" (locate-brick module_width point_pair) module_width)))
+          (loop (cdr loop_data_list) (cdr loop_trace_list)))))
 
 (define (snake-modules modules #:skip_points_hash [skip_hash (make-hash)])
   (let ([start_point (cons modules modules)]

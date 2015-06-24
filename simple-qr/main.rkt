@@ -7,12 +7,17 @@
 (require "lib/timing-pattern/timing-pattern.rkt")
 (require "lib/alignment-pattern/alignment-pattern.rkt")
 (require "lib/dark-module/dark-module.rkt")
+(require "lib/data-encoding/data-encoding.rkt")
+(require "lib/fill-data/fill-data.rkt")
 (require "lib/lib.rkt")
 (require "lib/func/func.rkt")
 
 (require racket/draw)
 
-(let* ([version 7]
+(let* ([data "http://chenxiao.info"]
+       [mode "B"]
+       [error_level "H"]
+       [version (get-version data mode error_level)]
        [modules (version->modules version)]
        [module_width 10]
        [canvas_width (* modules module_width)]
@@ -54,9 +59,13 @@
     (draw-alignment-pattern dc version module_width points_exists_map)
 
     (draw-dark-module dc version module_width points_exists_map)
+    
+    (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
+          [trace_list (snake-modules modules #:skip_points_hash points_exists_map)])
+      (draw-data dc module_width data_list trace_list points_exists_map))
     )
 
   (send target save-file "box.png" 'png)
-
+  
   (system "open box.png")
 )

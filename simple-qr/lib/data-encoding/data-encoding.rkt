@@ -102,7 +102,13 @@
     (set! capacity_count (get-required-bits-width version error_level))
     (set! mode_indicator (get-mode-indicator mode))
     (set! character_count_indicator (get-character-count-indicator character_count version mode))
-    (set! encoded_data (encode-a content))
+    (cond
+     [(string=? mode "A")
+      (set! encoded_data (encode-a content))]
+     [(string=? mode "B")
+      (set! encoded_data (encode-b content))]
+     [(string=? mode "N")
+      (set! encoded_data (encode-n content))])
 
     ;; stage1: data origin
     (set! encoded_data_stage1 (string-append mode_indicator character_count_indicator encoded_data))
