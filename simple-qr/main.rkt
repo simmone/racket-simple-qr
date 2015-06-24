@@ -68,14 +68,10 @@
 
     (draw-dark-module dc version module_width points_exists_map)
     
-    (draw-points-exists dc version module_width points_exists_map)
-    
-    (printf "version=~a hash-count=~a\n" version (hash-count points_exists_map))
+;    (draw-points-exists dc version module_width points_exists_map)
     
     (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
           [trace_list (snake-modules modules #:skip_points_hash points_exists_map)])
-      (printf "~a\n" (length trace_list))
-      (printf "~a\n" (length data_list))
       (draw-data dc module_width data_list trace_list points_exists_map))
     )
 

@@ -15,7 +15,7 @@
 (define (draw-data dc module_width data_list trace_list points_exists_map)
   (let loop ([loop_data_list data_list]
              [loop_trace_list trace_list])
-    (when (not (null? loop_data_list))
+    (when (and (not (null? loop_data_list)) (not (null? loop_trace_list)))
           (let ([bit_data (car loop_data_list)]
                 [point_pair (car loop_trace_list)])
             (if (char=? bit_data #\1)
@@ -32,7 +32,9 @@
                 [result_list '()])
 
        (if (and (not (null? result_list)) (equal? (car result_list) end_point))
-           result_list
+           (if (hash-has-key? skip_hash (car result_list))
+               (cdr result_list)
+               result_list)
            (begin
              (if (and (not (null? result_list)) (hash-has-key? skip_hash (car result_list)))
                  (loop point current_move (cdr result_list))
