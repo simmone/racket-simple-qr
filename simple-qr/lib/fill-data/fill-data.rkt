@@ -6,11 +6,18 @@
 
 (define (snake-modules modules)
   (reverse
-   (let ([points_sum_count (* modules modules)])
+   (let ([points_sum_count (- (* modules modules) modules)])
      (let loop ([point (cons modules modules)]
                 [current_move 'up_left]
                 [result_list '()])
-       (printf "~a:~a:~a\n" point current_move (length result_list))
+
+       (when (= (cdr point) 7)
+             (set! point (cons (car point) (- (cdr point) 1))))
+
+;       (if (= (remainder (sub1 (car point)) modules) 0)
+;           (printf "\n~a " point)
+;           (printf "~a " point))
+
        (if (= (length result_list) points_sum_count)
            result_list
            (let ([next_point #f]
