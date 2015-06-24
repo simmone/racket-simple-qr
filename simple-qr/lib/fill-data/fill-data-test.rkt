@@ -28,10 +28,10 @@
        (1 . 2) (1 . 1) (2 . 2) (2 . 1) (3 . 2) (3 . 1) (4 . 2) (4 . 1) (5 . 2) (5 . 1) (6 . 2) (6 . 1) (7 . 2) (7 . 1) (8 . 2) (8 . 1) (9 . 2) (9 . 1) (10 . 2) (10 . 1) (11 . 2) (11 . 1) (12 . 2) (12 . 1) (13 . 2) (13 . 1) (14 . 2) (14 . 1) (15 . 2) (15 . 1) (16 . 2) (16 . 1) (17 . 2) (17 . 1)))
 
     (let ([skip_hash (make-hash)])
-      (hash-set! skip_hash "9-9" #t)
-      (hash-set! skip_hash "9-8" #t)
-      (hash-set! skip_hash "7-4" #t)
-      (hash-set! skip_hash "3-1" #t)
+      (hash-set! skip_hash '(9 . 9) #t)
+      (hash-set! skip_hash '(9 . 8) #t)
+      (hash-set! skip_hash '(7 . 4) #t)
+      (hash-set! skip_hash '(3 . 1) #t)
       (check-equal? 
        (snake-modules 9 #:skip_points_hash skip_hash)
        '(                (8 . 9) (8 . 8) (7 . 9) (7 . 8) (6 . 9) (6 . 8) (5 . 9) (5 . 8) (4 . 9) (4 . 8) (3 . 9) (3 . 8) (2 . 9) (2 . 8) (1 . 9) (1 . 8)

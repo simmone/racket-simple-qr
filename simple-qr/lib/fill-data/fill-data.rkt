@@ -34,7 +34,7 @@
        (if (and (not (null? result_list)) (equal? (car result_list) end_point))
            result_list
            (begin
-             (if (and (not (null? result_list)) (hash-has-key? skip_hash (point->str (car result_list))))
+             (if (and (not (null? result_list)) (hash-has-key? skip_hash (car result_list)))
                  (loop point current_move (cdr result_list))
                  (begin
                    (when (= (cdr point) 7)
@@ -68,8 +68,5 @@
                            (loop (cons modules (sub1 (cdr point))) 'up_left (cons point result_list))])
                          (loop next_point next_move (cons point result_list))))))))))))
 
-    (define (in-range? point modules)
-      (and (>= (car point) 1) (<= (car point) modules) (>= (cdr point) 1) (<= (cdr point) modules)))
-
-    (define (point->str point)
-      (string-append (number->string (car point)) "-" (number->string (cdr point))))
+(define (in-range? point modules)
+  (and (>= (car point) 1) (<= (car point) modules) (>= (cdr point) 1) (<= (cdr point) modules)))
