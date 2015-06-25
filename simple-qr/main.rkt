@@ -83,6 +83,10 @@
     (printf "alignment-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
     (set! trace_count (hash-count points_exists_map))
 
+    (draw-dark-module dc version module_width points_exists_map)
+    (printf "dark-module:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
+
 ;    (draw-points-exists dc version module_width points_exists_map)
     
     (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
