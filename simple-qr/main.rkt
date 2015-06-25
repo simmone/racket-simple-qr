@@ -53,25 +53,45 @@
 
             (loop-row (add1 row))))
 
-  (let ([points_exists_map (make-hash)])
+  (let* ([points_exists_map (make-hash)]
+         [sum_count (* modules modules)]
+         [trace_count (hash-count points_exists_map)])
+
+    (printf "start sum:~a\n" sum_count)
+
     (draw-finder-pattern dc modules module_width points_exists_map)
+    (printf "finder-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-separator dc modules module_width points_exists_map)
+    (printf "separator:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-timing-pattern dc modules module_width points_exists_map)
+    (printf "timing-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-format-information dc modules module_width points_exists_map)
+    (printf "format-information:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-version-information dc version modules module_width points_exists_map)
+    (printf "version-information:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-alignment-pattern dc version module_width points_exists_map)
+    (printf "alignment-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
 
     (draw-dark-module dc version module_width points_exists_map)
+    (printf "dark-module:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
+    (set! trace_count (hash-count points_exists_map))
     
 ;    (draw-points-exists dc version module_width points_exists_map)
     
     (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
           [trace_list (snake-modules modules #:skip_points_hash points_exists_map)])
+      (printf "data_length:~a trace_length:~a\n" (length data_list) (length trace_list))
       (draw-data dc module_width data_list trace_list points_exists_map))
     )
 
