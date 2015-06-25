@@ -22,7 +22,7 @@
    (hash-keys points_exists_map)))
 
 
-(let* ([data "http://chenxiao.info"]
+(let* ([data "http://sdkfajsdklfj/sdfjkasdflkajsdlkfjsdklfjaklsdjfal;ksdfjaklsdjflkasdjfklsjdfklajsdklfjasdklfjakls"]
        [mode "B"]
        [error_level "H"]
        [version (get-version data mode error_level)]
@@ -57,7 +57,7 @@
          [sum_count (* modules modules)]
          [trace_count (hash-count points_exists_map)])
 
-    (printf "start sum:~a\n" sum_count)
+    (printf "start version:~a modules:~a sum:~a\n" version modules sum_count)
 
     (draw-finder-pattern dc modules module_width points_exists_map)
     (printf "finder-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
@@ -83,10 +83,6 @@
     (printf "alignment-pattern:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
     (set! trace_count (hash-count points_exists_map))
 
-    (draw-dark-module dc version module_width points_exists_map)
-    (printf "dark-module:~a remain:~a\n" (- (hash-count points_exists_map) trace_count) (- sum_count (hash-count points_exists_map)))
-    (set! trace_count (hash-count points_exists_map))
-    
 ;    (draw-points-exists dc version module_width points_exists_map)
     
     (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
