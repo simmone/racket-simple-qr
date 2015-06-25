@@ -55,6 +55,7 @@
 
 ;; a0x2+a1x9 align a9x10 = a9x2+a10x9
 (define (poly-align-on-a poly ref_poly)
+  (printf "poly=[~a] ref_poly=[~a]\n" poly ref_poly)
   (let* ([poly_first_item (car (regexp-split #rx"\\+" poly))]
          [ref_poly_first_item (car (regexp-split #rx"\\+" ref_poly))]
          [poly_a (string->number (second (regexp-match #rx"a([0-9]+)x[0-9+]+" poly_first_item)))]
