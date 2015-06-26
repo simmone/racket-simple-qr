@@ -105,19 +105,19 @@
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "alignment"))
+                  (hash-set! points_exists_map point_pair "1"))
                 (first alignment_points))
 
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "alignment"))
+                  (hash-set! points_exists_map point_pair "0"))
                 (second alignment_points))
 
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "alignment"))
+                  (hash-set! points_exists_map point_pair "1"))
                 (third alignment_points))))))
      (get-center-point-sets (hash-ref *alignment_pattern_map* version))))
 

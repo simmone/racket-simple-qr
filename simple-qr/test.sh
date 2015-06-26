@@ -13,5 +13,6 @@ echo "func/poly";cd; cd $HOME_DIR/lib/func/poly;racket poly-dic-func-test.rkt
 echo "error-correct-code/poly-func";cd; cd $HOME_DIR/lib/error-correct-code;racket poly-func-test.rkt
 echo "error-correct-code";cd; cd $HOME_DIR/lib/error-correct-code;racket error-correct-code-test.rkt
 echo "fill-data";cd; cd $HOME_DIR/lib/fill-data;racket fill-data-test.rkt
+echo "mask-data";cd; cd $HOME_DIR/lib/mask-data;racket mask-data-test.rkt
 echo "lib";cd; cd $HOME_DIR/lib/;racket lib-test.rkt
 

@@ -46,6 +46,12 @@
       )
 
     )
+   
+   (test-case
+    "test-penalty-one"
+    
+    (let ([data 
+           '(((6 . 6))))))) 
        
     ))
 
