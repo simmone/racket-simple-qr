@@ -24,10 +24,11 @@
       (error "invalid version!")))
 
 (define (draw-module dc color place_pair module_width)
-  (send dc set-pen color 1 'solid)
-  (send dc set-brush color 'solid)
+  (when (not (string=? color "transparent"))
+        (send dc set-pen color 1 'solid)
+        (send dc set-brush color 'solid)
 
-  (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
+        (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width)))
 
 (define (locate-brick module_width place_pair)
   (cons (* (sub1 (cdr place_pair)) module_width)

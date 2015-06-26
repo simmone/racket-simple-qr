@@ -19,13 +19,9 @@
           (let ([bit_data (car loop_data_list)]
                 [point_pair (car loop_trace_list)])
             (if (char=? bit_data #\1)
-                (begin
                   (hash-set! points_exists_map point_pair '("1" . "data"))
-                  (draw-module dc "black" (locate-brick module_width point_pair) module_width))
-                (begin
-                  (hash-set! points_exists_map point_pair '("0" . "data"))
-                  (draw-module dc "white" (locate-brick module_width point_pair) module_width)))
-          (loop (cdr loop_data_list) (cdr loop_trace_list))))))
+                  (hash-set! points_exists_map point_pair '("0" . "data"))))
+          (loop (cdr loop_data_list) (cdr loop_trace_list)))))
 
 (define (snake-modules modules #:skip_points_hash [skip_hash (make-hash)])
   (let ([start_point (cons modules modules)]
