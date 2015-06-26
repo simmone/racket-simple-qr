@@ -47,17 +47,17 @@
     (for-each
      (lambda (point_pair)
        (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-       (hash-set! points_exists_map point_pair "0"))
+       (hash-set! points_exists_map point_pair '("0" . "separator")))
      (transform-points-list (first *separator_points*) top_left_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "0"))
+        (hash-set! points_exists_map point_pair '("0" . "separator")))
       (transform-points-list (second *separator_points*) new_bottom_left_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "0"))
+        (hash-set! points_exists_map point_pair '("0" . "separator")))
       (transform-points-list (third *separator_points*) new_bottom_point))))

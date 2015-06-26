@@ -100,24 +100,24 @@
          (when (andmap
                 (lambda (point)
                   (or (not (hash-has-key? points_exists_map point))
-                      (and (hash-has-key? points_exists_map point) (string=? (hash-ref points_exists_map point) "timing"))))
+                      (and (hash-has-key? points_exists_map point) (string=? (cdr (hash-ref points_exists_map point)) "timing"))))
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() alignment_points))
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "1"))
+                  (hash-set! points_exists_map point_pair '("1" . "alignment")))
                 (first alignment_points))
 
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "0"))
+                  (hash-set! points_exists_map point_pair '("0" . "alignment")))
                 (second alignment_points))
 
                (for-each
                 (lambda (point_pair)
                   (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-                  (hash-set! points_exists_map point_pair "1"))
+                  (hash-set! points_exists_map point_pair '("1" . "alignmengt")))
                 (third alignment_points))))))
      (get-center-point-sets (hash-ref *alignment_pattern_map* version))))
 

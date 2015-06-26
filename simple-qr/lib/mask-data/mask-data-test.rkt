@@ -47,12 +47,6 @@
 
     )
    
-   (test-case
-    "test-penalty-one"
-    
-    (let ([data 
-           '(((6 . 6))))))) 
-       
     ))
 
   (run-tests test-mask-data)

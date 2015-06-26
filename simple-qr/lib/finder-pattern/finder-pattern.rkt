@@ -34,18 +34,18 @@
      (for-each
       (lambda (point_pair)
         (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "1"))
+        (hash-set! points_exists_map point_pair '("1" . "finder")))
       (transform-points-list (first *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "0"))
+        (hash-set! points_exists_map point_pair '("0" . "finder")))
       (transform-points-list (second *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "1"))
+        (hash-set! points_exists_map point_pair '("1" . "finder")))
       (transform-points-list (third *finder_pattern_points*) start_point)))
    (locate-finder-pattern modules)))

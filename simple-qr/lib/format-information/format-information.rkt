@@ -42,17 +42,17 @@
     (for-each
      (lambda (point_pair)
        (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-       (hash-set! points_exists_map point_pair "0"))
+       (hash-set! points_exists_map point_pair '("0" . "format")))
      (transform-points-list (first *information_points*) top_left_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "0"))
+        (hash-set! points_exists_map point_pair '("0" . "format")))
       (transform-points-list (second *information_points*) new_bottom_left_point))
 
      (for-each
       (lambda (point_pair)
         (draw-module dc "white" (locate-brick module_width point_pair) module_width)
-        (hash-set! points_exists_map point_pair "0"))
+        (hash-set! points_exists_map point_pair '("0" . "format")))
       (transform-points-list (third *information_points*) new_bottom_point))))

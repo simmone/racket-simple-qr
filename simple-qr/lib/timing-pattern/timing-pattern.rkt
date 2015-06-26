@@ -44,21 +44,21 @@
             (let ([point (car points)])
               (if (= (remainder (car point) 2) 1)
                   (begin
-                    (hash-set! points_exists_map point "1")
+                    (hash-set! points_exists_map point '("1" . "timing"))
                     (draw-module dc "black" (locate-brick module_width point) module_width))
                   (begin
-                    (hash-set! points_exists_map point "0")
+                    (hash-set! points_exists_map point '("0" . "timing"))
                     (draw-module dc "white" (locate-brick module_width point) module_width))))
             (loop (cdr points))))
 
     (let loop ([points horizontal_points])
       (when (not (null? points))
             (let ([point (car points)])
-              (hash-set! points_exists_map point "timing")
-              (begin
-                (hash-set! points_exists_map point "1")
-                (draw-module dc "black" (locate-brick module_width point) module_width))
-              (begin
-                (hash-set! points_exists_map point "0")
-                (draw-module dc "white" (locate-brick module_width point) module_width)))
+              (if (= (remainder (cdr point) 2) 1)
+                  (begin
+                    (hash-set! points_exists_map point '("1" . "timing"))
+                    (draw-module dc "black" (locate-brick module_width point) module_width))
+                  (begin
+                    (hash-set! points_exists_map point '("0" . "timing"))
+                    (draw-module dc "white" (locate-brick module_width point) module_width))))
             (loop (cdr points))))))
