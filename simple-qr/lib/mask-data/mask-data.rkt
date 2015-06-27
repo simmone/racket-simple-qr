@@ -6,6 +6,8 @@
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
           [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
+          [mask-condition3 (-> list? exact-nonnegative-integer?)]
+          [mask-on-condition3 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           ))
 
 (define *mask_proc_hash*
@@ -117,3 +119,27 @@
               (loop (cdr loop_list) (+ sum 3))
               (loop (cdr loop_list) sum)))
         sum)))
+
+(define (mask-condition3 row)
+  (let ([row_str (foldr string-append "" row)])
+    (if
+     (or
+      (regexp-match #rx"10111010000" row_str)
+      (regexp-match #rx"00001011101" row_str))
+     40
+     0)))
+
+(define (mask-on-condition3 modules points_map)
+  (foldr 
+   + 0 
+   (map
+    (lambda (row)
+      (mask-condition3 row))
+    (map
+     (lambda (point_row)
+       (map
+        (lambda (point)
+          (hash-ref points_map point))
+        point_row))
+     (split-matrix modules)))))
+

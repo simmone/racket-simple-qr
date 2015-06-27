@@ -130,6 +130,18 @@
       ))
 
    (test-case
+    "test-condition3"
+
+    (check-equal? (mask-condition3 '("1" "0" "1" "1" "1" "0" "1" "0" "0" "0" "0")) 40)
+    (check-equal? (mask-condition3 '("1" "0" "1" "0" "1" "1" "1" "0" "1" "0" "0" "0" "0" "1")) 40)
+    (check-equal? (mask-condition3 '("1" "0" "1" "0" "1" "1" "1" "0" "1" "0" "0" "1" "0" "1")) 0)
+
+    (check-equal? (mask-condition3 '("0" "0" "0" "0" "1" "0" "1" "1" "1" "0" "1")) 40)
+    (check-equal? (mask-condition3 '("1" "0" "0" "0" "0" "1" "0" "1" "1" "1" "0" "1" "0")) 40)
+    (check-equal? (mask-condition3 '("1" "0" "0" "0" "0" "1" "0" "1" "1" "1" "0" "0" "0")) 0)
+    )
+
+   (test-case
     "test-evaluation"
 
     (let ([matrix (split-matrix 21)]
@@ -183,6 +195,8 @@
       (check-equal? (mask-on-condition1 21 points_map) 180)
 
       (check-equal? (mask-on-condition2 points_map) 90)
+
+      (check-equal? (mask-on-condition3 21 points_map) 80)
       ))
    ))
 
