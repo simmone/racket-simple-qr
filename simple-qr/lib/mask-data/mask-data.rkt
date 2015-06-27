@@ -1,13 +1,14 @@
 #lang racket
 
 (provide (contract-out
-          [mask-data (-> list? exact-nonnegative-integer? list?)]
+          [mask-data (-> hash? void?)]
+          [mask-func (-> list? exact-nonnegative-integer? list?)]
           [split-matrix (-> exact-nonnegative-integer? list?)]
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
+          [mask-on-condition1 (-> hash? exact-nonnegative-integer?)]
           [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
           [mask-condition3 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition3 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
+          [mask-on-condition3 (-> hash? exact-nonnegative-integer?)]
           [mask-on-condition4 (-> hash? exact-nonnegative-integer?)]
           ))
 
@@ -23,7 +24,72 @@
    7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
    ))
 
-(define (mask-data data_list mask_number)
+(define (mask-data points_map)
+  (let ([modules (sqrt (hash-count points_map))]
+        [data_list #f]
+        [simplified_points_map (make-hash)]
+        )
+
+    (hash-for-each
+     points_map
+     (lambda (point val_pair)
+       (hash-set! simplified_points_map point (car val_pair))))
+
+    (set! data_list 
+          (let loop ([loop_list (hash->list simplified_points_map)]
+                     [result_list '()])
+            (if (not (null? loop_list))
+                (if (string=? (cdr (hash-ref points_map (caar loop_list))) "data")
+                    (loop (cdr loop_list) (cons (car loop_list) result_list))
+                    (loop (cdr loop_list) result_list))
+                result_list)))
+    
+    (let* ([mask_list
+            (map
+             (lambda (mask_number)
+               (let ([new_points_map (hash-copy simplified_points_map)])
+                 (for-each
+                  (lambda (item)
+                    (hash-set! new_points_map (car item) (cdr item)))
+                  (mask-func data_list mask_number))
+                 new_points_map))
+             '(0 1 2 3 4 5 6 7))]
+           [penalty_list
+            (map
+             (lambda (new_points_map)
+               (+
+                (mask-on-condition1 new_points_map)
+                (mask-on-condition2 new_points_map)
+                (mask-on-condition3 new_points_map)
+                (mask-on-condition4 new_points_map)))
+             mask_list)]
+           [penalty_map (make-hash)]
+           [result_points_map #f])
+
+;      (printf "penalty_list:~a\n" penalty_list)
+      
+      (let loop ([loop_list penalty_list]
+                 [index 0])
+        (when (not (null? loop_list))
+              (hash-set! penalty_map (car loop_list) index)
+              (loop (cdr loop_list) (add1 index))))
+      
+      (set! result_points_map (list-ref mask_list (hash-ref penalty_map (apply min penalty_list))))
+
+;      (printf "~a\n"
+;              (+
+;               (mask-on-condition1 result_points_map)
+;               (mask-on-condition2 result_points_map)
+;               (mask-on-condition3 result_points_map)
+;               (mask-on-condition4 result_points_map)))
+
+      (hash-for-each
+       result_points_map
+       (lambda (point val)
+         (let ([val_pair (hash-ref points_map point)])
+           (hash-set! points_map point (cons val (cdr val_pair)))))))))
+
+(define (mask-func data_list mask_number)
   (let ([mask-func (hash-ref *mask_proc_hash* mask_number)])
     (reverse
      (let loop ([loop_list data_list]
@@ -89,7 +155,7 @@
                 (loop (cdr loop_list) (car loop_list) 1))))
     sum_count))
 
-(define (mask-on-condition1 modules points_map)
+(define (mask-on-condition1 points_map)
   (foldr 
    + 0 
    (map
@@ -101,7 +167,7 @@
         (lambda (point)
           (hash-ref points_map point))
         point_row))
-     (split-matrix modules)))))
+     (split-matrix (sqrt (hash-count points_map)))))))
 
 (define (mask-on-condition2 points_map)
   (let loop ([loop_list (hash-keys points_map)]
@@ -130,7 +196,7 @@
      40
      0)))
 
-(define (mask-on-condition3 modules points_map)
+(define (mask-on-condition3 points_map)
   (foldr 
    + 0 
    (map
@@ -142,7 +208,7 @@
         (lambda (point)
           (hash-ref points_map point))
         point_row))
-     (split-matrix modules)))))
+     (split-matrix (sqrt (hash-count points_map)))))))
 
 (define (mask-on-condition4 points_map)
   (let ([sum_count (hash-count points_map)]

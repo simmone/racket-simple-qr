@@ -16,35 +16,35 @@
 
     (let ([data '(((2 . 3) . "1") ((3 . 4) . "0") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "0"))])
       (check-equal? 
-       (mask-data data 0)
+       (mask-func data 0)
        '(((2 . 3) . "1") ((3 . 4) . "0") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "0") ((2 . 4) . "1")))
 
       (check-equal? 
-       (mask-data data 1)
+       (mask-func data 1)
        '(((2 . 3) . "0") ((3 . 4) . "0") ((4 . 5) . "0") ((6 . 7) . "1") ((7 . 7) . "1") ((2 . 4) . "1")))
 
       (check-equal? 
-       (mask-data data 2)
+       (mask-func data 2)
        '(((2 . 3) . "0") ((3 . 4) . "0") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "0")))
 
       (check-equal? 
-       (mask-data data 3)
+       (mask-func data 3)
        '(((2 . 3) . "1") ((3 . 4) . "0") ((4 . 5) . "0") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "1")))
 
       (check-equal? 
-       (mask-data data 4)
+       (mask-func data 4)
        '(((2 . 3) . "0") ((3 . 4) . "1") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "1")))
 
       (check-equal? 
-       (mask-data data 5)
+       (mask-func data 5)
        '(((2 . 3) . "0") ((3 . 4) . "1") ((4 . 5) . "1") ((6 . 7) . "1") ((7 . 7) . "1") ((2 . 4) . "0")))
 
       (check-equal? 
-       (mask-data data 6)
+       (mask-func data 6)
        '(((2 . 3) . "0") ((3 . 4) . "1") ((4 . 5) . "0") ((6 . 7) . "1") ((7 . 7) . "0") ((2 . 4) . "1")))
 
       (check-equal? 
-       (mask-data data 7)
+       (mask-func data 7)
        '(((2 . 3) . "1") ((3 . 4) . "0") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "1")))
       )
 
@@ -230,11 +230,11 @@
 ;        (system "open test.png")
 ;        )
       
-      (check-equal? (mask-on-condition1 21 points_map) 180)
+      (check-equal? (mask-on-condition1 points_map) 180)
 
       (check-equal? (mask-on-condition2 points_map) 90)
 
-      (check-equal? (mask-on-condition3 21 points_map) 80)
+      (check-equal? (mask-on-condition3 points_map) 80)
 
       (check-equal? (mask-on-condition4 points_map) 0)
       ))

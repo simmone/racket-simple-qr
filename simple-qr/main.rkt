@@ -9,6 +9,7 @@
 (require "lib/dark-module/dark-module.rkt")
 (require "lib/data-encoding/data-encoding.rkt")
 (require "lib/fill-data/fill-data.rkt")
+(require "lib/mask-data/mask-data.rkt")
 (require "lib/lib.rkt")
 (require "lib/func/func.rkt")
 
@@ -87,7 +88,10 @@
       ; (printf "data_length:~a trace_length:~a\n" (length data_list) (length trace_list))
       (draw-data dc module_width data_list trace_list points_map))
 
-    (draw-points dc version module_width points_map)
+
+    (mask-data points_map)
+
+    (draw-points dc module_width points_map)
     )
 
   (send target save-file "box.png" 'png)
