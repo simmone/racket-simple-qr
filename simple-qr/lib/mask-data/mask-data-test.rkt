@@ -109,6 +109,25 @@
     (check-equal? (mask-condition1 '("1" "1" "1" "1" "1" "1" "1" "1" "1" "0" "0" "0" "0" "0" "0" "0" "0")) 13)
     (check-equal? (mask-condition1 '("1" "1" "1" "1" "1" "1" "1" "1" "1" "0" "0" "0" "0" "0" "0" "0" "0" "0")) 14)
     )
+   
+   (test-case
+    "test-on-condition2"
+    
+    (let ([points_map (make-hash)])
+      (hash-set! points_map '(1 . 1) "1") (hash-set! points_map '(1 . 2) "1") (hash-set! points_map '(1 . 3) "1")
+      (hash-set! points_map '(2 . 1) "1") (hash-set! points_map '(2 . 2) "1") (hash-set! points_map '(2 . 3) "1")
+      (hash-set! points_map '(3 . 1) "1") (hash-set! points_map '(3 . 2) "1") (hash-set! points_map '(3 . 3) "1")
+
+      (check-equal? (mask-on-condition2 points_map) 12)
+      
+      (hash-set! points_map '(3 . 3) "0")
+
+      (check-equal? (mask-on-condition2 points_map) 9)
+
+      (hash-set! points_map '(2 . 3) "0")
+
+      (check-equal? (mask-on-condition2 points_map) 6)
+      ))
 
    (test-case
     "test-evaluation"
@@ -162,6 +181,8 @@
 ;        )
       
       (check-equal? (mask-on-condition1 21 points_map) 180)
+
+      (check-equal? (mask-on-condition2 points_map) 90)
       ))
    ))
 

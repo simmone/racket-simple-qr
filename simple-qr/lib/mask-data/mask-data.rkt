@@ -5,6 +5,7 @@
           [split-matrix (-> exact-nonnegative-integer? list?)]
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
           [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
+          [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
           ))
 
 (define *mask_proc_hash*
@@ -79,10 +80,10 @@
        [(> single_count 5)
         (set! sum_count (add1 sum_count))])
 
-    (when (not (null? loop_list))
-          (if (string=? (car loop_list) last_item)
-              (loop (cdr loop_list) (car loop_list) (add1 single_count))
-              (loop (cdr loop_list) (car loop_list) 1))))
+      (when (not (null? loop_list))
+            (if (string=? (car loop_list) last_item)
+                (loop (cdr loop_list) (car loop_list) (add1 single_count))
+                (loop (cdr loop_list) (car loop_list) 1))))
     sum_count))
 
 (define (mask-on-condition1 modules points_map)
@@ -98,5 +99,21 @@
           (hash-ref points_map point))
         point_row))
      (split-matrix modules)))))
-         
-         
+
+(define (mask-on-condition2 points_map)
+  (let loop ([loop_list (hash-keys points_map)]
+             [sum 0])
+    (if (not (null? loop_list))
+        (let* ([row (caar loop_list)]
+               [col (cdar loop_list)]
+               [val (hash-ref points_map (car loop_list))]
+               [point2 (cons row (add1 col))]
+               [point3 (cons (add1 row) col)]
+               [point4 (cons (add1 row) (add1 col))])
+          (if (and
+               (hash-has-key? points_map point2) (string=? (hash-ref points_map point2) val)
+               (hash-has-key? points_map point3) (string=? (hash-ref points_map point3) val)
+               (hash-has-key? points_map point4) (string=? (hash-ref points_map point4) val))
+              (loop (cdr loop_list) (+ sum 3))
+              (loop (cdr loop_list) sum)))
+        sum)))
