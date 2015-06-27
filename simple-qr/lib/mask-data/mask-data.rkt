@@ -8,6 +8,7 @@
           [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
           [mask-condition3 (-> list? exact-nonnegative-integer?)]
           [mask-on-condition3 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
+          [mask-on-condition4 (-> hash? exact-nonnegative-integer?)]
           ))
 
 (define *mask_proc_hash*
@@ -143,3 +144,4 @@
         point_row))
      (split-matrix modules)))))
 
+(define (mask-on-condition4 points_map)
