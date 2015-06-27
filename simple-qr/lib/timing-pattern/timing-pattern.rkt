@@ -22,7 +22,7 @@
     (list (list (cons 9  7) (cons joint 7))
           (list (cons 7  9) (cons 7 joint)))))
 
-(define (draw-timing-pattern dc modules module_width points_exists_map)
+(define (draw-timing-pattern dc modules module_width points_map)
   (let ([joints #f]
         [vertical_joints #f]
         [horizontal_joints #f]
@@ -43,14 +43,14 @@
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (car point) 2) 1)
-                  (hash-set! points_exists_map point '("1" . "timing"))
-                  (hash-set! points_exists_map point '("0" . "timing"))))
+                  (hash-set! points_map point '("1" . "timing"))
+                  (hash-set! points_map point '("0" . "timing"))))
             (loop (cdr points))))
 
     (let loop ([points horizontal_points])
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (cdr point) 2) 1)
-                  (hash-set! points_exists_map point '("1" . "timing"))
-                  (hash-set! points_exists_map point '("0" . "timing"))))
+                  (hash-set! points_map point '("1" . "timing"))
+                  (hash-set! points_map point '("0" . "timing"))))
             (loop (cdr points))))))

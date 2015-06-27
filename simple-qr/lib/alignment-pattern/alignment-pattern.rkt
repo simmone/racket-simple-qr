@@ -91,7 +91,7 @@
                                    (unquote-splicing result1_list))))
          result1_list))))
 
-(define (draw-alignment-pattern dc version module_width points_exists_map)
+(define (draw-alignment-pattern dc version module_width points_map)
   (for-each
    (lambda (center_point_origin)
      (let ([center_point (cons (add1 (car center_point_origin)) (add1 (cdr center_point_origin)))])
@@ -99,22 +99,22 @@
          ;; find if occupied with exists points
          (when (andmap
                 (lambda (point)
-                  (or (not (hash-has-key? points_exists_map point))
-                      (and (hash-has-key? points_exists_map point) (string=? (cdr (hash-ref points_exists_map point)) "timing"))))
+                  (or (not (hash-has-key? points_map point))
+                      (and (hash-has-key? points_map point) (string=? (cdr (hash-ref points_map point)) "timing"))))
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() alignment_points))
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_exists_map point_pair '("1" . "alignment")))
+                  (hash-set! points_map point_pair '("1" . "alignment")))
                 (first alignment_points))
 
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_exists_map point_pair '("0" . "alignment")))
+                  (hash-set! points_map point_pair '("0" . "alignment")))
                 (second alignment_points))
 
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_exists_map point_pair '("1" . "alignmengt")))
+                  (hash-set! points_map point_pair '("1" . "alignmengt")))
                 (third alignment_points))))))
      (get-center-point-sets (hash-ref *alignment_pattern_map* version))))
 

@@ -24,7 +24,7 @@
      (3 . 1) (3 . 2) (3 . 3) (3 . 4) (3 . 5) (3 . 6))
     ))
 
-(define (draw-version-information dc version modules module_width points_exists_map)
+(define (draw-version-information dc version modules module_width points_map)
   (when (>= version 7)
         (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
                [bottom_left_point (second finder_pattern_start_points)]
@@ -33,10 +33,10 @@
                [new_top_right_point (cons (car top_right_point) (- (cdr top_right_point) 4))])
           (for-each
            (lambda (point_pair)
-             (hash-set! points_exists_map point_pair '("0" . "version")))
+             (hash-set! points_map point_pair '("0" . "version")))
            (transform-points-list (first *version_points*) new_top_right_point))
 
           (for-each
            (lambda (point_pair)
-             (hash-set! points_exists_map point_pair '("0" . "version")))
+             (hash-set! points_map point_pair '("0" . "version")))
            (transform-points-list (second *version_points*) new_bottom_left_point)))))

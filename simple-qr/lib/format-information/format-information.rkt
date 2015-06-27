@@ -32,7 +32,7 @@
                                                                      (9 . 9))
     ((9 . 1) (9 . 2) (9 . 3) (9 . 4) (9 . 5) (9 . 6) (9 . 7) (9 . 8) (9 . 9))))
 
-(define (draw-format-information dc modules module_width points_exists_map)
+(define (draw-format-information dc modules module_width points_map)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [bottom_left_point (second finder_pattern_start_points)]
@@ -41,15 +41,15 @@
          [new_bottom_point (cons (car top_right_point) (sub1 (cdr top_right_point)))])
     (for-each
      (lambda (point_pair)
-       (hash-set! points_exists_map point_pair '("0" . "format")))
+       (hash-set! points_map point_pair '("0" . "format")))
      (transform-points-list (first *information_points*) top_left_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_exists_map point_pair '("0" . "format")))
+        (hash-set! points_map point_pair '("0" . "format")))
       (transform-points-list (second *information_points*) new_bottom_left_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_exists_map point_pair '("0" . "format")))
+        (hash-set! points_map point_pair '("0" . "format")))
       (transform-points-list (third *information_points*) new_bottom_point))))

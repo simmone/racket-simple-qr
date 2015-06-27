@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [mask-data (-> list? exact-nonnegative-integer? list?)]
+          [split-matrix (-> exact-nonnegative-integer? list?)]
           ))
 
 (define *mask_proc_hash*
@@ -33,4 +34,34 @@
   (if (string=? bit "1")
       "0"
       "1"))
-          
+
+(define (split-matrix modules)
+  `(,@(reverse
+       (let loop-row ([row 1]
+                      [result_list '()])
+         (if (<= row modules)
+             (loop-row (add1 row)
+                       (cons 
+                        (reverse
+                         (let loop-col ([col 1]
+                                        [row_list '()])
+                           (if (<= col modules)
+                               (loop-col (add1 col) (cons (cons row col) row_list))
+                               row_list)))
+                        result_list))
+             result_list)))
+
+    ,@(reverse
+       (let loop-row ([col 1]
+                      [result_list '()])
+         (if (<= col modules)
+             (loop-row (add1 col)
+                       (cons 
+                        (reverse
+                         (let loop-col ([row 1]
+                                        [col_list '()])
+                           (if (<= row modules)
+                               (loop-col (add1 row) (cons (cons row col) col_list))
+                               col_list)))
+                        result_list))
+             result_list)))))

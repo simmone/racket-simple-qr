@@ -28,21 +28,21 @@
                      (4 . 3) (4 . 4) (4 . 5)
                      (5 . 3) (5 . 4) (5 . 5))))
 
-(define (draw-finder-pattern dc modules module_width points_exists_map)
+(define (draw-finder-pattern dc modules module_width points_map)
   (for-each
    (lambda (start_point)
      (for-each
       (lambda (point_pair)
-        (hash-set! points_exists_map point_pair '("1" . "finder")))
+        (hash-set! points_map point_pair '("1" . "finder")))
       (transform-points-list (first *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_exists_map point_pair '("0" . "finder")))
+        (hash-set! points_map point_pair '("0" . "finder")))
       (transform-points-list (second *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_exists_map point_pair '("1" . "finder")))
+        (hash-set! points_map point_pair '("1" . "finder")))
       (transform-points-list (third *finder_pattern_points*) start_point)))
    (locate-finder-pattern modules)))
