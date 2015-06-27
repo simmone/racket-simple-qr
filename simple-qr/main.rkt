@@ -14,16 +14,7 @@
 
 (require racket/draw)
 
-
-(define (draw-points dc version module_width points_map)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (if (string=? (car val) "1")
-         (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-         (draw-module dc "white" (locate-brick module_width point_pair) module_width)))))
-
-  ;; draw the background, help to count module
+;; draw the background, help to count module
 (define (draw-background dc modules module_width)
   (let loop-row ([row 1])
     (when (<= row modules)

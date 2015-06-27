@@ -7,6 +7,8 @@
           [locate-brick (-> exact-nonnegative-integer? pair? pair?)]
           [locate-finder-pattern (-> exact-nonnegative-integer? list?)]
           [draw-module (-> (is-a?/c bitmap-dc%) (or/c (is-a?/c color%) string?) pair? exact-nonnegative-integer? void?)]
+          [draw-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
+          [draw-debug-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [transform-points-list (-> list? pair? list?)]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [add-terminator (-> string? exact-nonnegative-integer? string?)]
@@ -29,6 +31,31 @@
         (send dc set-brush color 'solid)
 
         (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width)))
+
+(define (draw-points dc module_width points_map)
+  (hash-for-each
+   points_map
+   (lambda (point_pair val)
+     (if (string=? (car val) "1")
+         (draw-module dc "black" (locate-brick module_width point_pair) module_width)
+         (draw-module dc "white" (locate-brick module_width point_pair) module_width)))))
+
+(define (draw-debug-module dc color place_pair module_width)
+  (if (string=? color "black")
+      (send dc set-pen "white" 1 'dot)
+      (send dc set-pen "black" 1 'dot))
+      
+  (send dc set-brush color 'solid)
+
+  (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
+
+(define (draw-debug-points dc module_width points_map)
+  (hash-for-each
+   points_map
+   (lambda (point_pair val)
+     (if (string=? val "1")
+         (draw-debug-module dc "black" (locate-brick module_width point_pair) module_width)
+         (draw-debug-module dc "white" (locate-brick module_width point_pair) module_width)))))
 
 (define (locate-brick module_width place_pair)
   (cons (* (sub1 (cdr place_pair)) module_width)
