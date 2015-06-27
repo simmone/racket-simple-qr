@@ -3,6 +3,8 @@
 (provide (contract-out
           [mask-data (-> list? exact-nonnegative-integer? list?)]
           [split-matrix (-> exact-nonnegative-integer? list?)]
+          [mask-condition1 (-> list? exact-nonnegative-integer?)]
+          [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           ))
 
 (define *mask_proc_hash*
@@ -65,3 +67,36 @@
                                col_list)))
                         result_list))
              result_list)))))
+
+(define (mask-condition1 row)
+  (let ([sum_count 0])
+    (let loop ([loop_list row]
+               [last_item ""]
+               [single_count 0])
+      (cond
+       [(= single_count 5)
+        (set! sum_count (+ sum_count 3))]
+       [(> single_count 5)
+        (set! sum_count (add1 sum_count))])
+
+    (when (not (null? loop_list))
+          (if (string=? (car loop_list) last_item)
+              (loop (cdr loop_list) (car loop_list) (add1 single_count))
+              (loop (cdr loop_list) (car loop_list) 1))))
+    sum_count))
+
+(define (mask-on-condition1 modules points_map)
+  (foldr 
+   + 0 
+   (map
+    (lambda (row)
+      (mask-condition1 row))
+    (map
+     (lambda (point_row)
+       (map
+        (lambda (point)
+          (hash-ref points_map point))
+        point_row))
+     (split-matrix modules)))))
+         
+         
