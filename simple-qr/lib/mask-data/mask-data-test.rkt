@@ -142,14 +142,41 @@
     )
 
    (test-case
-    "test-on-condition2"
+    "test-on-condition4"
     
     (let ([points_map (make-hash)])
       (hash-set! points_map '(1 . 1) "1") (hash-set! points_map '(1 . 2) "1") (hash-set! points_map '(1 . 3) "1")
       (hash-set! points_map '(2 . 1) "1") (hash-set! points_map '(2 . 2) "1") (hash-set! points_map '(2 . 3) "1")
       (hash-set! points_map '(3 . 1) "1") (hash-set! points_map '(3 . 2) "1") (hash-set! points_map '(3 . 3) "1")
 
+      (check-equal? (mask-on-condition4 points_map) 100)
+
+      (hash-set! points_map '(1 . 1) "0")
+      (check-equal? (mask-on-condition4 points_map) 70)
+
+      (hash-set! points_map '(1 . 2) "0")
+      (check-equal? (mask-on-condition4 points_map) 50)
+
+      (hash-set! points_map '(1 . 3) "0")
+      (check-equal? (mask-on-condition4 points_map) 30)
+
+      (hash-set! points_map '(2 . 1) "0")
       (check-equal? (mask-on-condition4 points_map) 10)
+
+      (hash-set! points_map '(2 . 2) "0")
+      (check-equal? (mask-on-condition4 points_map) 10)
+
+      (hash-set! points_map '(2 . 3) "0")
+      (check-equal? (mask-on-condition4 points_map) 30)
+
+      (hash-set! points_map '(3 . 1) "0")
+      (check-equal? (mask-on-condition4 points_map) 50)
+
+      (hash-set! points_map '(3 . 2) "0")
+      (check-equal? (mask-on-condition4 points_map) 70)
+
+      (hash-set! points_map '(3 . 3) "0")
+      (check-equal? (mask-on-condition4 points_map) 100)
       ))
 
    (test-case
@@ -208,6 +235,8 @@
       (check-equal? (mask-on-condition2 points_map) 90)
 
       (check-equal? (mask-on-condition3 21 points_map) 80)
+
+      (check-equal? (mask-on-condition4 points_map) 0)
       ))
    ))
 

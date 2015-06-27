@@ -145,3 +145,25 @@
      (split-matrix modules)))))
 
 (define (mask-on-condition4 points_map)
+  (let ([sum_count (hash-count points_map)]
+        [dark_count (foldr + 0 (map (lambda (val) (string->number val)) (hash-values points_map)))]
+        [bili #f]
+        [low_val #f]
+        [high_val #f]
+        [low_result #f]
+        [high_result #f])
+    (set! bili (* (/ dark_count sum_count) 100))
+    
+    (set! low_val (* (floor (/ bili 5)) 5))
+    
+    (set! high_val (* (ceiling (/ bili 5)) 5))
+
+    (set! low_result (/ (abs (- low_val 50)) 5))
+    (set! high_result (/ (abs (- high_val 50)) 5))
+
+    (if (< low_result high_result)
+        (* low_result 10)
+        (* high_result 10))))
+
+
+    
