@@ -75,7 +75,7 @@
     ; (printf "format-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
-    (draw-version-information version modules points_map)
+    (draw-reserved-version-information version modules points_map)
     ; (printf "version-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
@@ -90,6 +90,8 @@
 
     (let ([mask_number (mask-data modules points_map)])
       (draw-format-information error_level mask_number modules points_map))
+
+    (draw-version-information version modules points_map)
 
     (draw-points dc module_width points_map)
     )
