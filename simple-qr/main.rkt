@@ -15,9 +15,9 @@
 
 (require racket/draw)
 
-(let* ([data "HELLO WORLD"]
-       [mode "A"]
-       [error_level "Q"]
+(let* ([data "01234567"]
+       [mode "N"]
+       [error_level "M"]
        [version (get-version data mode error_level)]
        [modules (version->modules version)]
        [module_width 10]
@@ -30,42 +30,44 @@
     (printf "start version:~a modules:~a sum:~a\n" version modules sum_count)
 
     (draw-finder-pattern modules points_map)
-    ; (printf "finder-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "finder-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-separator modules points_map)
-    ; (printf "separator:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "separator:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-timing-pattern modules points_map)
-    ; (printf "timing-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "timing-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-alignment-pattern version points_map)
-    ; (printf "alignment-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "alignment-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-reserved-format-information modules points_map)
-    ; (printf "format-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "format-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-reserved-version-information version modules points_map)
-    ; (printf "version-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "version-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (draw-dark-module version points_map)
-    ; (printf "dark-module:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
+    (printf "dark-module:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
     (set! trace_count (hash-count points_map))
 
     (let ([data_list (string->list (matrix-data data #:mode mode #:error_level error_level))]
           [trace_list (snake-modules modules #:skip_points_hash points_map)])
-      ; (printf "data_length:~a trace_length:~a\n" (length data_list) (length trace_list))
+      (printf "data_length:~a trace_length:~a\n" (length data_list) (length trace_list))
       (draw-data data_list trace_list points_map))
 
     (let ([mask_number (mask-data modules points_map)])
       (draw-format-information error_level mask_number modules points_map))
+    (printf "format:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
 
     (draw-version-information version modules points_map)
+    (printf "version:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
 
     (let* ([canvas_width (* (+ modules 8) module_width)]
            [target (make-bitmap canvas_width canvas_width)]

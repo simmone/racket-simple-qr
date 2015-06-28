@@ -91,14 +91,14 @@
                      [trace_list (transform-points-list (first *trace_points*) new_bottom_left_point)])
             (when (and (not (null? data_list)) (not (null? trace_list)))
                   (if (char=? (car data_list) #\0)
-                      (hash-set! points_map (car trace_list) '("0" . "format"))
-                      (hash-set! points_map (car trace_list) '("1" . "format")))
+                      (hash-set! points_map (car trace_list) '("0" . "version"))
+                      (hash-set! points_map (car trace_list) '("1" . "version")))
                   (loop (cdr data_list) (cdr trace_list))))
 
           (let loop ([data_list (string->list (hash-ref *version_code_hash* version))]
                      [trace_list (transform-points-list (second *trace_points*) new_top_right_point)])
             (when (and (not (null? data_list)) (not (null? trace_list)))
                   (if (char=? (car data_list) #\0)
-                      (hash-set! points_map (car trace_list) '("0" . "format"))
-                      (hash-set! points_map (car trace_list) '("1" . "format")))
+                      (hash-set! points_map (car trace_list) '("0" . "version"))
+                      (hash-set! points_map (car trace_list) '("1" . "version")))
                   (loop (cdr data_list) (cdr trace_list)))))))

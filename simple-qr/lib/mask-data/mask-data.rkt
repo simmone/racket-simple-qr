@@ -57,6 +57,11 @@
            [penalty_list
             (map
              (lambda (new_points_map)
+;               (printf "condition1:~a\n" (mask-on-condition1 modules new_points_map))
+;               (printf "condition2:~a\n" (mask-on-condition2 new_points_map))
+;               (printf "condition3:~a\n" (mask-on-condition3 modules new_points_map))
+;               (printf "condition4:~a\n" (mask-on-condition4 new_points_map))
+
                (+
                 (mask-on-condition1 modules new_points_map)
                 (mask-on-condition2 new_points_map)
@@ -66,8 +71,6 @@
            [penalty_map (make-hash)]
            [result_points_map #f])
 
-;      (printf "penalty_list:~a\n" penalty_list)
-      
       (let loop ([loop_list penalty_list]
                  [index 0])
         (when (not (null? loop_list))
@@ -76,13 +79,6 @@
 
       (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
       (set! result_points_map (list-ref mask_list result_mask_number))
-
-;      (printf "~a\n"
-;              (+
-;               (mask-on-condition1 result_points_map)
-;               (mask-on-condition2 result_points_map)
-;               (mask-on-condition3 result_points_map)
-;               (mask-on-condition4 result_points_map)))
 
       (hash-for-each
        result_points_map
