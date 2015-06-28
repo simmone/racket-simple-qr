@@ -5,15 +5,8 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [locate-timing-pattern-joints (->
-                                         exact-nonnegative-integer?
-                                         list?)]
-          [draw-timing-pattern (->
-                                (is-a?/c bitmap-dc%)
-                                exact-nonnegative-integer?
-                                exact-nonnegative-integer?
-                                hash?
-                                void?)]
+          [locate-timing-pattern-joints (-> exact-nonnegative-integer? list?)]
+          [draw-timing-pattern (-> exact-nonnegative-integer? hash? void?)]
                                 
           ))
 
@@ -22,7 +15,7 @@
     (list (list (cons 9  7) (cons joint 7))
           (list (cons 7  9) (cons 7 joint)))))
 
-(define (draw-timing-pattern dc modules module_width points_map)
+(define (draw-timing-pattern modules points_map)
   (let ([joints #f]
         [vertical_joints #f]
         [horizontal_joints #f]

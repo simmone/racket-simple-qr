@@ -2,17 +2,12 @@
 
 (provide (contract-out 
           [snake-modules (->* (exact-nonnegative-integer?) (#:skip_points_hash hash?) list?)]
-          [draw-data (-> any/c
-                         exact-nonnegative-integer?
-                         list?
-                         list?
-                         hash?
-                         void?)]
+          [draw-data (-> list? list? hash? void?)]
           ))
 
 (require "../func/func.rkt")
 
-(define (draw-data dc module_width data_list trace_list points_map)
+(define (draw-data data_list trace_list points_map)
   (let loop ([loop_data_list data_list]
              [loop_trace_list trace_list])
     (when (not (null? loop_data_list))

@@ -3,12 +3,7 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [draw-version-information (-> any/c
-                                        exact-nonnegative-integer?
-                                        exact-nonnegative-integer?
-                                        exact-nonnegative-integer?
-                                        hash?
-                                        void?)]
+          [draw-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? void?)]
           ))
 
 (define *version_points*
@@ -24,7 +19,7 @@
      (3 . 1) (3 . 2) (3 . 3) (3 . 4) (3 . 5) (3 . 6))
     ))
 
-(define (draw-version-information dc version modules module_width points_map)
+(define (draw-version-information version modules points_map)
   (when (>= version 7)
         (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
                [bottom_left_point (second finder_pattern_start_points)]

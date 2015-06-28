@@ -5,17 +5,9 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [get-alignment-pattern-points (->
-                                         pair?
-                                         list?)]
-          [get-center-point-sets (->
-                                  list?
-                                  list?)]
-          [draw-alignment-pattern (-> any/c
-                                      exact-nonnegative-integer?
-                                      exact-nonnegative-integer?
-                                      hash?
-                                      void?)]
+          [get-alignment-pattern-points (-> pair? list?)]
+          [get-center-point-sets (-> list? list?)]
+          [draw-alignment-pattern (-> exact-nonnegative-integer? hash? void?)]
           ))
 
 (define *alignment_pattern_map*
@@ -91,7 +83,7 @@
                                    (unquote-splicing result1_list))))
          result1_list))))
 
-(define (draw-alignment-pattern dc version module_width points_map)
+(define (draw-alignment-pattern version points_map)
   (for-each
    (lambda (center_point_origin)
      (let ([center_point (cons (add1 (car center_point_origin)) (add1 (cdr center_point_origin)))])

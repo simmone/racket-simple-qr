@@ -3,11 +3,7 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [draw-finder-pattern (-> any/c
-                                   exact-nonnegative-integer?
-                                   exact-nonnegative-integer?
-                                   hash?
-                                   void?)]
+          [draw-finder-pattern (-> exact-nonnegative-integer? hash? void?)]
           ))
 
 (define *finder_pattern_points*
@@ -28,7 +24,7 @@
                      (4 . 3) (4 . 4) (4 . 5)
                      (5 . 3) (5 . 4) (5 . 5))))
 
-(define (draw-finder-pattern dc modules module_width points_map)
+(define (draw-finder-pattern modules points_map)
   (for-each
    (lambda (start_point)
      (for-each

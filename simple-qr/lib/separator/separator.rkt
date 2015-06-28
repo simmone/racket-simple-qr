@@ -3,11 +3,7 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [draw-separator (-> any/c
-                              exact-nonnegative-integer?
-                              exact-nonnegative-integer?
-                              hash?
-                              void?)]
+          [draw-separator (-> exact-nonnegative-integer? hash? void?)]
           ))
 
 (define *separator_points*
@@ -37,7 +33,7 @@
      (7 . 1)
      (8 . 1) (8 . 2) (8 . 3) (8 . 4) (8 . 5) (8 . 6) (8 . 7) (8 . 8))))
 
-(define (draw-separator dc modules module_width points_map)
+(define (draw-separator modules points_map)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [bottom_left_point (second finder_pattern_start_points)]

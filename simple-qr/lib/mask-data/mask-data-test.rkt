@@ -12,7 +12,7 @@
    "test-mask-data"
 
    (test-case
-    "test-mask-data"
+    "test-mask-func"
 
     (let ([data '(((2 . 3) . "1") ((3 . 4) . "0") ((4 . 5) . "1") ((6 . 7) . "0") ((7 . 7) . "1") ((2 . 4) . "0"))])
       (check-equal? 
@@ -230,11 +230,11 @@
 ;        (system "open test.png")
 ;        )
       
-      (check-equal? (mask-on-condition1 points_map) 180)
+      (check-equal? (mask-on-condition1 21 points_map) 180)
 
       (check-equal? (mask-on-condition2 points_map) 90)
 
-      (check-equal? (mask-on-condition3 points_map) 80)
+      (check-equal? (mask-on-condition3 21 points_map) 80)
 
       (check-equal? (mask-on-condition4 points_map) 0)
       ))

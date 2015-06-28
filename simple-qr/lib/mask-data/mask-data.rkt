@@ -1,14 +1,14 @@
 #lang racket
 
 (provide (contract-out
-          [mask-data (-> hash? void?)]
+          [mask-data (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           [mask-func (-> list? exact-nonnegative-integer? list?)]
           [split-matrix (-> exact-nonnegative-integer? list?)]
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition1 (-> hash? exact-nonnegative-integer?)]
+          [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
           [mask-condition3 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition3 (-> hash? exact-nonnegative-integer?)]
+          [mask-on-condition3 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
           [mask-on-condition4 (-> hash? exact-nonnegative-integer?)]
           ))
 
@@ -24,10 +24,10 @@
    7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
    ))
 
-(define (mask-data points_map)
-  (let ([modules (sqrt (hash-count points_map))]
-        [data_list #f]
+(define (mask-data modules points_map)
+  (let ([data_list #f]
         [simplified_points_map (make-hash)]
+        [result_mask_number #f]
         )
 
     (hash-for-each
@@ -58,9 +58,9 @@
             (map
              (lambda (new_points_map)
                (+
-                (mask-on-condition1 new_points_map)
+                (mask-on-condition1 modules new_points_map)
                 (mask-on-condition2 new_points_map)
-                (mask-on-condition3 new_points_map)
+                (mask-on-condition3 modules new_points_map)
                 (mask-on-condition4 new_points_map)))
              mask_list)]
            [penalty_map (make-hash)]
@@ -73,8 +73,9 @@
         (when (not (null? loop_list))
               (hash-set! penalty_map (car loop_list) index)
               (loop (cdr loop_list) (add1 index))))
-      
-      (set! result_points_map (list-ref mask_list (hash-ref penalty_map (apply min penalty_list))))
+
+      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
+      (set! result_points_map (list-ref mask_list result_mask_number))
 
 ;      (printf "~a\n"
 ;              (+
@@ -87,7 +88,8 @@
        result_points_map
        (lambda (point val)
          (let ([val_pair (hash-ref points_map point)])
-           (hash-set! points_map point (cons val (cdr val_pair)))))))))
+           (hash-set! points_map point (cons val (cdr val_pair)))))))
+  result_mask_number))
 
 (define (mask-func data_list mask_number)
   (let ([mask-func (hash-ref *mask_proc_hash* mask_number)])
@@ -155,7 +157,7 @@
                 (loop (cdr loop_list) (car loop_list) 1))))
     sum_count))
 
-(define (mask-on-condition1 points_map)
+(define (mask-on-condition1 modules points_map)
   (foldr 
    + 0 
    (map
@@ -167,7 +169,7 @@
         (lambda (point)
           (hash-ref points_map point))
         point_row))
-     (split-matrix (sqrt (hash-count points_map)))))))
+     (split-matrix modules)))))
 
 (define (mask-on-condition2 points_map)
   (let loop ([loop_list (hash-keys points_map)]
@@ -196,7 +198,7 @@
      40
      0)))
 
-(define (mask-on-condition3 points_map)
+(define (mask-on-condition3 modules points_map)
   (foldr 
    + 0 
    (map
@@ -208,7 +210,7 @@
         (lambda (point)
           (hash-ref points_map point))
         point_row))
-     (split-matrix (sqrt (hash-count points_map)))))))
+     (split-matrix modules)))))
 
 (define (mask-on-condition4 points_map)
   (let ([sum_count (hash-count points_map)]
