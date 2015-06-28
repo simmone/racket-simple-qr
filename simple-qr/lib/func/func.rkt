@@ -7,6 +7,7 @@
           [locate-brick (-> exact-nonnegative-integer? pair? pair?)]
           [locate-finder-pattern (-> exact-nonnegative-integer? list?)]
           [draw-module (-> (is-a?/c bitmap-dc%) (or/c (is-a?/c color%) string?) pair? exact-nonnegative-integer? void?)]
+          [draw-background (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? exact-nonnegative-integer? void?)]
           [draw-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [draw-debug-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [transform-points-list (-> list? pair? list?)]
@@ -36,9 +37,43 @@
   (hash-for-each
    points_map
    (lambda (point_pair val)
-     (if (string=? (car val) "1")
-         (draw-module dc "black" (locate-brick module_width point_pair) module_width)
-         (draw-module dc "white" (locate-brick module_width point_pair) module_width)))))
+     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
+       (if (string=? (car val) "1")
+           (draw-module dc "black" (locate-brick module_width new_point_pair) module_width)
+           (draw-module dc "white" (locate-brick module_width new_point_pair) module_width))))))
+
+(define (draw-debug-points dc module_width points_map)
+  (hash-for-each
+   points_map
+   (lambda (point_pair val)
+     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
+       (cond
+        [(string=? (cdr val) "finder")
+         (draw-module dc "red" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "separator")
+         (draw-module dc "green" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "timing")
+         (draw-module dc "brown" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "alignment")
+         (draw-module dc "blue" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "format")
+         (draw-module dc "teal" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "version")
+         (draw-module dc "magenta" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "dark")
+         (draw-module dc "pink" (locate-brick module_width new_point_pair) module_width)]
+        [(string=? (cdr val) "data")
+         (draw-module dc "black" (locate-brick module_width new_point_pair) module_width)])))))
+
+;; draw the background, help to count module
+(define (draw-background dc modules module_width)
+  (let loop-row ([row 1])
+    (when (<= row modules)
+          (let loop-col ([col 1])
+            (when (<= col modules)
+                  (draw-module dc "white" (locate-brick module_width (cons row col)) module_width)
+                  (loop-col (add1 col))))
+          (loop-row (add1 row)))))
 
 (define (draw-debug-module dc color place_pair module_width)
   (if (string=? color "black")
@@ -49,13 +84,6 @@
 
   (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
 
-(define (draw-debug-points dc module_width points_map)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (if (string=? val "1")
-         (draw-debug-module dc "black" (locate-brick module_width point_pair) module_width)
-         (draw-debug-module dc "white" (locate-brick module_width point_pair) module_width)))))
 
 (define (locate-brick module_width place_pair)
   (cons (* (sub1 (cdr place_pair)) module_width)

@@ -15,45 +15,19 @@
 
 (require racket/draw)
 
-;; draw the background, help to count module
-(define (draw-background dc modules module_width)
-  (let loop-row ([row 1])
-    (when (<= row modules)
-          (let loop-col ([col 1])
-            (when (<= col modules)
-                  (if (= (remainder col 2) 1)
-                      (draw-module dc "pink" (locate-brick module_width (cons row col)) module_width)
-                      (draw-module dc "orchid" (locate-brick module_width (cons row col)) module_width))
-                  (loop-col (add1 col))))
-
-          (let loop-col ([col 1])
-            (when (<= col modules)
-                  (when (= (remainder row 2) 0)
-                        (draw-module dc "orchid" (locate-brick module_width (cons row col)) module_width))
-                  (loop-col (add1 col))))
-
-            (loop-row (add1 row)))))
-
-(let* ([data "//http://weibo.com/1401771454/profile?rightmod=1&wvr=6&mod=personnumber"]
-       [mode "B"]
-       [error_level "H"]
+(let* ([data "HELLO WORLD"]
+       [mode "A"]
+       [error_level "Q"]
        [version (get-version data mode error_level)]
        [modules (version->modules version)]
        [module_width 10]
-       [canvas_width (* modules module_width)]
        )
-
-  (define target (make-bitmap canvas_width canvas_width))
-
-  (define dc (new bitmap-dc% [bitmap target]))
-
-;  (draw-background dc modules module_width)
 
   (let* ([points_map (make-hash)]
          [sum_count (* modules modules)]
          [trace_count (hash-count points_map)])
 
-    ; (printf "start version:~a modules:~a sum:~a\n" version modules sum_count)
+    (printf "start version:~a modules:~a sum:~a\n" version modules sum_count)
 
     (draw-finder-pattern modules points_map)
     ; (printf "finder-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map)))
@@ -93,11 +67,16 @@
 
     (draw-version-information version modules points_map)
 
-    (draw-points dc module_width points_map)
-    )
+    (let* ([canvas_width (* (+ modules 8) module_width)]
+           [target (make-bitmap canvas_width canvas_width)]
+           [dc (new bitmap-dc% [bitmap target])])
 
-  (send target save-file "box.png" 'png)
-  
-  (system "open box.png")
-)
+      (draw-background dc (+ modules 8) module_width)
+
+      (draw-points dc module_width points_map)
+
+      (send target save-file "box.png" 'png)
+      
+      (system "open box.png"))))
+
 
