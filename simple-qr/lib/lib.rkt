@@ -1,11 +1,9 @@
 #lang racket
 
 (provide (contract-out
-          [matrix-data (->* (string?) (#:mode string? #:error_level string?) string?)]
+          [matrix-data (-> string? #:version exact-nonnegative-integer? #:mode string? #:error_level string? string?)]
           [get-encoded-data-group-from-bit-string (-> string? exact-nonnegative-integer? string? list?)]
-          [get-encoded-data-group (->* (string?) 
-                                       (#:mode string? #:error_level string?)
-                                       list?)]
+          [get-encoded-data-group (-> string? #:version exact-nonnegative-integer? #:mode string? #:error_level string? list?)]
           [interleave-data-group (-> list? list?)]
           ))
 
@@ -17,17 +15,12 @@
 (require "data-encoding/data-encoding.rkt")
 (require "error-correct-code/error-correct-code.rkt")
 
-(define (matrix-data data #:mode [mode "B"] #:error_level [error_level "H"])
-  (let ([version #f]
-        [data_grouped #f]
+(define (matrix-data data #:version version #:mode mode #:error_level error_level)
+  (let ([data_grouped #f]
         [interleave_data_group #f]
         [padded_remainder_bits #f]
         )
-
-    (set! version (get-version data mode error_level))
-    ; (printf "st1: version=[~a]\n" version)
-
-    (set! data_grouped (get-encoded-data-group data #:mode mode #:error_level error_level))
+    (set! data_grouped (get-encoded-data-group data #:version version #:mode mode #:error_level error_level))
     ; (printf "st2: data_grouped=[~a]\n" data_grouped)
     
     (set! interleave_data_group (decimal-list-to-string (interleave-data-group data_grouped)))
@@ -70,14 +63,10 @@
               (error-code block_list version error_level)))
       (cadr origin_data_group)))))
 
-(define (get-encoded-data-group data #:mode [mode "B"] #:error_level [error_level "H"])
+(define (get-encoded-data-group data #:version version #:mode mode #:error_level error_level)
   (let ([version #f]
-        [bit_data #f]
-        )
+        [bit_data #f])
 
-    (set! version (get-version data mode error_level))
-    (printf "version=[~a] mode=[~a] error_level=[~a]\n" version mode error_level)
-    
     (set! bit_data (data-encode data #:mode mode #:error_level error_level))
     (printf "bit_data=~a\n" (cut-string bit_data))
 
