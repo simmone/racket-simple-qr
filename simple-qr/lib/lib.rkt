@@ -34,7 +34,7 @@
     ; (printf "st3: interleave_data_group=[~a]\n" interleave_data_group)
     
     (set! padded_remainder_bits (~a interleave_data_group #:min-width (+ (string-length interleave_data_group) (get-remainder-bits version)) #:right-pad-string "0"))
-    ; (printf "st4: padded_remainder_bits=[~a]\n" padded_remainder_bits)
+     ; (printf "st4: padded_remainder_bits=[~a]\n" (cut-string padded_remainder_bits))
     
     padded_remainder_bits))
 
@@ -76,9 +76,10 @@
         )
 
     (set! version (get-version data mode error_level))
-    ; (printf "version=[~a] mode=[~a] error_level=[~a]\n" version mode error_level)
+    (printf "version=[~a] mode=[~a] error_level=[~a]\n" version mode error_level)
     
     (set! bit_data (data-encode data #:mode mode #:error_level error_level))
+    (printf "bit_data=~a\n" (cut-string bit_data))
 
     (get-encoded-data-group-from-bit-string bit_data version error_level)
     ))

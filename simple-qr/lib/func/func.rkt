@@ -19,6 +19,7 @@
           [split-decimal-list-on-contract (-> list? vector? list?)]
           [interleave-list (-> list? list?)]
           [decimal-list-to-string (-> list? string?)]
+          [cut-string (-> string? list)]
           ))
 
 (define (version->modules version)
@@ -219,3 +220,15 @@
        (lambda (num)
          (printf "~a" (~r num #:base 2 #:min-width 8 #:pad-string "0")))
        decimal_list))))
+
+(define (cut-string str)
+  (reverse
+   (let loop ([loop_str str]
+              [result_list '()])
+     (cond 
+      [(> (string-length loop_str) 8)
+       (loop (substring loop_str 8) (cons (substring loop_str 0 8) result_list))]
+      [(> (string-length loop_str) 0)
+       (cons loop_str result_list)]
+      [else
+       result_list]))))
