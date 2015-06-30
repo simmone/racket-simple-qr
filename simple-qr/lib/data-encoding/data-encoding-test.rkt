@@ -85,7 +85,7 @@
 
     (parameterize 
      ([*trace_level* 2])
-     (check-equal? (data-encode "01234567" #:version 1 #:mode "A" #:error_level "M")
+     (check-equal? (data-encode "01234567" #:version 1 #:mode "N" #:error_level "M")
                    "00010000001000000000110001010110011000011000000011101100000100011110110000010001111011000001000111101100000100011110110000010001"))
     )
 
