@@ -31,35 +31,31 @@
     )
 
    (test-case
-    "test-num-split-three"
-
-    (check-equal? (num-split-three "10000") '(100 0))
-    (check-equal? (num-split-three "10001") '(100 1))
-    (check-equal? (num-split-three "12345") '(123 45))
-    (check-equal? (num-split-three "1234567") '(123 456 7))
-    (check-equal? (num-split-three "123456") '(123 456))
-    (check-equal? (num-split-three "1") '(1))
-    (check-equal? (num-split-three "12") '(12))
-    (check-equal? (num-split-three "123") '(123))
-    (check-equal? (num-split-three "1234") '(123 4))
-    (check-equal? (num-split-three "01234") '(12 34))
-    (check-equal? (num-split-three "001234") '(1 234))
-    (check-equal? (num-split-three "0001234") '(0 123 4))
-    )
-
-   (test-case
     "test-encode-n"
     
-    (check-equal? (encode-n "1234567") "1111011111001000111")
+    (check-equal? (encode-n "1234567") "000111101101110010000111")
     )
     
    (test-case
-    "test-string-split-two"
+    "test-string-split"
 
-    (check-equal? (string-split-two "A") '("A"))
-    (check-equal? (string-split-two "AB") '("AB"))
-    (check-equal? (string-split-two "ABC") '("AB" "C"))
-    (check-equal? (string-split-two "ABCD") '("AB" "CD"))
+    (check-equal? (string-split "A" 2) '("A"))
+    (check-equal? (string-split "AB" 2) '("AB"))
+    (check-equal? (string-split "ABC" 2) '("AB" "C"))
+    (check-equal? (string-split "ABCD" 2) '("AB" "CD"))
+
+    (check-equal? (string-split "10000" 3) '("100" "00"))
+    (check-equal? (string-split "10001" 3) '("100" "01"))
+    (check-equal? (string-split "12345" 3) '("123" "45"))
+    (check-equal? (string-split "1234567" 3) '("123" "456" "7"))
+    (check-equal? (string-split "123456" 3) '("123" "456"))
+    (check-equal? (string-split "1" 3) '("1"))
+    (check-equal? (string-split "12" 3) '("12"))
+    (check-equal? (string-split "123" 3) '("123"))
+    (check-equal? (string-split "1234" 3) '("123" "4"))
+    (check-equal? (string-split "01234" 3) '("012" "34"))
+    (check-equal? (string-split "001234" 3) '("001" "234"))
+    (check-equal? (string-split "0001234" 3) '("000" "123" "4"))
     )
 
    (test-case

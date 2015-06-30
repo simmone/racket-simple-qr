@@ -5,9 +5,8 @@
           [get-mode-indicator (-> string? string?)]
           [get-character-count-indicator (-> exact-nonnegative-integer? exact-nonnegative-integer? string? string?)]
           [encode-b (-> string? string?)]
-          [num-split-three (-> string? list?)]
           [encode-n (-> string? string?)]
-          [string-split-two (-> string? list?)]
+          [string-split (-> string? exact-nonnegative-integer? list?)]
           [encode-a (-> string? string?)]
           [get-required-bits-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
           [data-encode (-> string? #:version exact-nonnegative-integer? #:mode string? #:error_level string? string?)]
@@ -41,29 +40,28 @@
          (printf "~a" (~r char_byte #:base 2 #:min-width 8 #:pad-string "0")))
        (bytes->list (string->bytes/latin-1 content))))))
 
-(define (num-split-three num_str)
+(define (string-split str num)
   (reverse
-   (let loop ([loop_str num_str]
+   (let loop ([loop_str str]
               [result_list '()])
-     (if (<= (string-length loop_str) 3)
-         (cons (string->number loop_str) result_list)
-         (loop (substring loop_str 3) (cons (string->number (substring loop_str 0 3)) result_list))))))
+     (if (<= (string-length loop_str) num)
+         (cons loop_str result_list)
+         (loop (substring loop_str num) (cons (substring loop_str 0 num) result_list))))))
 
 (define (encode-n content)
+  (trace (format "split:~a\n" (string-split content 3)) 2)
   (with-output-to-string
     (lambda ()
       (for-each
        (lambda (num)
-         (printf "~a" (~r num #:base 2)))
-       (num-split-three content)))))
-
-(define (string-split-two str)
-  (reverse
-   (let loop ([loop_str str]
-              [result_list '()])
-     (if (<= (string-length loop_str) 2)
-         (cons loop_str result_list)
-         (loop (substring loop_str 2) (cons (substring loop_str 0 2) result_list))))))
+         (cond
+          [(= (string-length num) 3)
+           (printf "~a" (~r (string->number num) #:base 2 #:min-width 10 #:pad-string "0"))]
+          [(= (string-length num) 2)
+           (printf "~a" (~r (string->number num) #:base 2 #:min-width 7 #:pad-string "0"))]
+          [(= (string-length num) 1)
+           (printf "~a" (~r (string->number num) #:base 2 #:min-width 4 #:pad-string "0"))]))
+       (string-split content 3)))))
 
 (define (encode-a str)
   (with-output-to-string
@@ -78,7 +76,7 @@
                     [num_2_value (get-alphanumeric-num num_2)]
                     [value (+ (* num_1_value 45) num_2_value)])
                (printf "~a" (~r value #:base 2 #:min-width 11 #:pad-string "0")))))
-       (string-split-two str)))))
+       (string-split str 2)))))
 
 (define (get-required-bits-width version error_level)
   (* 8 (get-bits-width version error_level)))
