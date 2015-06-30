@@ -64,11 +64,10 @@
       (cadr origin_data_group)))))
 
 (define (get-encoded-data-group data #:version version #:mode mode #:error_level error_level)
-  (let ([version #f]
-        [bit_data #f])
+  (let ([bit_data #f])
 
-    (set! bit_data (data-encode data #:mode mode #:error_level error_level))
-    (printf "bit_data=~a\n" (cut-string bit_data))
+    (set! bit_data (data-encode data #:version version #:mode mode #:error_level error_level))
+    (trace (format "bit_data=~a\n" (cut-string bit_data)) 1)
 
     (get-encoded-data-group-from-bit-string bit_data version error_level)
     ))

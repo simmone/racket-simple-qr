@@ -10,9 +10,7 @@
           [string-split-two (-> string? list?)]
           [encode-a (-> string? string?)]
           [get-required-bits-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
-          [data-encode (->* (string?) 
-                            (#:mode string? #:error_level string?)
-                            string?)]
+          [data-encode (-> string? #:version exact-nonnegative-integer? #:mode string? #:error_level string? string?)]
           ))
 
 (require "alphanumeric.rkt")
@@ -85,9 +83,8 @@
 (define (get-required-bits-width version error_level)
   (* 8 (get-bits-width version error_level)))
 
-(define (data-encode content #:mode [mode "B"] #:error_level [error_level "H"])
+(define (data-encode content #:version version #:mode mode #:error_level error_level)
   (let ([character_count #f]
-        [version #f]
         [mode_indicator #f]
         [character_count_indicator #f]
         [capacity_count #f]
@@ -98,10 +95,17 @@
         [encoded_data_stage4 #f])
     
     (set! character_count (string-length content))
-    (set! version (get-version content mode error_level))
+    (trace (format "character_count:~a\n" character_count) 2)
+
     (set! capacity_count (get-required-bits-width version error_level))
+    (trace (format "capacity_count:~a\n" capacity_count) 2)
+
     (set! mode_indicator (get-mode-indicator mode))
+    (trace (format "mode_indicator:~a\n" mode_indicator) 2)
+
     (set! character_count_indicator (get-character-count-indicator character_count version mode))
+    (trace (format "character_count_indicator:~a\n" character_count_indicator) 2)
+
     (cond
      [(string=? mode "A")
       (set! encoded_data (encode-a content))]
@@ -109,17 +113,22 @@
       (set! encoded_data (encode-b content))]
      [(string=? mode "N")
       (set! encoded_data (encode-n content))])
+    (trace (format "encoded_data:~a\n" (cut-string encoded_data)) 2)
 
     ;; stage1: data origin
     (set! encoded_data_stage1 (string-append mode_indicator character_count_indicator encoded_data))
+    (trace (format "encoded_data_stage1:~a\n" encoded_data_stage1) 2)
 
     ;; stage2: add terminator
     (set! encoded_data_stage2 (add-terminator encoded_data_stage1 capacity_count))
+    (trace (format "encoded_data_added_terminator:~a\n" encoded_data_stage2) 2)
 
     ;; stage3: add multiple eight
     (set! encoded_data_stage3 (add-multi-eight encoded_data_stage2))
+    (trace (format "encoded_data_added_multiple_eight:~a\n" encoded_data_stage3) 2)
 
     ;; stage4: repeat padding
     (set! encoded_data_stage4 (repeat-right-pad-string encoded_data_stage3 capacity_count "1110110000010001"))
+    (trace (format "encoded_data_added_repeat_padding:~a\n" encoded_data_stage4) 2)
 
     encoded_data_stage4))
