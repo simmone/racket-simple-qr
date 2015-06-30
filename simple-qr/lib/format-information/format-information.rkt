@@ -101,9 +101,11 @@
          [bottom_left_point (second finder_pattern_start_points)]
          [top_right_point (third finder_pattern_start_points)]
          [new_bottom_left_point (cons (sub1 (car bottom_left_point)) (cdr bottom_left_point))]
-         [new_bottom_point (cons (car top_right_point) (sub1 (cdr top_right_point)))])
+         [new_bottom_point (cons (car top_right_point) (sub1 (cdr top_right_point)))]
+         [format_string (hash-ref *error_level_code_hash* (string-append error_level "-" (number->string mask_number)))])
 
-    (let loop ([data_list (string->list (hash-ref *error_level_code_hash* (string-append error_level "-" (number->string mask_number))))]
+    (trace (format "format-string:~a\n" format_string) 1)
+    (let loop ([data_list (string->list format_string)]
                [trace_list (transform-points-list (first *information_points*) top_left_point)])
       (when (and (not (null? data_list)) (not (null? trace_list)))
             (if (char=? (car data_list) #\0)
@@ -111,7 +113,7 @@
                 (hash-set! points_map (car trace_list) '("1" . "format")))
             (loop (cdr data_list) (cdr trace_list))))
 
-    (let loop ([data_list (string->list (hash-ref *error_level_code_hash* (string-append error_level "-" (number->string mask_number))))]
+    (let loop ([data_list (string->list format_string)]
                [trace_list 
                 `(,@(transform-points-list (second *information_points*) new_bottom_point)
                   ,@(transform-points-list (third *information_points*) new_bottom_left_point))])

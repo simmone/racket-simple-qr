@@ -8,6 +8,7 @@
 (require "../func/code-log/code-log-func.rkt")
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/poly/poly-dic-func.rkt")
+(require "../func/func.rkt")
 (require "poly-func.rkt")
 
 (define (to-message-poly number_list)
@@ -29,49 +30,49 @@
         [poly_generator #f]
         )
 
-     ; (printf "error-code step by step\n")
+    (trace (format "error-code step by step\n") 2)
 
-     ; (printf "source=[~a]\n" number_list)
+    (trace (format "source=[~a]\n" number_list) 1)
 
     (set! ec_count (get-ec-count version error_level))
-     ; (printf "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count)
+    (trace (format "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count) 1)
 
     (set! origin_poly_message (to-message-poly number_list))
-     ; (printf "st2: origin_poly_message=[~a]\n" origin_poly_message)
+    (trace (format "st2: origin_poly_message=[~a]\n" origin_poly_message) 2)
 
     (set! origin_poly_generator (get-poly ec_count))
-     ; (printf "st3: origin_poly_generator=[~a]\n" origin_poly_generator)
+    (trace (format "st3: origin_poly_generator=[~a]\n" origin_poly_generator) 2)
 
     (set! poly_message (poly-multiply-x origin_poly_message ec_count))
     (set! poly_message_count (length (regexp-split #rx"\\+" poly_message)))
-     ; (printf "st4: poly_message=[~a] poly_message_count=[~a]\n" poly_message poly_message_count)
+    (trace (format "st4: poly_message=[~a] poly_message_count=[~a]\n" poly_message poly_message_count) 2)
     
     (set! poly_generator (poly-align-on-x origin_poly_generator poly_message))
-     ; (printf "st5: poly_generator=[~a]\n" poly_generator)
+    (trace (format "st5: poly_generator=[~a]\n" poly_generator) 2)
     
     (let loop ([loop_poly_generator poly_generator]
                [loop_poly_message poly_message]
                [count 1])
       (if (<= count poly_message_count)
           (begin
-             ; (printf "step:~a1 message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator)
+            (trace (format "step:~a1 message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator) 2)
 
             (let ([loop_poly_generator_aligned_a #f]
                   [loop_poly_generator_aligned_v #f]
                   [loop_poly_message_v #f])
       
               (set! loop_poly_generator_aligned_a (poly-align-on-a loop_poly_generator loop_poly_message))
-               ; (printf "step:~a2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a)
+              (trace (format "step:~a2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a) 2)
 
               (set! loop_poly_generator_aligned_v (poly-a-to-v loop_poly_generator_aligned_a))
-               ; (printf "step:~a3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v)
+              (trace (format "step:~a3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v) 2)
 
               (set! loop_poly_message_v (poly-a-to-v loop_poly_message))
-               ; (printf "step:~a4 loop_poly_message_v=~a\n" count loop_poly_message_v)
+              (trace (format "step:~a4 loop_poly_message_v=~a\n" count loop_poly_message_v) 2)
 
                (let-values ([(skip_count loop_poly_message_result_v)
                              (poly-xor loop_poly_message_v loop_poly_generator_aligned_v)])
-                 ; (printf "step:~a5 loop_poly_message_xor_result_v=~a\n" count loop_poly_message_result_v)
+                 (trace (format "step:~a5 loop_poly_message_xor_result_v=~a\n" count loop_poly_message_result_v) 2)
 
                  (loop (poly-multiply-x loop_poly_generator (* skip_count -1)) (poly-v-to-a loop_poly_message_result_v) (+ count skip_count)))))
           (poly-get-codeword (poly-a-to-v loop_poly_message))))))
