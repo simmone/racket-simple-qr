@@ -14,6 +14,7 @@
 
 (require "../func/func.rkt")
 
+;; start from (0, 0)
 (define *mask_proc_hash*
   (hash
    0 (lambda (row column) (= (modulo (+ row column) 2) 0))
@@ -113,7 +114,7 @@
                  [bit (cdar loop_list)])
              (loop
               (cdr loop_list)
-              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
+              (cons (cons point_pair (if (mask-lb (sub1 (car point_pair)) (sub1 (cdr point_pair))) (switch-bit bit) bit)) result_list)))
            result_list)))))
 
 (define (switch-bit bit)
