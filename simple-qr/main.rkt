@@ -92,6 +92,4 @@
         (system "open box.png")))))
 
 (parameterize ([*trace_level* 1])
-              (qr-code "HTTP://CHENXIAO.INFO" #:mode "B" #:error_level "H"))
-
-
+              (qr-code "陈晓" #:mode "B"))

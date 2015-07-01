@@ -81,8 +81,7 @@
               (hash-set! penalty_map (car loop_list) index)
               (loop (cdr loop_list) (add1 index))))
 
-;      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
-      (set! result_mask_number 3)
+      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
       (set! result_points_map (list-ref mask_list result_mask_number))
       
       (trace (format "[21,21][21,20][20,21][20,20][19,21][19,20][18,21][18,20]=[~a~a~a~a~a~a~a~a]\n"
