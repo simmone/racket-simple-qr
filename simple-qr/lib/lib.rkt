@@ -21,12 +21,12 @@
         [padded_remainder_bits #f]
         )
     (set! data_grouped (get-encoded-data-group data #:version version #:mode mode #:error_level error_level))
-    (trace (format "st2: data_grouped=[~a]\n" data_grouped) 1)
+    (trace (format "st2: data_grouped=[~a]\n" data_grouped) 2)
     
     (set! interleave_data_group (decimal-list-to-string (interleave-data-group data_grouped)))
      
     (set! padded_remainder_bits (~a interleave_data_group #:min-width (+ (string-length interleave_data_group) (get-remainder-bits version)) #:right-pad-string "0"))
-    (trace (format "st4: padded_remainder_bits=[~a]\n" (cut-string padded_remainder_bits)) 1)
+    (trace (format "st4: padded_remainder_bits=[~a]\n" (cut-string padded_remainder_bits)) 2)
     
     padded_remainder_bits))
 
@@ -39,13 +39,13 @@
         )
 
     (set! decimal_list (split-bit-string-to-decimal bit_data))
-    (trace (format "decimal_list=[~a]\n" decimal_list) 1)
+    (trace (format "decimal_list=[~a]\n" decimal_list) 2)
     
     (set! split_contract (get-group-width version error_level))
-    (trace (format "split_contract=[~a]\n" split_contract) 1)
+    (trace (format "split_contract=[~a]\n" split_contract) 2)
     
     (set! origin_data_group (split-decimal-list-on-contract decimal_list split_contract))
-    (trace (format "data_group=[~a]\n" origin_data_group) 1)
+    (trace (format "data_group=[~a]\n" origin_data_group) 2)
     
     (list
      (map
@@ -64,7 +64,7 @@
   (let ([bit_data #f])
 
     (set! bit_data (data-encode data #:version version #:mode mode #:error_level error_level))
-    (trace (format "bit_data=~a\n" (cut-string bit_data)) 1)
+    (trace (format "bit_data=~a\n" (cut-string bit_data)) 2)
 
     (get-encoded-data-group-from-bit-string bit_data version error_level)
     ))

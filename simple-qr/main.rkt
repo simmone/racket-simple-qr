@@ -62,14 +62,22 @@
         (trace (format "data_length:~a trace_length:~a\n" (length data_list) (length trace_list)) 1)
         (draw-data data_list trace_list points_map))
 
+      (trace (format "[21,21][21,20][20,21][20,20][19,21][19,20][18,21][18,20]=[~a~a~a~a~a~a~a~a]\n"
+                     (car (hash-ref points_map '(21 . 21)))
+                     (car (hash-ref points_map '(21 . 20)))
+                     (car (hash-ref points_map '(20 . 21)))
+                     (car (hash-ref points_map '(20 . 20)))
+                     (car (hash-ref points_map '(19 . 21)))
+                     (car (hash-ref points_map '(19 . 20)))
+                     (car (hash-ref points_map '(18 . 21)))
+                     (car (hash-ref points_map '(18 . 20))))
+             1)
+
       (let ([mask_number (mask-data modules points_map)])
-        (set! mask_number 3)
         (trace (format "mask_number:~a\n" mask_number) 1)
         (draw-format-information error_level mask_number modules points_map))
-        (trace (format "format:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
 
-        (draw-version-information version modules points_map)
-        (trace (format "version:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
+      (draw-version-information version modules points_map)
 
       (let* ([canvas_width (* (+ modules 8) module_width)]
              [target (make-bitmap canvas_width canvas_width)]

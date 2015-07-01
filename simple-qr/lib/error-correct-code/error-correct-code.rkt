@@ -32,10 +32,10 @@
 
     (trace (format "error-code step by step\n") 2)
 
-    (trace (format "source=[~a]\n" number_list) 1)
+    (trace (format "source=[~a]\n" number_list) 2)
 
     (set! ec_count (get-ec-count version error_level))
-    (trace (format "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count) 1)
+    (trace (format "st1: version=[~a] error_level=[~a] ec_count=[~a]\n" version error_level ec_count) 2)
 
     (set! origin_poly_message (to-message-poly number_list))
     (trace (format "st2: origin_poly_message=[~a]\n" origin_poly_message) 2)

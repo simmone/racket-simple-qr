@@ -10,6 +10,7 @@
           [draw-background (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? exact-nonnegative-integer? void?)]
           [draw-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [draw-debug-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
+          [draw-block-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [transform-points-list (-> list? pair? list?)]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [add-terminator (-> string? exact-nonnegative-integer? string?)]
@@ -56,6 +57,15 @@
    points_map
    (lambda (point_pair val)
      (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
+       (if (string=? (car val) "1")
+           (draw-debug-module dc "black" (locate-brick module_width new_point_pair) module_width)
+           (draw-debug-module dc "white" (locate-brick module_width new_point_pair) module_width))))))
+
+(define (draw-block-points dc module_width points_map)
+  (hash-for-each
+   points_map
+   (lambda (point_pair val)
+     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
        (cond
         [(string=? (cdr val) "finder")
          (draw-module dc "red" (locate-brick module_width new_point_pair) module_width)]
@@ -92,7 +102,6 @@
   (send dc set-brush color 'solid)
 
   (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
-
 
 (define (locate-brick module_width place_pair)
   (cons (* (sub1 (cdr place_pair)) module_width)

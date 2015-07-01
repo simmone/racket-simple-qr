@@ -12,6 +12,8 @@
           [mask-on-condition4 (-> hash? exact-nonnegative-integer?)]
           ))
 
+(require "../func/func.rkt")
+
 (define *mask_proc_hash*
   (hash
    0 (lambda (row column) (= (modulo (+ row column) 2) 0))
@@ -43,7 +45,7 @@
                     (loop (cdr loop_list) (cons (car loop_list) result_list))
                     (loop (cdr loop_list) result_list))
                 result_list)))
-    
+
     (let* ([mask_list
             (map
              (lambda (mask_number)
@@ -57,10 +59,10 @@
            [penalty_list
             (map
              (lambda (new_points_map)
-;               (printf "condition1:~a\n" (mask-on-condition1 modules new_points_map))
-;               (printf "condition2:~a\n" (mask-on-condition2 new_points_map))
-;               (printf "condition3:~a\n" (mask-on-condition3 modules new_points_map))
-;               (printf "condition4:~a\n" (mask-on-condition4 new_points_map))
+               (trace (format "condition1:~a\n" (mask-on-condition1 modules new_points_map)) 2)
+               (trace (format "condition2:~a\n" (mask-on-condition2 new_points_map)) 2)
+               (trace (format "condition3:~a\n" (mask-on-condition3 modules new_points_map)) 2)
+               (trace (format "condition4:~a\n" (mask-on-condition4 new_points_map)) 2)
 
                (+
                 (mask-on-condition1 modules new_points_map)
@@ -70,6 +72,7 @@
              mask_list)]
            [penalty_map (make-hash)]
            [result_points_map #f])
+      (trace (format "penalty_list:~a\n" penalty_list) 1)
 
       (let loop ([loop_list penalty_list]
                  [index 0])
@@ -77,8 +80,21 @@
               (hash-set! penalty_map (car loop_list) index)
               (loop (cdr loop_list) (add1 index))))
 
-      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
+;      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
+      (set! result_mask_number 3)
       (set! result_points_map (list-ref mask_list result_mask_number))
+      
+      (trace (format "[21,21][21,20][20,21][20,20][19,21][19,20][18,21][18,20]=[~a~a~a~a~a~a~a~a]\n"
+                     (hash-ref result_points_map '(21 . 21))
+                     (hash-ref result_points_map '(21 . 20))
+                     (hash-ref result_points_map '(20 . 21))
+                     (hash-ref result_points_map '(20 . 20))
+                     (hash-ref result_points_map '(19 . 21))
+                     (hash-ref result_points_map '(19 . 20))
+                     (hash-ref result_points_map '(18 . 21))
+                     (hash-ref result_points_map '(18 . 20))
+                     )
+             1)
 
       (hash-for-each
        result_points_map
@@ -88,7 +104,7 @@
   result_mask_number))
 
 (define (mask-func data_list mask_number)
-  (let ([mask-func (hash-ref *mask_proc_hash* mask_number)])
+  (let ([mask-lb (hash-ref *mask_proc_hash* mask_number)])
     (reverse
      (let loop ([loop_list data_list]
                 [result_list '()])
@@ -97,7 +113,7 @@
                  [bit (cdar loop_list)])
              (loop
               (cdr loop_list)
-              (cons (cons point_pair (if (mask-func (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
+              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
            result_list)))))
 
 (define (switch-bit bit)
