@@ -97,7 +97,7 @@
     (trace (format "character_count:~a\n" character_count) 2)
 
     (set! capacity_count (get-required-bits-width version error_level))
-    (trace (format "capacity_count:~a\n" capacity_count) 2)
+    (trace (format "capacity_count:~a\n" capacity_count) 1)
 
     (set! mode_indicator (get-mode-indicator mode))
     (trace (format "mode_indicator:~a\n" mode_indicator) 2)
@@ -120,20 +120,19 @@
     ;; stage1: data origin
     (trace (format "mode_indicator:~a character_count_indicator:~a\n" mode_indicator character_count_indicator) 2)
     (set! encoded_data_stage1 (string-append mode_indicator character_count_indicator encoded_data))
-    (trace (format "encoded_data_after_add_mode_count_indicator:~a\n" (string-length encoded_data_stage1)) 2)
-    (trace (format "encoded_data_stage1:~a\n" encoded_data_stage1) 2)
+    (trace (format "encoded_data_stage1:[~a]~a\n" (string-length encoded_data_stage1) encoded_data_stage1) 2)
 
     ;; stage2: add terminator
     (set! encoded_data_stage2 (add-terminator encoded_data_stage1 capacity_count))
-    (trace (format "encoded_data_added_terminator:~a\n" encoded_data_stage2) 2)
+    (trace (format "encoded_data_added_terminator:[~a]~a\n" (string-length encoded_data_stage2) encoded_data_stage2) 2)
 
     ;; stage3: add multiple eight
     (set! encoded_data_stage3 (add-multi-eight encoded_data_stage2))
-    (trace (format "encoded_data_added_multiple_eight:~a\n" encoded_data_stage3) 2)
+    (trace (format "encoded_data_added_multiple_eight:[~a]~a\n" (string-length encoded_data_stage3) encoded_data_stage3) 2)
 
     ;; stage4: repeat padding
     (set! encoded_data_stage4 (repeat-right-pad-string encoded_data_stage3 capacity_count "1110110000010001"))
-    (trace (format "encoded_data_added_repeat_padding:~a\n" encoded_data_stage4) 2)
+    (trace (format "encoded_data_added_repeat_padding:[~a]~a\n" (string-length encoded_data_stage4) encoded_data_stage4) 2)
 
     (trace (format "encoded_data_length:~a\n" (string-length encoded_data_stage4)) 2)
 
