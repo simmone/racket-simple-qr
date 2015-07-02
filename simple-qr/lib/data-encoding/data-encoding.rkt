@@ -92,6 +92,7 @@
         [encoded_data_stage3 #f]
         [encoded_data_stage4 #f])
     
+    (trace (format "content:~a\n" content) 2)
     (set! character_count (string-length content))
     (trace (format "character_count:~a\n" character_count) 2)
 
@@ -111,10 +112,15 @@
       (set! encoded_data (encode-b content))]
      [(string=? mode "N")
       (set! encoded_data (encode-n content))])
+
     (trace (format "encoded_data:~a\n" (cut-string encoded_data)) 2)
 
+    (trace (format "encoded_data_length:~a\n" (string-length encoded_data)) 2)
+
     ;; stage1: data origin
+    (trace (format "mode_indicator:~a character_count_indicator:~a\n" mode_indicator character_count_indicator) 2)
     (set! encoded_data_stage1 (string-append mode_indicator character_count_indicator encoded_data))
+    (trace (format "encoded_data_after_add_mode_count_indicator:~a\n" (string-length encoded_data_stage1)) 2)
     (trace (format "encoded_data_stage1:~a\n" encoded_data_stage1) 2)
 
     ;; stage2: add terminator
@@ -128,5 +134,7 @@
     ;; stage4: repeat padding
     (set! encoded_data_stage4 (repeat-right-pad-string encoded_data_stage3 capacity_count "1110110000010001"))
     (trace (format "encoded_data_added_repeat_padding:~a\n" encoded_data_stage4) 2)
+
+    (trace (format "encoded_data_length:~a\n" (string-length encoded_data_stage4)) 2)
 
     encoded_data_stage4))

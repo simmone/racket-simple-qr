@@ -60,11 +60,6 @@
            [penalty_list
             (map
              (lambda (new_points_map)
-               (trace (format "condition1:~a\n" (mask-on-condition1 modules new_points_map)) 2)
-               (trace (format "condition2:~a\n" (mask-on-condition2 new_points_map)) 2)
-               (trace (format "condition3:~a\n" (mask-on-condition3 modules new_points_map)) 2)
-               (trace (format "condition4:~a\n" (mask-on-condition4 new_points_map)) 2)
-
                (+
                 (mask-on-condition1 modules new_points_map)
                 (mask-on-condition2 new_points_map)
@@ -73,7 +68,6 @@
              mask_list)]
            [penalty_map (make-hash)]
            [result_points_map #f])
-      (trace (format "penalty_list:~a\n" penalty_list) 1)
 
       (let loop ([loop_list penalty_list]
                  [index 0])
@@ -84,18 +78,6 @@
       (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
       (set! result_points_map (list-ref mask_list result_mask_number))
       
-      (trace (format "[21,21][21,20][20,21][20,20][19,21][19,20][18,21][18,20]=[~a~a~a~a~a~a~a~a]\n"
-                     (hash-ref result_points_map '(21 . 21))
-                     (hash-ref result_points_map '(21 . 20))
-                     (hash-ref result_points_map '(20 . 21))
-                     (hash-ref result_points_map '(20 . 20))
-                     (hash-ref result_points_map '(19 . 21))
-                     (hash-ref result_points_map '(19 . 20))
-                     (hash-ref result_points_map '(18 . 21))
-                     (hash-ref result_points_map '(18 . 20))
-                     )
-             1)
-
       (hash-for-each
        result_points_map
        (lambda (point val)
@@ -244,6 +226,3 @@
     (if (< low_result high_result)
         (* low_result 10)
         (* high_result 10))))
-
-
-    

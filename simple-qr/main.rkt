@@ -19,11 +19,11 @@
 
 (require racket/draw)
 
-(define (qr-code data #:mode [mode "B"] #:error_level [error_level "M"] #:module_width [module_width 10])
+(define (qr-code data #:mode [mode "B"] #:error_level [error_level "H"] #:module_width [module_width 10])
   (let* ([version (get-version data mode error_level)]
          [modules (version->modules version)])
 
-    (trace (format "start version:~a modules:~a\n" version modules) 1)
+    (trace (format "start version:~a mode:~a error_level:~a data_length:~a modules:~a\n" version mode error_level (string-length data) modules) 1)
 
     (let* ([points_map (make-hash)]
            [sum_count (* modules modules)]
@@ -62,19 +62,7 @@
         (trace (format "data_length:~a trace_length:~a\n" (length data_list) (length trace_list)) 1)
         (draw-data data_list trace_list points_map))
 
-      (trace (format "[21,21][21,20][20,21][20,20][19,21][19,20][18,21][18,20]=[~a~a~a~a~a~a~a~a]\n"
-                     (car (hash-ref points_map '(21 . 21)))
-                     (car (hash-ref points_map '(21 . 20)))
-                     (car (hash-ref points_map '(20 . 21)))
-                     (car (hash-ref points_map '(20 . 20)))
-                     (car (hash-ref points_map '(19 . 21)))
-                     (car (hash-ref points_map '(19 . 20)))
-                     (car (hash-ref points_map '(18 . 21)))
-                     (car (hash-ref points_map '(18 . 20))))
-             1)
-
       (let ([mask_number (mask-data modules points_map)])
-        (trace (format "mask_number:~a\n" mask_number) 1)
         (draw-format-information error_level mask_number modules points_map))
 
       (draw-version-information version modules points_map)
@@ -92,4 +80,4 @@
         (system "open box.png")))))
 
 (parameterize ([*trace_level* 1])
-              (qr-code "陈晓" #:mode "B"))
+              (qr-code "SDFASDFSDFASDFASDABCD" #:mode "A" #:error_level "M"))
