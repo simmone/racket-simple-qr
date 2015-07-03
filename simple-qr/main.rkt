@@ -26,36 +26,19 @@
     (trace (format "start version:~a mode:~a error_level:~a data_length:~a modules:~a\n" version mode error_level (string-length data) modules) 1)
 
     (let* ([points_map (make-hash)]
-           [sum_count (* modules modules)]
-           [trace_count (hash-count points_map)])
+           [type_map (make-hash)]
+           [sum_count (* modules modules)])
 
-      (draw-finder-pattern modules points_map)
-      (trace (format "finder-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-separator modules points_map)
-      (trace (format "separator:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-timing-pattern modules points_map)
-      (trace (format "timing-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-alignment-pattern version points_map)
-      (trace (format "alignment-pattern:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-reserved-format-information modules points_map)
-      (trace (format "format-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-reserved-version-information version modules points_map)
-      (trace (format "version-information:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
-
-      (draw-dark-module version points_map)
-      (trace (format "dark-module:~a remain:~a\n" (- (hash-count points_map) trace_count) (- sum_count (hash-count points_map))) 1)
-      (set! trace_count (hash-count points_map))
+      (draw-finder-pattern modules points_map type_map)
+      (draw-separator modules points_map type_map)
+      (draw-timing-pattern modules points_map type_map)
+      (draw-alignment-pattern version points_map type_map)
+      (draw-reserved-format-information modules points_map type_map)
+      (draw-reserved-version-information version modules points_map type_map)
+      (draw-dark-module version points_map type_map)
+      
+      (trace (format "finder[~a]separator[~a]timing[~a]alignment[~a]format[~a]version[~a]\n"
+                     
 
       (let ([data_list (string->list (matrix-data data #:version version #:mode mode #:error_level error_level))]
             [trace_list (snake-modules modules #:skip_points_hash points_map)])

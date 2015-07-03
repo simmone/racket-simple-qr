@@ -23,6 +23,7 @@
           [cut-string (-> string? list)]
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
+          [add-point (-> pair? string? hash? hash? void?)]
           ))
 
 (define *trace_level* (make-parameter 0))
@@ -249,3 +250,6 @@
        (cons loop_str result_list)]
       [else
        result_list]))))
+
+(define (add-point point type points_map type_map)
+  (hash-set! points_map point 
