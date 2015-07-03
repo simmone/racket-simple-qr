@@ -80,4 +80,4 @@
         (system "open box.png")))))
 
 (parameterize ([*trace_level* 1])
-              (qr-code "SDFASDFSDFASDFASDABCD" #:mode "A" #:error_level "M"))
+              (qr-code "SM" #:mode "A" #:error_level "M"))
