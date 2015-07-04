@@ -49,7 +49,7 @@
    points_map
    (lambda (point_pair val)
      (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
-       (if (string=? (car val) "1")
+       (if (string=? val "1")
            (draw-module dc "black" (locate-brick module_width new_point_pair) module_width)
            (draw-module dc "white" (locate-brick module_width new_point_pair) module_width))))))
 

@@ -92,7 +92,7 @@
          (when (andmap
                 (lambda (point)
                   (or (not (hash-has-key? points_map point))
-                      (and (hash-has-key? points_map point) (string=? (cdr (hash-ref points_map point)) "timing"))))
+                      (and (hash-has-key? points_map point) (string=? (hash-ref type_map point) "timing"))))
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() alignment_points))
                (for-each
                 (lambda (point_pair)

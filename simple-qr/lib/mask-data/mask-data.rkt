@@ -26,6 +26,7 @@
    6 (lambda (row column) (= (modulo (+ (modulo (* row column) 2) (modulo (* row column) 3)) 2) 0))
    7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
    ))
+
 (define (mask-data modules points_map type_map)
   (let ([data_list #f]
         [result_mask_number #f]
@@ -35,7 +36,7 @@
           (let loop ([loop_list (hash->list points_map)]
                      [result_list '()])
             (if (not (null? loop_list))
-                (if (string=? (hash-ref type_map (car loop_list)) "data")
+                (if (string=? (hash-ref type_map (caar loop_list)) "data")
                     (loop (cdr loop_list) (cons (car loop_list) result_list))
                     (loop (cdr loop_list) result_list))
                 result_list)))
