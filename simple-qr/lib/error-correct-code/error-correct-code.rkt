@@ -55,24 +55,20 @@
                [count 1])
       (if (<= count poly_message_count)
           (begin
-            (trace (format "step:~a1 message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator) 2)
+            (trace (format "step:~a-1 message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator) 2)
 
             (let ([loop_poly_generator_aligned_a #f]
-                  [loop_poly_generator_aligned_v #f]
-                  [loop_poly_message_v #f])
+                  [loop_poly_generator_aligned_v #f])
       
               (set! loop_poly_generator_aligned_a (poly-align-on-a loop_poly_generator loop_poly_message))
-              (trace (format "step:~a2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a) 2)
+              (trace (format "step:~a-2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a) 2)
 
               (set! loop_poly_generator_aligned_v (poly-a-to-v loop_poly_generator_aligned_a))
-              (trace (format "step:~a3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v) 2)
+              (trace (format "step:~a-3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v) 2)
 
-              (set! loop_poly_message_v (poly-a-to-v loop_poly_message))
-              (trace (format "step:~a4 loop_poly_message_v=~a\n" count loop_poly_message_v) 2)
+              (let-values ([(skip_count loop_poly_message_result_v)
+                            (poly-xor loop_poly_message loop_poly_generator_aligned_v)])
+                (trace (format "step:~a-4 loop_poly_message_xor_result_v=~a\n" count loop_poly_message_result_v) 2)
 
-               (let-values ([(skip_count loop_poly_message_result_v)
-                             (poly-xor loop_poly_message_v loop_poly_generator_aligned_v)])
-                 (trace (format "step:~a5 loop_poly_message_xor_result_v=~a\n" count loop_poly_message_result_v) 2)
-
-                 (loop (poly-multiply-x loop_poly_generator (* skip_count -1)) (poly-v-to-a loop_poly_message_result_v) (+ count skip_count)))))
-          (poly-get-codeword (poly-a-to-v loop_poly_message))))))
+                (loop (poly-multiply-x loop_poly_generator (* skip_count -1)) loop_poly_message_result_v (+ count skip_count)))))
+          (poly-get-codeword loop_poly_message)))))

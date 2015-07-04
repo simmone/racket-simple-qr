@@ -74,7 +74,7 @@
       (hash-for-each
        result_points_map
        (lambda (point val)
-         (hash-set! points_map point val))))
+         (add-point point val "data" points_map type_map))))
   result_mask_number))
 
 (define (mask-func data_list mask_number)
