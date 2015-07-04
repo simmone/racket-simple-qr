@@ -29,17 +29,16 @@
    (lambda (start_point)
      (for-each
       (lambda (point_pair)
-        (hash-set! points_map point_pair '("1" . "finder"))
-        (hash-set! type_map
+        (add-point point_pair "1" "finder" points_map type_map))
       (transform-points-list (first *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_map point_pair '("0" . "finder")))
+        (add-point point_pair "0" "finder" points_map type_map))
       (transform-points-list (second *finder_pattern_points*) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_map point_pair '("1" . "finder")))
+        (add-point point_pair "1" "finder" points_map type_map))
       (transform-points-list (third *finder_pattern_points*) start_point)))
    (locate-finder-pattern modules)))
