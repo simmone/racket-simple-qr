@@ -2,6 +2,7 @@
 
 (provide (contract-out 
           [poly-multiply-x (-> string? exact-integer? string?)]
+          [message-multiply-x (-> string? exact-integer? string?)]
           [poly-align-on-x (-> string? string? string?)]
           [poly-multiply-a (-> string? exact-integer? string?)]
           [poly-align-on-a (-> string? string? string?)]
@@ -16,6 +17,20 @@
 (require "../func/code-log/code-log-func.rkt")
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/poly/poly-dic-func.rkt")
+
+;; (1x2+3x4)*x2 = 1x4+3x6
+(define (message-multiply-x poly_str x_log)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
+        (when (not (null? loop_list))
+              (let* ([result (regexp-match #rx"([0-9]+)x([0-9]+)" (car loop_list))]
+                     [a_index (list-ref result 1)]
+                     [x_index (list-ref result 2)])
+                (printf "~ax~a" a_index (+ (string->number x_index) x_log)))
+              (when (> (length loop_list) 1)
+                    (printf "+"))
+              (loop (cdr loop_list)))))))
 
 ;; (a1x2+a3x4)*x2 = a1x4+a3x6
 (define (poly-multiply-x poly_str x_log)
@@ -50,7 +65,7 @@
   (let* ([poly_first_item (car (regexp-split #rx"\\+" poly))]
          [ref_poly_first_item (car (regexp-split #rx"\\+" ref_poly))]
          [poly_x (string->number (second (regexp-match #rx"a[0-9]+x([0-9+]+)" poly_first_item)))]
-         [ref_poly_x (string->number (second (regexp-match #rx"a[0-9]+x([0-9+]+)" ref_poly_first_item)))])
+         [ref_poly_x (string->number (second (regexp-match #rx"[0-9]+x([0-9+]+)" ref_poly_first_item)))])
     (poly-multiply-x poly (- ref_poly_x poly_x))))
 
 ;; a0x2+a1x9 align a9x10 = a9x2+a10x9
@@ -58,8 +73,8 @@
   (let* ([poly_first_item (car (regexp-split #rx"\\+" poly))]
          [ref_poly_first_item (car (regexp-split #rx"\\+" ref_poly))]
          [poly_a (string->number (second (regexp-match #rx"a([0-9]+)x[0-9+]+" poly_first_item)))]
-         [ref_poly_a (string->number (second (regexp-match #rx"a([0-9]+)x[0-9+]+" ref_poly_first_item)))])
-    (poly-multiply-a poly (- ref_poly_a poly_a))))
+         [ref_poly_x (string->number (second (regexp-match #rx"([0-9]+)x[0-9+]+" ref_poly_first_item)))])
+    (poly-multiply-a poly (- (value->a ref_poly_x) poly_a))))
 
 (define (poly-a-to-v poly_str)
   (with-output-to-string

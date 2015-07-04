@@ -9,17 +9,24 @@
    "test-poly-func"
 
    (test-case
+    "test-message-multiply-x"
+    
+    (check-equal? (message-multiply-x "2x1+0x0" 5) "2x6+0x5")
+    (check-equal? (message-multiply-x "2x1+3x0+4x8" 10) "2x11+3x10+4x18")
+    )
+
+   (test-case
     "test-poly-multiply-x"
     
-    (check-equal? (poly-multiply-x "a2x1+a3x0" 5) "a2x6+a3x5")
+    (check-equal? (poly-multiply-x "a2x1+a0x0" 5) "a2x6+a0x5")
     (check-equal? (poly-multiply-x "a2x1+a3x0+a4x8" 10) "a2x11+a3x10+a4x18")
     )
 
    (test-case
     "test-poly-align-on-x"
     
-    (check-equal? (poly-align-on-x "a1x1+a2x4" "a0x7") "a1x7+a2x10")
-    (check-equal? (poly-align-on-x "a1x1+a2x4" "a0x7+a4x8") "a1x7+a2x10")
+    (check-equal? (poly-align-on-x "a1x1+a2x4" "0x7") "a1x7+a2x10")
+    (check-equal? (poly-align-on-x "a1x1+a2x4" "0x7+4x8") "a1x7+a2x10")
     )
 
    (test-case
@@ -32,11 +39,11 @@
    (test-case
     "test-poly-align-on-a"
     
-    (check-equal? (poly-align-on-a "a1x1+a2x4" "a7x7") "a7x1+a8x4")
-    (check-equal? (poly-align-on-a "a1x1+a2x4" "a7x7+a4x8") "a7x1+a8x4")
+    (check-equal? (poly-align-on-a "a1x1+a2x4" "32x7") "a5x1+a6x4")
+    (check-equal? (poly-align-on-a "a1x1+a2x4" "32x7+16x8") "a5x1+a6x4")
 
-    (check-equal? (poly-align-on-a "a1x1+a250x4" "a6x7") "a6x1+a0x4")
-    (check-equal? (poly-align-on-a "a1x1+a251x4" "a6x7") "a6x1+a1x4")
+    (check-equal? (poly-align-on-a "a1x1+a250x4" "64x7") "a6x1+a0x4")
+    (check-equal? (poly-align-on-a "a1x1+a251x4" "64x7") "a6x1+a1x4")
     )
 
    (test-case

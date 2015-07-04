@@ -16,7 +16,7 @@
     (lambda ()
       (let loop ([loop_list number_list])
         (when (not (null? loop_list))
-              (printf "a~ax~a" (value->a (car loop_list)) (sub1 (length loop_list)))
+              (printf "~ax~a" (car loop_list) (sub1 (length loop_list)))
               (when (> (length loop_list) 1)
                     (printf "+"))
               (loop (cdr loop_list)))))))
@@ -43,7 +43,7 @@
     (set! origin_poly_generator (get-poly ec_count))
     (trace (format "st3: origin_poly_generator=[~a]\n" origin_poly_generator) 2)
 
-    (set! poly_message (poly-multiply-x origin_poly_message ec_count))
+    (set! poly_message (message-multiply-x origin_poly_message ec_count))
     (set! poly_message_count (length (regexp-split #rx"\\+" poly_message)))
     (trace (format "st4: poly_message=[~a] poly_message_count=[~a]\n" poly_message poly_message_count) 2)
     
