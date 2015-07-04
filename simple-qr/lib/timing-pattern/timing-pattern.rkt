@@ -6,7 +6,7 @@
 
 (provide (contract-out
           [locate-timing-pattern-joints (-> exact-nonnegative-integer? list?)]
-          [draw-timing-pattern (-> exact-nonnegative-integer? hash? void?)]
+          [draw-timing-pattern (-> exact-nonnegative-integer? hash? hash? void?)]
                                 
           ))
 
@@ -15,7 +15,7 @@
     (list (list (cons 9  7) (cons joint 7))
           (list (cons 7  9) (cons 7 joint)))))
 
-(define (draw-timing-pattern modules points_map)
+(define (draw-timing-pattern modules points_map type_map)
   (let ([joints #f]
         [vertical_joints #f]
         [horizontal_joints #f]
@@ -36,14 +36,14 @@
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (car point) 2) 1)
-                  (hash-set! points_map point '("1" . "timing"))
-                  (hash-set! points_map point '("0" . "timing"))))
+                  (add-point point "1" "timing" points_map type_map)
+                  (add-point point "0" "timing" points_map type_map)))
             (loop (cdr points))))
 
     (let loop ([points horizontal_points])
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (cdr point) 2) 1)
-                  (hash-set! points_map point '("1" . "timing"))
-                  (hash-set! points_map point '("0" . "timing"))))
+                  (add-point point "1" "timing" points_map type_map)
+                  (add-point point "0" "timing" points_map type_map)))
             (loop (cdr points))))))

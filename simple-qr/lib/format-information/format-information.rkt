@@ -10,6 +10,7 @@
                                        exact-nonnegative-integer?
                                        exact-nonnegative-integer?
                                        hash?
+                                       hash?
                                        void?)]
           ))
 
@@ -73,7 +74,7 @@
          ("H-6" . "000110100001100")
          ("H-7" . "000100000111011")))
          
-(define (draw-reserved-format-information modules points_map)
+(define (draw-reserved-format-information modules points_map type_map)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [bottom_left_point (second finder_pattern_start_points)]
@@ -82,20 +83,20 @@
          [new_bottom_point (cons (car top_right_point) (sub1 (cdr top_right_point)))])
     (for-each
      (lambda (point_pair)
-       (hash-set! points_map point_pair '("0" . "format")))
+       (add-point (car trace_list) "0" "format" points_map type_map))
      (transform-points-list (first *information_points*) top_left_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_map point_pair '("0" . "format")))
+       (add-point (car trace_list) "0" "format" points_map type_map))
       (transform-points-list (second *information_points*) new_bottom_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! points_map point_pair '("0" . "format")))
+       (add-point (car trace_list) "0" "format" points_map type_map))
       (transform-points-list (third *information_points*) new_bottom_left_point))))
 
-(define (draw-format-information error_level mask_number modules points_map)
+(define (draw-format-information error_level mask_number modules points_map type_map)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [bottom_left_point (second finder_pattern_start_points)]
@@ -108,8 +109,8 @@
                [trace_list (transform-points-list (first *information_points*) top_left_point)])
       (when (and (not (null? data_list)) (not (null? trace_list)))
             (if (char=? (car data_list) #\0)
-                (hash-set! points_map (car trace_list) '("0" . "format"))
-                (hash-set! points_map (car trace_list) '("1" . "format")))
+                (add-point (car trace_list) "0" "format" points_map type_map)
+                (add-point (car trace_list) "1" "format" points_map type_map))
             (loop (cdr data_list) (cdr trace_list))))
 
     (let loop ([data_list (reverse (string->list format_string))]
@@ -118,6 +119,6 @@
                   ,@(transform-points-list (third *information_points*) new_bottom_left_point))])
       (when (and (not (null? data_list)) (not (null? trace_list)))
             (if (char=? (car data_list) #\0)
-                (hash-set! points_map (car trace_list) '("0" . "format"))
-                (hash-set! points_map (car trace_list) '("1" . "format")))
+                (add-point (car trace_list) "0" "format" points_map type_map)
+                (add-point (car trace_list) "1" "format" points_map type_map))
             (loop (cdr data_list) (cdr trace_list))))))

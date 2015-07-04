@@ -3,8 +3,8 @@
 (require "../func/func.rkt")
 
 (provide (contract-out
-          [draw-reserved-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? void?)]
-          [draw-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? void?)]
+          [draw-reserved-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? hash? void?)]
+          [draw-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? hash? void?)]
           ))
 
 (define *version_points*
@@ -20,7 +20,7 @@
      (3 . 1) (3 . 2) (3 . 3) (3 . 4) (3 . 5) (3 . 6))
     ))
 
-(define (draw-reserved-version-information version modules points_map)
+(define (draw-reserved-version-information version modules points_map type_map)
   (when (>= version 7)
         (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
                [bottom_left_point (second finder_pattern_start_points)]
@@ -29,12 +29,12 @@
                [new_top_right_point (cons (car top_right_point) (- (cdr top_right_point) 4))])
           (for-each
            (lambda (point_pair)
-             (hash-set! points_map point_pair '("0" . "version")))
+             (add-point point_pair "0" "version" points_map type_map))
            (transform-points-list (first *version_points*) new_top_right_point))
 
           (for-each
            (lambda (point_pair)
-             (hash-set! points_map point_pair '("0" . "version")))
+             (add-point point_pair "0" "version" points_map type_map))
            (transform-points-list (second *version_points*) new_bottom_left_point)))))
 
 (define *trace_points*
@@ -79,7 +79,7 @@
          (39 . "100111010101000001")
          (40 . "101000110001101001")))
 
-(define (draw-version-information version modules points_map)
+(define (draw-version-information version modules points_map type_map)
   (when (>= version 7)
         (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
                [bottom_left_point (second finder_pattern_start_points)]
@@ -91,14 +91,14 @@
                      [trace_list (transform-points-list (first *trace_points*) new_bottom_left_point)])
             (when (and (not (null? data_list)) (not (null? trace_list)))
                   (if (char=? (car data_list) #\0)
-                      (hash-set! points_map (car trace_list) '("0" . "version"))
-                      (hash-set! points_map (car trace_list) '("1" . "version")))
+                      (add-point point_pair "0" "version" points_map type_map)
+                      (add-point point_pair "1" "version" points_map type_map))
                   (loop (cdr data_list) (cdr trace_list))))
 
           (let loop ([data_list (string->list (hash-ref *version_code_hash* version))]
                      [trace_list (transform-points-list (second *trace_points*) new_top_right_point)])
             (when (and (not (null? data_list)) (not (null? trace_list)))
                   (if (char=? (car data_list) #\0)
-                      (hash-set! points_map (car trace_list) '("0" . "version"))
-                      (hash-set! points_map (car trace_list) '("1" . "version")))
+                      (add-point point_pair "0" "version" points_map type_map)
+                      (add-point point_pair "1" "version" points_map type_map))
                   (loop (cdr data_list) (cdr trace_list)))))))

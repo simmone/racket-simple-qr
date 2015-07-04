@@ -7,7 +7,7 @@
 (provide (contract-out
           [get-alignment-pattern-points (-> pair? list?)]
           [get-center-point-sets (-> list? list?)]
-          [draw-alignment-pattern (-> exact-nonnegative-integer? hash? void?)]
+          [draw-alignment-pattern (-> exact-nonnegative-integer? hash? hash? void?)]
           ))
 
 (define *alignment_pattern_map*
@@ -83,7 +83,7 @@
                                    (unquote-splicing result1_list))))
          result1_list))))
 
-(define (draw-alignment-pattern version points_map)
+(define (draw-alignment-pattern version points_map type_map)
   (for-each
    (lambda (center_point_origin)
      (let ([center_point (cons (add1 (car center_point_origin)) (add1 (cdr center_point_origin)))])
@@ -96,17 +96,17 @@
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() alignment_points))
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_map point_pair '("1" . "alignment")))
+                  (add-point point_pair "1" "alignment" points_map type_map))
                 (first alignment_points))
 
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_map point_pair '("0" . "alignment")))
+                  (add-point point_pair "0" "alignment" points_map type_map))
                 (second alignment_points))
 
                (for-each
                 (lambda (point_pair)
-                  (hash-set! points_map point_pair '("1" . "alignmengt")))
+                  (add-point point_pair "1" "alignment" points_map type_map))
                 (third alignment_points))))))
      (get-center-point-sets (hash-ref *alignment_pattern_map* version))))
 
