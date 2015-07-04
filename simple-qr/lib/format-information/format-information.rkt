@@ -5,7 +5,7 @@
 (require racket/format)
 
 (provide (contract-out
-          [draw-reserved-format-information (-> exact-nonnegative-integer? hash? void?)]
+          [draw-reserved-format-information (-> exact-nonnegative-integer? hash? hash? void?)]
           [draw-format-information (-> string?
                                        exact-nonnegative-integer?
                                        exact-nonnegative-integer?
@@ -83,17 +83,17 @@
          [new_bottom_point (cons (car top_right_point) (sub1 (cdr top_right_point)))])
     (for-each
      (lambda (point_pair)
-       (add-point (car trace_list) "0" "format" points_map type_map))
+       (add-point point_pair "0" "format" points_map type_map))
      (transform-points-list (first *information_points*) top_left_point))
 
      (for-each
       (lambda (point_pair)
-       (add-point (car trace_list) "0" "format" points_map type_map))
+       (add-point point_pair "0" "format" points_map type_map))
       (transform-points-list (second *information_points*) new_bottom_point))
 
      (for-each
       (lambda (point_pair)
-       (add-point (car trace_list) "0" "format" points_map type_map))
+       (add-point point_pair "0" "format" points_map type_map))
       (transform-points-list (third *information_points*) new_bottom_left_point))))
 
 (define (draw-format-information error_level mask_number modules points_map type_map)

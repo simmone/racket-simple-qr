@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-          [mask-data (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
+          [mask-data (-> exact-nonnegative-integer? hash? hash? exact-nonnegative-integer?)]
           [mask-func (-> list? exact-nonnegative-integer? list?)]
           [split-matrix (-> exact-nonnegative-integer? list?)]
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
@@ -26,23 +26,16 @@
    6 (lambda (row column) (= (modulo (+ (modulo (* row column) 2) (modulo (* row column) 3)) 2) 0))
    7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
    ))
-
-(define (mask-data modules points_map)
+(define (mask-data modules points_map type_map)
   (let ([data_list #f]
-        [simplified_points_map (make-hash)]
         [result_mask_number #f]
         )
 
-    (hash-for-each
-     points_map
-     (lambda (point val_pair)
-       (hash-set! simplified_points_map point (car val_pair))))
-
     (set! data_list 
-          (let loop ([loop_list (hash->list simplified_points_map)]
+          (let loop ([loop_list (hash->list points_map)]
                      [result_list '()])
             (if (not (null? loop_list))
-                (if (string=? (cdr (hash-ref points_map (caar loop_list))) "data")
+                (if (string=? (hash-ref type_map (car loop_list)) "data")
                     (loop (cdr loop_list) (cons (car loop_list) result_list))
                     (loop (cdr loop_list) result_list))
                 result_list)))
@@ -50,7 +43,7 @@
     (let* ([mask_list
             (map
              (lambda (mask_number)
-               (let ([new_points_map (hash-copy simplified_points_map)])
+               (let ([new_points_map (hash-copy points_map)])
                  (for-each
                   (lambda (item)
                     (hash-set! new_points_map (car item) (cdr item)))
@@ -81,8 +74,7 @@
       (hash-for-each
        result_points_map
        (lambda (point val)
-         (let ([val_pair (hash-ref points_map point)])
-           (hash-set! points_map point (cons val (cdr val_pair)))))))
+         (hash-set! points_map point val))))
   result_mask_number))
 
 (define (mask-func data_list mask_number)

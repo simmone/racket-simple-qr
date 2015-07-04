@@ -51,9 +51,9 @@
       (let ([data_list (string->list (matrix-data data #:version version #:mode mode #:error_level error_level))]
             [trace_list (snake-modules modules #:skip_points_hash points_map)])
         (trace (format "data_length:~a trace_length:~a\n" (length data_list) (length trace_list)) 1)
-        (draw-data data_list trace_list points_map))
+        (draw-data data_list trace_list points_map type_map))
 
-      (let ([mask_number (mask-data modules points_map)])
+      (let ([mask_number (mask-data modules points_map type_map)])
         (draw-format-information error_level mask_number modules points_map type_map))
 
       (draw-version-information version modules points_map type_map)
@@ -70,5 +70,5 @@
         
         (system "open box.png")))))
 
-(parameterize ([*trace_level* 1])
+(parameterize ([*trace_level* 2])
               (qr-code "SM" #:mode "A" #:error_level "M"))
