@@ -70,5 +70,5 @@
         
         (system "open box.png")))))
 
-(parameterize ([*trace_level* 1])
-              (qr-code "http://weibo.com/1401771454/"))
+(parameterize ([*trace_level* 2])
+              (qr-code "a.b.c.dsdkfasdkfjaskdfka00" #:error_level "H"))

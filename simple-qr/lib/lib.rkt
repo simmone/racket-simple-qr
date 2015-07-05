@@ -24,9 +24,10 @@
     (trace (format "st2: data_grouped=[~a]\n" data_grouped) 2)
     
     (set! interleave_data_group (decimal-list-to-string (interleave-data-group data_grouped)))
+    (trace (format "st3: interleave_data_group=[~a][~a]\n" (string-length interleave_data_group) interleave_data_group) 2)
      
     (set! padded_remainder_bits (~a interleave_data_group #:min-width (+ (string-length interleave_data_group) (get-remainder-bits version)) #:right-pad-string "0"))
-    (trace (format "st4: padded_remainder_bits=[~a]\n" (cut-string padded_remainder_bits)) 2)
+    (trace (format "st4: padded_remainder_bits=[~a][~a]\n" (string-length padded_remainder_bits) (cut-string padded_remainder_bits)) 2)
     
     padded_remainder_bits))
 
