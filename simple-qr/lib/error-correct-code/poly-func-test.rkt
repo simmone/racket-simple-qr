@@ -120,6 +120,12 @@
     (check-equal? (poly-get-codeword "196x9+35x8+39x7+119x6+235x5+215x4+231x3+226x2+93x1+23x0")
                   '(196  35  39  119  235  215  231  226  93  23))
     )
+   
+   (test-case
+    "test-poly-to-zero"
+    
+    (check-equal? (poly-to-zero "a1x10+a3x10+a4x6+a0x8") "0x10+0x10+0x6+0x8")
+    )
 
    ))
 

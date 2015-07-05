@@ -12,11 +12,13 @@
           [poly-cdr (-> string? string?)]
           [poly-append-zero (-> string? string?)]
           [poly-get-codeword (-> string? list?)]
+          [poly-to-zero (-> string? string?)]
           ))
 
 (require "../func/code-log/code-log-func.rkt")
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/poly/poly-dic-func.rkt")
+(require "../func/func.rkt")
 
 ;; (1x2+3x4)*x2 = 1x4+3x6
 (define (message-multiply-x poly_str x_log)
@@ -58,6 +60,20 @@
                 (printf "a~ax~a" (remainder (+ (string->number a_index) a_log) 255) x_index))
               (when (> (length loop_list) 1)
                     (printf "+"))
+              (loop (cdr loop_list)))))))
+
+(define (poly-to-zero poly_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list (regexp-split #rx"\\+" poly_str)])
+        (when (not (null? loop_list))
+              (let* ([result (regexp-match #rx"a([0-9]+)x([0-9]+)" (car loop_list))]
+                     [x_index (list-ref result 2)])
+                (printf "0x~a" x_index))
+
+              (when (> (length loop_list) 1)
+                    (printf "+"))
+
               (loop (cdr loop_list)))))))
 
 ;; a0x2+a1x9 align a0x10 = a0x10+a1x17
@@ -145,7 +161,7 @@
 
                           (when (null? message_loop_list) (set! message_a_index 0))
                           (when (null? generator_loop_list) (set! generator_a_index 0))
-
+                          
                           (let ([result_index (bitwise-xor message_a_index generator_a_index)])
                             (if (not (= result_index 0))
                                 (set! lead_zero? #f)
@@ -189,3 +205,4 @@
           (cdr loop_list)
           (cons (string->number (second (regexp-match #rx"([0-9]+)x[0-9]+" (car loop_list)))) result_list))
          result_list))))
+

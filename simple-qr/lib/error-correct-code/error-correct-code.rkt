@@ -56,19 +56,22 @@
       (if (<= count poly_message_count)
           (begin
             (trace (format "step:~a-1 message=[~a] generator=[~a]\n" count loop_poly_message loop_poly_generator) 3)
-
+            
             (let ([loop_poly_generator_aligned_a #f]
                   [loop_poly_generator_aligned_v #f])
-      
-              (set! loop_poly_generator_aligned_a (poly-align-on-a loop_poly_generator loop_poly_message))
-              (trace (format "step:~a-2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a) 3)
-
-              (set! loop_poly_generator_aligned_v (poly-a-to-v loop_poly_generator_aligned_a))
-              (trace (format "step:~a-3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v) 3)
+                  
+              (if (regexp-match #rx"^0x.*" loop_poly_message)
+                  (set! loop_poly_generator_aligned_v (poly-to-zero loop_poly_generator))
+                  (begin
+                    (set! loop_poly_generator_aligned_a (poly-align-on-a loop_poly_generator loop_poly_message))
+                    (trace (format "step:~a-2 loop_poly_generator_aligned_a=~a\n" count loop_poly_generator_aligned_a) 3)
+              
+                    (set! loop_poly_generator_aligned_v (poly-a-to-v loop_poly_generator_aligned_a))
+                    (trace (format "step:~a-3 loop_poly_generator_aligned_v=~a\n" count loop_poly_generator_aligned_v) 3)))
 
               (let-values ([(skip_count loop_poly_message_result_v)
                             (poly-xor loop_poly_message loop_poly_generator_aligned_v)])
-                (trace (format "step:~a-4 loop_poly_message_xor_result_v=~a\n" count loop_poly_message_result_v) 3)
+                (trace (format "step:~a-4 skip_count=[~a]loop_poly_message_xor_result_v=~a\n" count skip_count loop_poly_message_result_v) 3)
 
                 (loop (poly-multiply-x loop_poly_generator (* skip_count -1)) loop_poly_message_result_v (+ count skip_count)))))
           (poly-get-codeword loop_poly_message)))))

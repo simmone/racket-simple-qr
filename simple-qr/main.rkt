@@ -70,5 +70,5 @@
         
         (system "open box.png")))))
 
-(parameterize ([*trace_level* 2])
-              (qr-code "a.b.c.dsdkfasdkfjaskdfka00" #:error_level "H"))
+(parameterize ([*trace_level* 1])
+              (qr-code "a.b.c.dsdkfasdkfjaskdfka0" #:error_level "H"))

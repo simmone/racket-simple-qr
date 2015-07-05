@@ -38,7 +38,7 @@
    (test-case
     "test-get-encoded-data-group"
 
-    (check-equal? (get-encoded-data-group "HELLO WORLD" #:mode "B" #:error_level "Q")
+    (check-equal? (get-encoded-data-group "HELLO WORLD" #:version 1 #:mode "B" #:error_level "Q")
                   '(
                     (
                      ((64 180 132 84 196 196 242 5 116 245 36 196 64) (43 245 36 39 171 198 24 185 196 41 84 197 159))
