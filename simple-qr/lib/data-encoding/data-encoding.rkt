@@ -38,7 +38,7 @@
       (for-each
        (lambda (char_byte)
          (printf "~a" (~r char_byte #:base 2 #:min-width 8 #:pad-string "0")))
-       (bytes->list (string->bytes/latin-1 content))))))
+       (bytes->list (string->bytes/utf-8 content))))))
 
 (define (string-split str num)
   (reverse
