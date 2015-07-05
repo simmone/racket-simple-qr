@@ -1,3 +1,3 @@
 #lang info
 (define scribblings
-  '(("simple-qr.scrbl" (multi-page) (tool 100))))
+  '(("scribble/simple-qr.scrbl" (multi-page) (tool 100))))
