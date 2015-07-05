@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-          [qr-code (->* (string?) (#:mode string? #:error_level string? #:module_width exact-nonnegative-integer?) void?)]
+          [qr-code (->* (string? path-string?) (#:mode string? #:error_level string? #:module_width exact-nonnegative-integer?) void?)]
           ))
 
 (require "lib/finder-pattern/finder-pattern.rkt")
@@ -19,7 +19,7 @@
 
 (require racket/draw)
 
-(define (qr-code data #:mode [mode "B"] #:error_level [error_level "H"] #:module_width [module_width 10])
+(define (qr-code data file_name #:mode [mode "B"] #:error_level [error_level "H"] #:module_width [module_width 5])
   (let* ([version (get-version data mode error_level)]
          [modules (version->modules version)])
 
@@ -66,9 +66,4 @@
 
         (draw-points dc module_width points_map)
 
-        (send target save-file "box.png" 'png)
-        
-        (system "open box.png")))))
-
-(parameterize ([*trace_level* 1])
-              (qr-code "a.b.c.dsdkfasdkfjaskdfka0" #:error_level "H"))
+        (send target save-file file_name 'png)))))
