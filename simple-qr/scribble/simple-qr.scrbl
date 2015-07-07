@@ -16,6 +16,9 @@ raco pkg install simple-qr
 
 @section{Usage}  
 
+@defmodule[simple-qr]
+@(require (for-label simple-qr))
+
 @defproc[(qr-code
               [data (string?)]
               [output_file_path (path-string?)]
@@ -34,7 +37,7 @@ raco pkg install simple-qr
   (qr-code "Hello World!" "hello.png")
 }
 
-@image{hello.png}
+@image{scribble/hello.png}
 
 You can use the optional parameter #:module_width to control the size of image.
 
