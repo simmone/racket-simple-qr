@@ -55,11 +55,11 @@ module_width means a block(black or white)'s width. 5 is the default.
   (qr-code "https://github.com/simmone" "large.png" #:module_width 10)
 }
 
-@image{../../example/small.png}
+@image{example/small.png}
 
-@image{../../example/normal.png}
+@image{example/normal.png}
 
-@image{../../example/large.png}
+@image{example/large.png}
             
 @section{FAQ}
 
