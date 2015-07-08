@@ -2,7 +2,7 @@
 
 ;(require simple-qr)
 
-(require "../simple-qr/main.rkt")
+(require "../main.rkt")
 
 ;; block's default width is 5
 
