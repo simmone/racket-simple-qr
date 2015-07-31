@@ -18,9 +18,9 @@ A Qr Code Generator for Racket
   (qr-code "https://github.com/simmone" "large.png" #:module_width 10)
 
 ```
-![ScreenShot](example/small.png)
+![ScreenShot](simple-qr/example/small.png)
 
-![ScreenShot](example/normal.png)
+![ScreenShot](simple-qr/example/normal.png)
 
-![ScreenShot](example/large.png)
+![ScreenShot](simple-qr/example/large.png)
 

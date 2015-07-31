@@ -66,4 +66,5 @@
 
         (draw-points dc module_width points_map)
 
-        (send target save-file file_name 'png)))))
+        (send target save-file file_name 'png))))
+  (void))
