@@ -1,6 +1,6 @@
 # racket-simple-qr
 
-A Qr Code Generator for Racket
+A Qr Code Reader and Writer for Racket
 ==================
 
 # Install
