@@ -14,7 +14,7 @@
    ;module_width is 5
 
    (test-case
-    "test-pic->points"
+    "tests"
 
     (let ([points_list (pic->points test_file)])
       (check-equal? (length points_list) 165)
@@ -35,6 +35,8 @@
       (check-equal? (list-ref (list-ref points_list 30) 45) 765)
       (check-equal? (list-ref (list-ref points_list 30) 50) 0)
       (check-equal? (list-ref (list-ref points_list 30) 55) 765)
+      
+      (check-equal? (find-threshold points_list) 382)
     ))
 
    ))

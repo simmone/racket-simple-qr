@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [pic->points (-> path-string? list?)]
+          [find-threshold (-> list? exact-nonnegative-integer?)]
           ))
 
 (require racket/draw)
@@ -25,3 +26,21 @@
                 (loop (cdr (cdr (cdr (cdr loop_list)))) 
                       rows
                       (cons (+ (list-ref loop_list 1) (list-ref loop_list 2) (list-ref loop_list 3)) cols))))))))
+
+(define (find-threshold points_list)
+  (let ([max_value 0]
+        [min_value 765])
+    (let row-loop ([loop_row_list points_list])
+      (if (not (null? loop_row_list))
+          (begin
+            (let col-loop ([loop_col_list (car loop_row_list)])
+              (when (not (null? loop_col_list))
+                    (cond
+                     [(> (car loop_col_list) max_value)
+                      (set! max_value (car loop_col_list))]
+                     [(< (car loop_col_list) min_value)
+                      (set! min_value (car loop_col_list))]
+                     )
+                    (col-loop (cdr loop_col_list))))
+            (row-loop (cdr loop_row_list)))
+          (floor (/ (- max_value min_value) 2))))))
