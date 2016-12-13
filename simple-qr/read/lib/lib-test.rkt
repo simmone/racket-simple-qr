@@ -55,6 +55,14 @@
       (check-equal? (list-ref (list-ref bw_points 1) 2) 0)
       (check-equal? (list-ref (list-ref bw_points 1) 3) 1)
       ))
+   
+   (test-case
+    "test-matrix-supply"
+    
+    (let* ([points '((1 2) (3 4))]
+           [supplied_points (matrix-supply points)])
+      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (#f #f #f)))
+      ))
 
    ))
 

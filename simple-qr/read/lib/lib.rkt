@@ -5,6 +5,7 @@
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
+          [matrix-supply (->* (list?) (#:fill any/c) list?)]
           ))
 
 (require racket/draw)
@@ -66,3 +67,12 @@
                 (col-loop (cdr loop_col_list)))
               (printf "\n")))
         (row-loop (cdr loop_row_list)))))
+
+(define (matrix-supply matrix #:fill [fill_thing #f])
+  (let* ([matrix_width (length matrix)]
+         [supplied_matrix_width (if (= (remainder matrix_width 2) 1) matrix_width (add1 matrix_width))]
+         [matrix_height (length (car matrix))]
+         [supplied_matrix_height (if (= (remainder matrix_height 2) 1) matrix_height (add1 matrix_height))])
+         
+    (
+    
