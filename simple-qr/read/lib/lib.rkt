@@ -73,6 +73,20 @@
          [supplied_matrix_width (if (= (remainder matrix_width 2) 1) matrix_width (add1 matrix_width))]
          [matrix_height (length (car matrix))]
          [supplied_matrix_height (if (= (remainder matrix_height 2) 1) matrix_height (add1 matrix_height))])
-         
-    (
+    (let row-loop ([loop_row_list matrix]
+                   [row_result_list '()])
+      (if (not (null? loop_row_list))
+          (row-loop (cdr loop_row_list)
+                    (cons
+                     (let col-loop ([loop_col_list (car loop_row_list)]
+                                    [col_result_list '()])
+                       (if (not (null? loop_col_list))
+                           (col-loop (cdr loop_col_list) (cons (car loop_col_list) col_result_list))
+                           (if (> supplied_matrix_width (length col_result_list))
+                               (reverse (cons fill_thing col_result_list))
+                               (reverse col_result_list))))
+                     row_result_list))
+          (if (> supplied_matrix_height (length row_result_list))
+              (reverse (cons (build-list supplied_matrix_width (lambda (x) fill_thing)) row_result_list))
+              (reverse row_result_list))))))
     

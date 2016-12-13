@@ -61,8 +61,17 @@
     
     (let* ([points '((1 2) (3 4))]
            [supplied_points (matrix-supply points)])
-      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (#f #f #f)))
-      ))
+      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (#f #f #f))))
+
+    (let* ([points '((1 2) (3 4) (5 6))]
+           [supplied_points (matrix-supply points)])
+      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (5 6 #f))))
+
+    (let* ([points '((1 2 3) (3 4 5))]
+           [supplied_points (matrix-supply points)])
+      (check-equal? supplied_points '((1 2 3) (3 4 5) (#f #f #f))))
+
+      )
 
    ))
 
