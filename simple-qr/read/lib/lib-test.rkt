@@ -38,6 +38,23 @@
       
       (check-equal? (find-threshold points_list) 382)
     ))
+   
+   (test-case
+    "test-points->bw"
+    
+    (let* ([points '((100 1 80 10) (200 1 300 10))]
+           [bw_points (points->bw points 50)])
+
+      (check-equal? (list-ref (list-ref bw_points 0) 0) 0)
+      (check-equal? (list-ref (list-ref bw_points 0) 1) 1)
+      (check-equal? (list-ref (list-ref bw_points 0) 2) 0)
+      (check-equal? (list-ref (list-ref bw_points 0) 3) 1)
+
+      (check-equal? (list-ref (list-ref bw_points 1) 0) 0)
+      (check-equal? (list-ref (list-ref bw_points 1) 1) 1)
+      (check-equal? (list-ref (list-ref bw_points 1) 2) 0)
+      (check-equal? (list-ref (list-ref bw_points 1) 3) 1)
+      ))
 
    ))
 

@@ -3,6 +3,8 @@
 (provide (contract-out
           [pic->points (-> path-string? list?)]
           [find-threshold (-> list? exact-nonnegative-integer?)]
+          [points->bw (-> list? exact-nonnegative-integer? list?)]
+          [print-points (-> list? void?)]
           ))
 
 (require racket/draw)
@@ -44,3 +46,23 @@
                     (col-loop (cdr loop_col_list))))
             (row-loop (cdr loop_row_list)))
           (floor (/ (- max_value min_value) 2))))))
+
+(define (points->bw points_list threshold)
+  (map
+   (lambda (row)
+     (map
+      (lambda (col)
+        (if (> col threshold) 0 1))
+      row))
+   points_list))
+
+(define (print-points points_list)
+  (let row-loop ([loop_row_list points_list])
+    (when (not (null? loop_row_list))
+        (let col-loop ([loop_col_list (car loop_row_list)])
+          (if (not (null? loop_col_list))
+              (begin
+                (printf "~a" (car loop_col_list))
+                (col-loop (cdr loop_col_list)))
+              (printf "\n")))
+        (row-loop (cdr loop_row_list)))))
