@@ -44,7 +44,7 @@
     
     (let* ([points '((100 1 80 10) (200 1 300 10))]
            [bw_points (points->bw points 50)])
-
+      
       (check-equal? (list-ref (list-ref bw_points 0) 0) 0)
       (check-equal? (list-ref (list-ref bw_points 0) 1) 1)
       (check-equal? (list-ref (list-ref bw_points 0) 2) 0)
@@ -70,8 +70,10 @@
     (let* ([points '((1 2 3) (3 4 5))]
            [supplied_points (matrix-supply points)])
       (check-equal? supplied_points '((1 2 3) (3 4 5) (#f #f #f))))
-
-      )
+    )
+   
+   (test-case
+    "test-
 
    ))
 
