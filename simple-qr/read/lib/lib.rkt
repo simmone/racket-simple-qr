@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [pic->points (-> path-string? list?)]
+          [points->pic (-> (listof list?) path-string? void?)]
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
@@ -66,4 +67,7 @@
                 (col-loop (cdr loop_col_list)))
               (printf "\n")))
         (row-loop (cdr loop_row_list)))))
+
+(define (points->pic points_list pic_path)
+  )
     

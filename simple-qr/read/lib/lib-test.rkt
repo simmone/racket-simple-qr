@@ -6,6 +6,7 @@
 
 (require racket/runtime-path)
 (define-runtime-path test_file "test.png")
+(define-runtime-path test_file "test_clock_90.png")
 
 (define test-lib
   (test-suite 
@@ -57,23 +58,10 @@
       ))
    
    (test-case
-    "test-matrix-supply"
-    
-    (let* ([points '((1 2) (3 4))]
-           [supplied_points (matrix-supply points)])
-      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (#f #f #f))))
+    "test-points-rotate"
 
-    (let* ([points '((1 2) (3 4) (5 6))]
-           [supplied_points (matrix-supply points)])
-      (check-equal? supplied_points '((1 2 #f) (3 4 #f) (5 6 #f))))
-
-    (let* ([points '((1 2 3) (3 4 5))]
-           [supplied_points (matrix-supply points)])
-      (check-equal? supplied_points '((1 2 3) (3 4 5) (#f #f #f))))
+    (let ([points_list (pic->points test_file)])
     )
-   
-   (test-case
-    "test-
 
    ))
 
