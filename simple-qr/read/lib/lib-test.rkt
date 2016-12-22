@@ -60,7 +60,10 @@
    (test-case
     "test-points-rotate"
 
-    (let ([points_list (pic->points test_file)])
+    (let ([points_list (pic->points test_file)]
+          [bw_points (points->bw points_list 50)])
+      (points->pic bw_points "result.png")
+      )
     )
 
    ))

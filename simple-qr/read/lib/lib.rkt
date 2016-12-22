@@ -69,5 +69,23 @@
         (row-loop (cdr loop_row_list)))))
 
 (define (points->pic points_list pic_path)
-  )
-    
+  (let* ([width (length (caar points_list))]
+         [height (length points_list)]
+         [points_pic (make-object bitmap% width height)])
+    (send points_pic set-argb-pixels 0 0 width height 
+          (let loop ([rows points_list]
+                     [bytes_list])
+            (if (not (null? rows))
+                (loop
+                 (cdr rows)
+                 (cons
+                  (let col-loop ([cols (car rows)]
+                                 [col_bytes_list])
+                    (if (not (null? cols))
+                        (if (= (car cols) 0)
+                            (col-loop (cdr cols) (cons 255 (cons 255 (cons 255 (cons 255 col_bytes_list)))))
+                            (col-loop (cdr cols) (cons 255 (cons 0 (cons 0 (cons 0 col_bytes_list))))))
+                        (reverse col_bytes_list)))
+                  bytes_list))
+                (reverse bytes_list))))
+    (send points_pic save-file pic_path 'png)))
