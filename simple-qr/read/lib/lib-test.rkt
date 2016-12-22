@@ -1,12 +1,11 @@
 #lang racket
 
 (require rackunit/text-ui)
-
 (require rackunit "lib.rkt")
+(require matrix-rotate)
 
 (require racket/runtime-path)
 (define-runtime-path test_file "test.png")
-(define-runtime-path test_file "test_clock_90.png")
 
 (define test-lib
   (test-suite 
@@ -60,9 +59,10 @@
    (test-case
     "test-points-rotate"
 
-    (let ([points_list (pic->points test_file)]
-          [bw_points (points->bw points_list 50)])
-      (points->pic bw_points "result.png")
+    (let* ([points_list (pic->points test_file)]
+           [bw_points (points->bw points_list 50)]
+           [rotated_points (matrix-rotate bw_points 164)])
+      (points->pic rotated_points "result.png")
       )
     )
 
