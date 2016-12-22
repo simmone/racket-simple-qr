@@ -84,7 +84,7 @@
                     (if (not (null? cols))
                         (if (= (car cols) 0)
                             (col-loop (cdr cols) (cons 255 (cons 255 (cons 255 (cons 255 col_bytes_list)))))
-                            (col-loop (cdr cols) (cons 0 (cons 0 (cons 0 (cons 0 col_bytes_list))))))
+                            (col-loop (cdr cols) (cons 0 (cons 0 (cons 0 (cons 255 col_bytes_list))))))
                         (reverse col_bytes_list)))
                   bytes_list))
                 (list->bytes (foldr (lambda (a b) (append a b)) '() (reverse bytes_list))))))
