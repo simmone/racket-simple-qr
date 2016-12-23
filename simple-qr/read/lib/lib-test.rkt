@@ -62,8 +62,16 @@
     (let* ([points_list (pic->points test_file)]
            [bw_points (points->bw points_list 50)]
            [rotated_points (matrix-rotate bw_points 164)])
-      (points->pic rotated_points "result.png")
+      (void)
+;      (points->pic rotated_points "result.png")
       )
+    )
+
+   (test-case
+    "test-guess-finder-pattern"
+    
+    (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0)])
+      (check-equal? (guess-finder-pattern test_points) '(2 . 1)))
     )
 
    ))

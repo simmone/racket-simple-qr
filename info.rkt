@@ -6,12 +6,6 @@
 
 (define deps '("base"
                "rackunit-lib"
-               "at-exp-lib"
-               "draw-lib"))
-
-(define build-deps '("racket-doc"
-                     "scribble-lib"
-                     "rackunit-lib"
-                     "draw-lib"
-                     "at-exp-lib"))
-
+               "draw-lib"
+               "matrix-rotate"
+               ))
