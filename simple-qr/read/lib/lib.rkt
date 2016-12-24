@@ -6,7 +6,7 @@
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
-          [guess-finder-pattern (-> list? list?)]
+          [guess-module-widthn (-> list? list?)]
           ))
 
 (require racket/draw)
@@ -91,7 +91,7 @@
                 (list->bytes (foldr (lambda (a b) (append a b)) '() (reverse bytes_list))))))
     (send points_pic save-file pic_path 'png)))
 
-(define (guess-finder-pattern points_row)
+(define (guess-module-widthn points_row)
   (let ([max_module_width (floor (/ (length potins_row) 14))])
     (let guess-loop ([module_width 1])
       

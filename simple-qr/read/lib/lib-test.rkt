@@ -68,10 +68,10 @@
     )
 
    (test-case
-    "test-guess-finder-pattern"
+    "test-guess-module-width"
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0)])
-      (check-equal? (guess-finder-pattern test_points) '(2 . 1)))
+      (check-equal? (guess-module-width test_points) '(2 . 1)))
     )
 
    ))
