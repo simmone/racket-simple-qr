@@ -79,6 +79,27 @@
     (let ([test_points '(0 0)])
       (check-equal? (guess-first-dark-width test_points) 0))
     )
+   
+   (test-case
+    "test-squash-points"
+    
+    (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
+      (check-equal? (squash-points test_points 1) '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1))
+
+      (check-equal? (squash-points test_points 2) '(0 1 0 1 0 1 0 1 0 1 0 1))
+
+      (check-equal? (squash-points test_points 3) '(0 1 0 1 0 1 0 1 0 1 0 1))
+
+      (check-equal? (squash-points test_points 4) '(0 1 0 1))
+      )
+
+    (let ([test_points '(0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)])
+      (check-equal? (squash-points test_points 4) '(0 1 0 0 1))
+    )
+
+    (let ([test_points '(0 0 0 0 0 1 1 1 1 1  0 0 0 0 0 0 0 1 1 1)])
+      (check-equal? (squash-points test_points 4) '(0 1 0 0 1))
+    )
 
    (test-case
     "test-guess-module-width"
