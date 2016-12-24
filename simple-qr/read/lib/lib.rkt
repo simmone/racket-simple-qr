@@ -8,6 +8,7 @@
           [print-points (-> list? void?)]
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> list? (or/c boolean? exact-nonnegative-integer?))]
+          [squash-points (-> list? exact-nonnegative-integer? list?)]
           ))
 
 (require racket/draw)
@@ -102,6 +103,27 @@
                 (loop (cdr points_loop) dark_length))
             (loop (cdr points_loop) (add1 dark_length)))
         dark_length)))
+
+(define (squash-points points width)
+  (let ([min_width (floor (* width 0.5))])
+    (let loop ([loop_points points]
+               [last_value -1]
+               [same_count 0]
+               [result_list '()])
+
+      (if (not (null? loop_points))
+          (if (= same_count width)
+              (loop (cdr loop_points) (car loop_points) 1 (cons last_value result_list))
+              (if (= (car loop_points) last_value)
+                  (loop (cdr loop_points) last_value (add1 same_count) result_list)
+                  (if (= last_value -1)
+                      (loop (cdr loop_points) (car loop_points) (add1 same_count) result_list)
+                      (if (>= same_count min_width)
+                          (loop (cdr loop_points) (car loop_points) 1 (cons last_value result_list))
+                          (loop (cdr loop_points) (car loop_points) 1 result_list)))))
+          (if (and (> same_count 0) (>= same_count min_width))
+              (reverse (cons last_value result_list))
+              (reverse result_list))))))
 
 (define (guess-module-width points_row)
   (let ([max_module_width (floor (/ (length points_row) 14))])
