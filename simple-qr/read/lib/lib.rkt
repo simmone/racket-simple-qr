@@ -10,10 +10,18 @@
           [guess-module-width (-> list? (or/c boolean? exact-nonnegative-integer?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
           [find-module-width (-> (listof list?) (or/c boolean? exact-nonnegative-integer?))]
+          [*trace_level* parameter?]
+          [trace (-> string? exact-nonnegative-integer? void?)]
           [qr-read (-> path-string? string?)]
           ))
 
 (require racket/draw)
+
+(define *trace_level* (make-parameter 0))
+
+(define (trace data trace_level)
+  (when (>= (*trace_level*) trace_level)
+        (printf "t[~a]=~a\n" trace_level data)))
 
 (define (pic->points pic_path)
   (let* ([img (make-object bitmap% pic_path)]
@@ -152,11 +160,20 @@
         #f)))
 
 (define (qr-read pic_path)
-  (let* ([points_list (pic->points pic_path)]
-         [threshold (find-threshold points_list)]
-         [bw_points (points->bw points_list threshold)])
+  (let* ([step1_points_list #f]
+         [step2_threshold #f]
+         [step3_bw_points #f])
+
+    (set! step1_points_list (pic->points pic_path))
+    (trace (format "step1:convert pic file to pixel points[~aX~a]" (length step1_points_list) (length (car step1_points_list))) 1)
+
+    (set! step2_threshold (find-threshold step1_points_list))
+    (trace (format "step2:find threshold is ~a" step2_threshold) 1)
+
+    (set! step3_bw_points (points->bw step1_points_list step2_threshold))
+    (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
     
-    (points->pic bw_points "bw.png")
+    (points->pic step3_bw_points "bw.png")
     )
   ""
   )

@@ -148,9 +148,10 @@
    (test-case
     "test-qr-read"
  
-    (void)
-
-;    (qr-read "test.jpg")
+    (parameterize
+     ([*trace_level* 1])
+     (qr-read "test.png")
+    )
     )
 
    ))
