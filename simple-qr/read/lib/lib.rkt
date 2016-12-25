@@ -127,9 +127,16 @@
 
 (define (guess-module-width points_row)
   (let ([max_module_width (floor (/ (length points_row) 14))])
-    (let row-loop ([points points_row])
+    (let loop ([points points_row])
       (if (not (null? points))
-          (let ([guess_module_width (guess-first-dark-width points)])
-            (void))
+          (if (= (car points) 1)
+              (let* ([guess_module_width (guess-first-dark-width points)]
+                     [squashed_line (squash-points points guess_module_width)]
+                     [squashed_str 
+                      (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
+                (if (= (length (regexp-match* #rx"1011101" squashed_str)) 2)
+                    guess_module_width
+                    (loop (take-right points guess_module_width))))
+              (loop (cdr points)))
           #f))))
       
