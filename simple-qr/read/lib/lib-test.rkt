@@ -69,6 +69,9 @@
 
    (test-case
     "test-guess-first-dark-width"
+
+    (let ([test_points '(1 1)])
+      (check-equal? (guess-first-dark-width test_points) 2))
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
       (check-equal? (guess-first-dark-width test_points) 1))
@@ -104,6 +107,9 @@
 
    (test-case
     "test-guess-module-width"
+
+    (let ([test_points '(1 1)])
+      (check-equal? (guess-module-width test_points) #f))
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
       (check-equal? (guess-module-width test_points) 1))
@@ -115,6 +121,36 @@
                            0 1 1 0 0 1 1 1 1 1 1 0 0 1 1
                            )])
       (check-equal? (guess-module-width test_points) 2))
+    )
+
+   (test-case
+    "test-find-module-width"
+    
+    (let ([test_points '(
+                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 0)
+                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
+                         )])
+      (check-equal? (find-module-width test_points) 1))
+
+    (let ([test_points '(
+                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)
+                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)
+                         )])
+      (check-equal? (find-module-width test_points) #f))
+
+    (let ([test_points '(
+                         (0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)
+                         (0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)
+                         )])
+      (check-equal? (find-module-width test_points) 2))
+    )
+
+   (test-case
+    "test-qr-read"
+ 
+    (void)
+
+;    (qr-read "test.jpg")
     )
 
    ))

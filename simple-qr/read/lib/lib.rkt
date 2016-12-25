@@ -9,6 +9,8 @@
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> list? (or/c boolean? exact-nonnegative-integer?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
+          [find-module-width (-> (listof list?) (or/c boolean? exact-nonnegative-integer?))]
+          [qr-read (-> path-string? string?)]
           ))
 
 (require racket/draw)
@@ -136,7 +138,25 @@
                       (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
                 (if (= (length (regexp-match* #rx"1011101" squashed_str)) 2)
                     guess_module_width
-                    (loop (take-right points guess_module_width))))
+                    (loop (list-tail points guess_module_width))))
               (loop (cdr points)))
           #f))))
-      
+
+(define (find-module-width rows)
+  (let loop ([loop_rows rows])
+    (if (not (null? loop_rows))
+        (let ([guessed_width (guess-module-width (car loop_rows))])
+          (if guessed_width
+              guessed_width
+              (loop (cdr loop_rows))))
+        #f)))
+
+(define (qr-read pic_path)
+  (let* ([points_list (pic->points pic_path)]
+         [threshold (find-threshold points_list)]
+         [bw_points (points->bw points_list threshold)])
+    
+    (points->pic bw_points "bw.png")
+    )
+  ""
+  )
