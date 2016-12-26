@@ -12,7 +12,7 @@
           [find-module-width (-> (listof list?) (or/c boolean? exact-nonnegative-integer?))]
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
-          [qr-read (-> path-string? string?)]
+          [qr-read (-> path-string? (or/c string? boolean?))]
           ))
 
 (require racket/draw)
@@ -161,19 +161,26 @@
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
+         [original_height (length step1_points_list)]
+         [original_width (length (car step1_points_list))]
+         [rotate_max_tries (- (+ (* original_width 2) (* origin_height 2)) 4)]
          [step2_threshold #f]
-         [step3_bw_points #f])
+         [step3_bw_points #f]
+         [step4_module_width #f])
 
     (set! step1_points_list (pic->points pic_path))
-    (trace (format "step1:convert pic file to pixel points[~aX~a]" (length step1_points_list) (length (car step1_points_list))) 1)
+    (trace (format "step1:convert pic file to pixel points[~aX~a]" origin_width origin_height) 1)
 
     (set! step2_threshold (find-threshold step1_points_list))
     (trace (format "step2:find threshold is ~a" step2_threshold) 1)
 
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
-    
-    (points->pic step3_bw_points "bw.png")
+
+    (points->pic step3_bw_points "step3_bw.png")
+
+    (set! step4_module_width (find-module-width step3_bw_points))
+    (trace (format "step4:find module width:~a" step4_module_width) 1)
     )
   ""
   )
