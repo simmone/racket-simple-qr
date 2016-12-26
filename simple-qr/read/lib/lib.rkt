@@ -13,9 +13,11 @@
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
+          [verify-matrix (-> (listof list?) boolean?)]
           ))
 
 (require racket/draw)
+(require matrix-rotate)
 
 (define *trace_level* (make-parameter 0))
 
@@ -159,17 +161,23 @@
               (loop (cdr loop_rows))))
         #f)))
 
+(define (squash-matrix module_width)
+  '())
+
+(define (verify-matrix matrix)
+  #t)
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height (length step1_points_list)]
          [original_width (length (car step1_points_list))]
-         [rotate_max_tries (- (+ (* original_width 2) (* origin_height 2)) 4)]
+         [rotate_max_tries (- (+ (* original_width 2) (* original_height 2)) 4)]
          [step2_threshold #f]
          [step3_bw_points #f]
          [step4_qr_points #f])
 
     (set! step1_points_list (pic->points pic_path))
-    (trace (format "step1:convert pic file to pixel points[~aX~a]" origin_width origin_height) 1)
+    (trace (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height) 1)
 
     (set! step2_threshold (find-threshold step1_points_list))
     (trace (format "step2:find threshold is ~a" step2_threshold) 1)
@@ -183,10 +191,11 @@
           (let rotate-loop ([tries 0]
                             [matrix step3_bw_points])
             (if (< tries rotate_max_tries)
-                (let ([guess_width (find-module-width matrix)]
-                      [squashed_matrix (squash-matrix matrix)])
-                  (if (verify-matrix squash_matrix)
-                      (cut-qr-from-matrix squash_matrix)
+                (let* ([guess_width (find-module-width matrix)]
+                       [squashed_matrix (squash-matrix matrix)]
+                       [verified_matrix (verify-matrix matrix)])
+                  (if verified_matrix
+                      verified_matrix
                       (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries)))))
                 #f)))
 
