@@ -14,6 +14,7 @@
           [trace (-> string? exact-nonnegative-integer? void?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
           [verify-matrix (-> (listof list?) boolean?)]
+          [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
           ))
 
 (require racket/draw)
@@ -161,8 +162,11 @@
               (loop (cdr loop_rows))))
         #f)))
 
-(define (squash-matrix module_width)
-  '())
+(define (squash-matrix matrix module_width)
+  (map
+   (lambda (row)
+     (squash-points row module_width))
+   matrix))
 
 (define (verify-matrix matrix)
   #t)

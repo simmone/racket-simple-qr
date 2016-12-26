@@ -146,6 +146,19 @@
     )
 
    (test-case
+    "test-squash-matrix"
+
+    (let ([test_points '(
+                         (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
+                         (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
+                         (0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
+                         )
+                       ])
+      (check-equal? (squash-matrix test_points 4) '((0 1 0 0 1) (0 1 0 0 1) (0 1 0 0 1)))
+      )
+    )
+
+   (test-case
     "test-verify-matrix"
 
     (let ([matrix '(
