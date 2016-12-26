@@ -145,14 +145,14 @@
       (check-equal? (find-module-width test_points) 2))
     )
 
-   (test-case
-    "test-qr-read"
- 
-    (parameterize
-     ([*trace_level* 1])
-     (qr-read "test.png")
-    )
-    )
+;   (test-case
+;    "test-qr-read"
+; 
+;    (parameterize
+;     ([*trace_level* 1])
+;     (qr-read "test.png")
+;    )
+;    )
 
    ))
 

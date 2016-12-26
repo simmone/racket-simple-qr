@@ -166,7 +166,7 @@
          [rotate_max_tries (- (+ (* original_width 2) (* origin_height 2)) 4)]
          [step2_threshold #f]
          [step3_bw_points #f]
-         [step4_module_width #f])
+         [step4_qr_points #f])
 
     (set! step1_points_list (pic->points pic_path))
     (trace (format "step1:convert pic file to pixel points[~aX~a]" origin_width origin_height) 1)
@@ -179,8 +179,17 @@
 
     (points->pic step3_bw_points "step3_bw.png")
 
-    (set! step4_module_width (find-module-width step3_bw_points))
-    (trace (format "step4:find module width:~a" step4_module_width) 1)
-    )
-  ""
-  )
+    (set! step4_qr_points
+          (let rotate-loop ([tries 0]
+                            [matrix step3_bw_points])
+            (if (< tries rotate_max_tries)
+                (let ([guess_width (find-module-width matrix)]
+                      [squashed_matrix (squash-matrix matrix)])
+                  (if (verify-matrix squash_matrix)
+                      (cut-qr-from-matrix squash_matrix)
+                      (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries)))))
+                #f)))
+
+    (if (not step4_qr_points)
+        (points->pic step4_qr_points "qr.png")
+        "")))
