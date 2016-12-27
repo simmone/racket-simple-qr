@@ -124,28 +124,6 @@
     )
 
    (test-case
-    "test-find-module-width"
-    
-    (let ([test_points '(
-                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 0)
-                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                         )])
-      (check-equal? (find-module-width test_points) 1))
-
-    (let ([test_points '(
-                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)
-                         (0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)
-                         )])
-      (check-equal? (find-module-width test_points) #f))
-
-    (let ([test_points '(
-                         (0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)
-                         (0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)
-                         )])
-      (check-equal? (find-module-width test_points) 2))
-    )
-
-   (test-case
     "test-squash-matrix"
 
     (let ([test_points '(

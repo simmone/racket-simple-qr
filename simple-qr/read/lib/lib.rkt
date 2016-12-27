@@ -153,15 +153,6 @@
               (loop (cdr points)))
           #f))))
 
-(define (find-module-width rows)
-  (let loop ([loop_rows rows])
-    (if (not (null? loop_rows))
-        (let ([guessed_width (guess-module-width (car loop_rows))])
-          (if guessed_width
-              guessed_width
-              (loop (cdr loop_rows))))
-        #f)))
-
 (define (squash-matrix matrix module_width)
   (map
    (lambda (row)
@@ -169,7 +160,14 @@
    matrix))
 
 (define (verify-matrix matrix)
-  #t)
+  (let ([cut_matrix #f])
+    (let loop ([rows matrix])
+      (if (not (null? (car matrix)))
+          (let ([guess_module_width (guess-module-width (car matrix))])
+            (if guess-module-width
+                (void)
+                (loop (cdr matrix))))
+          cut_matrix))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
