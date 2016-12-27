@@ -15,6 +15,7 @@
           [qr-read (-> path-string? (or/c string? boolean?))]
           [verify-matrix (-> (listof list?) boolean?)]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
+          [cut-matrix (-> (listof list?) (or/c (listof list?) boolean?))]
           ))
 
 (require racket/draw)
@@ -159,15 +160,32 @@
      (squash-points row module_width))
    matrix))
 
+(define (try-to-get-matrix row_index finder_pattern1_index finder_patter2_index)
+  #f)
+
+(define (cut-matrix matrix)
+  (let loop ([rows matrix]
+             [row_index 0])
+    (if (not (null? rows))
+        (if (= (length (regexp-match* #rx"1011101" (car rows))) 2)
+            (let ([finder_pattern_index (regexp-positions* #rx"1011101" squashed_str)])
+              (try-to-get-matrix matrix row_index (car (first finder_pattern_index)) (car (second finder_pattern_index))))
+            (loop (cdr rows) (add1 row_index)))
+        (loop (cdr rows) (add1 row_index)))))
+
 (define (verify-matrix matrix)
-  (let ([cut_matrix #f])
+  (let ([result_matrix #f])
     (let loop ([rows matrix])
       (if (not (null? (car matrix)))
           (let ([guess_module_width (guess-module-width (car matrix))])
             (if guess-module-width
-                (void)
+                (let* ([squashed_matrix (squash-matrix matrix guess_module_width)]
+                       [cut_matrix (cut-matrix squashed_matrix)])
+                  (if cut_matrix
+                      cut_matrix
+                      #f))
                 (loop (cdr matrix))))
-          cut_matrix))))
+          result_matrix))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
