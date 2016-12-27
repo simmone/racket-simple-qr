@@ -160,8 +160,15 @@
      (squash-points row module_width))
    matrix))
 
-(define (try-to-get-matrix row_index finder_pattern1_index finder_patter2_index)
-  #f)
+(define (try-to-get-matrix matrix row_index finder_pattern1_index finder_pattern2_index)
+  (let* ([matrix_width (length matrix)]
+         [matrix_height (length (car matrix))]
+         [guess_matrix_width (+ (- finder_pattern2_index finder_pattern1_index) 7)]
+         [left_up_point (cons (- row_index 2) finder_pattern1_index)]
+         [right_down_point (cons (+ (- row_index 2) guess_matrix_width) (+ finder_pattern2_index 7))])
+    (if (and (>= (car left_up_point) 0) (<= (cdr right_down_point) (sub1 matrix_width)))
+        (void)
+        #f)))
 
 (define (cut-matrix matrix)
   (let loop ([rows matrix]
