@@ -19,6 +19,8 @@
                                  exact-nonnegative-integer? 
                                  exact-nonnegative-integer? 
                                  (or/c (listof list?) boolean?))]
+          [matrix-row->col (-> (listof list?) (listof list?))]
+          [matrix-col->row (-> (listof list?) (listof list?))]
           ))
 
 (require racket/draw)
@@ -29,6 +31,9 @@
 (define (trace data trace_level)
   (when (>= (*trace_level*) trace_level)
         (printf "t[~a]=~a\n" trace_level data)))
+
+(define (matrix-row->col matrix)
+  
 
 (define (pic->points pic_path)
   (let* ([img (make-object bitmap% pic_path)]
