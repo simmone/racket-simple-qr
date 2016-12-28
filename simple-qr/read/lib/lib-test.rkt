@@ -112,7 +112,7 @@
       (check-equal? (guess-module-width test_points) #f))
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
-      (check-equal? (guess-module-width test_points) 1))
+      (check-equal? (guess-module-width test_points) (list 1 2 12)))
 
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)])
       (check-equal? (guess-module-width test_points) #f))
@@ -120,7 +120,7 @@
     (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 
                            0 1 1 0 0 1 1 1 1 1 1 0 0 1 1
                            )])
-      (check-equal? (guess-module-width test_points) 2))
+      (check-equal? (guess-module-width test_points) (list 2 2 12)))
     )
 
    (test-case
@@ -231,14 +231,14 @@
       (check-equal? (verify-matrix matrix) #f))
     )
 
-;   (test-case
-;    "test-qr-read"
-; 
-;    (parameterize
-;     ([*trace_level* 1])
-;     (qr-read "test.png")
-;    )
-;    )
+   (test-case
+    "test-qr-read"
+ 
+    (parameterize
+     ([*trace_level* 1])
+     (qr-read "test.png")
+    )
+    )
 
    ))
 

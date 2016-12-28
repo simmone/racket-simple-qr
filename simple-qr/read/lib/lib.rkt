@@ -7,7 +7,7 @@
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
-          [guess-module-width (-> list? (or/c boolean? exact-nonnegative-integer?))]
+          [guess-module-width (-> list? (or/c boolean? list?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
@@ -152,10 +152,21 @@
                      [squashed_str 
                       (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
                 (if (= (length (regexp-match* #rx"1011101" squashed_str)) 2)
-                    guess_module_width
+                    (let ([points_str (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) (squash-points points_row guess_module_width)))])
+                      `(,guess_module_width ,@(map (lambda (item) (car item)) (regexp-match-positions* #rx"1011101" points_str))))
                     (loop (list-tail points guess_module_width))))
               (loop (cdr points)))
           #f))))
+
+(define (guess-matrix matrix)
+  (let loop ([rows matrix]
+             [row_index 0])
+    (if (not (null? rows))
+        (let ([guess_result (guess-module-width (car rows))])
+          (if guess_result
+              `(,@guess_result ,row_index)
+              (loop (cdr rows) (add1 row_index))))
+        #f)))
 
 (define (squash-matrix matrix module_width)
   (map
@@ -204,21 +215,28 @@
          [guess_matrix_width (+ (- finder_pattern2_index finder_pattern1_index) 7)]
          [left_up_point (cons (- row_index 2) finder_pattern1_index)]
          [right_down_point (cons (sub1 (+ (- row_index 2) guess_matrix_width)) (+ finder_pattern2_index 6))])
+    (trace (format "left_up_point:~a, right_down_point:~a" left_up_point right_down_point) 1)
     (if (and (>= (car left_up_point) 0) (<= (cdr right_down_point) (sub1 matrix_width)))
-        (verify-matrix (carve-matrix matrix left_up_point right_down_point))
+        (let ([carved_matrix (carve-matrix matrix left_up_point right_down_point)])
+          (verify-matrix carved_matrix))
         #f)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
-         [original_height (length step1_points_list)]
-         [original_width (length (car step1_points_list))]
-         [rotate_max_tries (- (+ (* original_width 2) (* original_height 2)) 4)]
+         [original_height #f]
+         [original_width #f]
+         [rotate_max_tries #f]
          [step2_threshold #f]
          [step3_bw_points #f]
          [step4_qr_points #f])
 
     (set! step1_points_list (pic->points pic_path))
+    (set! original_width (length step1_points_list))
+    (set! original_height (length (car step1_points_list)))
     (trace (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height) 1)
+    
+    (set! rotate_max_tries (- (+ (* original_width 2) (* original_height 2)) 4))
+    (trace (format "max rotate tries[~a]" rotate_max_tries) 1)
 
     (set! step2_threshold (find-threshold step1_points_list))
     (trace (format "step2:find threshold is ~a" step2_threshold) 1)
@@ -232,12 +250,23 @@
           (let rotate-loop ([tries 0]
                             [matrix step3_bw_points])
             (if (< tries rotate_max_tries)
-                (let ([verified_matrix (verify-matrix matrix)])
-                  (if verified_matrix
-                      verified_matrix
-                      (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries)))))
+                (let ([guess_result (guess-matrix matrix)])
+                  (trace (format "try to rotate to find pattern[~a][~a]" tries guess_result) 1)
+                  (if guess_result
+                      (let* ([module_width (first guess_result)]
+                             [finder_pattern1_x (second guess_result)]
+                             [finder_pattern2_x (third guess_result)]
+                             [row_index (floor (/ (fourth guess_result) module_width))]
+                             [squashed_matrix (squash-matrix matrix module_width)])
+                        (trace (format "guess_result:~a,~a,~a" finder_pattern1_x finder_pattern2_x row_index) 1)
+                        (let ([verified_matrix (try-to-get-matrix squashed_matrix row_index finder_pattern1_x finder_pattern2_x)])
+                          (if verified_matrix
+                              verified_matrix
+                              (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries))))))
+                      #f))
                 #f)))
+    (trace (format "step4 qr points:~a" step4_qr_points) 1)
 
-    (if (not step4_qr_points)
+    (if step4_qr_points
         (points->pic step4_qr_points "qr.png")
         "")))
