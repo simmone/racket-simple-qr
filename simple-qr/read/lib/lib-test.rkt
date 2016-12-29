@@ -235,7 +235,8 @@
  
     (parameterize
      ([*trace_level* 1])
-     (qr-read "test.png")
+;     (qr-read "test.png")
+     (qr-read "test1.jpg")
     )
     )
 

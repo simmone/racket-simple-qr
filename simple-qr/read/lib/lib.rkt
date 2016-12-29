@@ -159,6 +159,7 @@
           #f))))
 
 (define (guess-matrix matrix)
+  (printf "~a\n" (length matrix))
   (let loop ([rows matrix]
              [row_index 0])
     (if (not (null? rows))
@@ -242,6 +243,7 @@
          [original_height #f]
          [original_width #f]
          [rotate_max_tries #f]
+         [rotate_each_tries #f]
          [step2_threshold #f]
          [step3_bw_points #f]
          [step4_qr_points #f])
@@ -252,6 +254,7 @@
     (trace (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height) 1)
     
     (set! rotate_max_tries (- (+ (* original_width 2) (* original_height 2)) 4))
+    (set! rotate_each_tries 1)
     (trace (format "max rotate tries[~a]" rotate_max_tries) 1)
 
     (set! step2_threshold (find-threshold step1_points_list))
@@ -274,14 +277,15 @@
                              [finder_pattern2_x (third guess_result)]
                              [row_index (floor (/ (fourth guess_result) module_width))]
                              [squashed_matrix (squash-matrix matrix module_width)])
-                        (trace (format "guess_result:~a,~a,~a" finder_pattern1_x finder_pattern2_x row_index) 1)
                         (if squashed_matrix
                             (let ([verified_matrix (try-to-get-matrix squashed_matrix row_index finder_pattern1_x finder_pattern2_x)])
                               (if verified_matrix
                                   verified_matrix
-                                  (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries)))))
-                            #f))
-                      #f))
+                                  (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0))))
+                            (begin
+                              (trace "fail:squashed_matrix is invalid." 1)
+                              (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0)))))
+                      (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0))))
                 #f)))
     (trace (format "step4 qr points:~a" step4_qr_points) 1)
 
