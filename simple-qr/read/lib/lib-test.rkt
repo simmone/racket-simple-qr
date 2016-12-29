@@ -117,10 +117,8 @@
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)])
       (check-equal? (guess-module-width test_points) #f))
 
-    (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 
-                           0 1 1 0 0 1 1 1 1 1 1 0 0 1 1
-                           )])
-      (check-equal? (guess-module-width test_points) (list 2 2 12)))
+    (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)])
+      (check-equal? (guess-module-width test_points) (list 2 1 9)))
     )
 
    (test-case
@@ -129,10 +127,11 @@
     (let ([test_points '(
                          (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
                          (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
-                         (0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
+                         (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
+                         (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
                          )
                        ])
-      (check-equal? (squash-matrix test_points 4) '((0 1 0 0 1) (0 1 0 0 1) (0 1 0 0 1)))
+      (check-equal? (squash-matrix test_points 4) '((0 1 0 0 1)))
       )
     )
 

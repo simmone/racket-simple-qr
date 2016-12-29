@@ -19,8 +19,6 @@
                                  exact-nonnegative-integer? 
                                  exact-nonnegative-integer? 
                                  (or/c (listof list?) boolean?))]
-          [matrix-row->col (-> (listof list?) (listof list?))]
-          [matrix-col->row (-> (listof list?) (listof list?))]
           ))
 
 (require racket/draw)
@@ -31,9 +29,6 @@
 (define (trace data trace_level)
   (when (>= (*trace_level*) trace_level)
         (printf "t[~a]=~a\n" trace_level data)))
-
-(define (matrix-row->col matrix)
-  
 
 (define (pic->points pic_path)
   (let* ([img (make-object bitmap% pic_path)]
@@ -173,11 +168,27 @@
               (loop (cdr rows) (add1 row_index))))
         #f)))
 
+(define (check-matrix-integrity matrix)
+  (let ([width (length (car matrix))])
+    (andmap (lambda (item) (= (length item) width)) matrix)))
+
 (define (squash-matrix matrix module_width)
-  (map
-   (lambda (row)
-     (squash-points row module_width))
-   matrix))
+  (let ([squash_matrix_x
+         (map
+          (lambda (row)
+            (squash-points row module_width))
+          matrix)])
+    (if (check-matrix-integrity squash_matrix_x)
+        (let* ([rotate_matrix (matrix-row->col squash_matrix_x)]
+               [squash_matrix_y
+                (map
+                 (lambda (row)
+                   (squash-points row module_width))
+                 rotate_matrix)])
+          (if (check-matrix-integrity squash_matrix_y)
+              (matrix-col->row squash_matrix_y)
+              #f))
+        #f)))
 
 (define (carve-matrix matrix left_up_point right_down_point)
   (let ([start_x (car left_up_point)]
@@ -264,10 +275,12 @@
                              [row_index (floor (/ (fourth guess_result) module_width))]
                              [squashed_matrix (squash-matrix matrix module_width)])
                         (trace (format "guess_result:~a,~a,~a" finder_pattern1_x finder_pattern2_x row_index) 1)
-                        (let ([verified_matrix (try-to-get-matrix squashed_matrix row_index finder_pattern1_x finder_pattern2_x)])
-                          (if verified_matrix
-                              verified_matrix
-                              (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries))))))
+                        (if squashed_matrix
+                            (let ([verified_matrix (try-to-get-matrix squashed_matrix row_index finder_pattern1_x finder_pattern2_x)])
+                              (if verified_matrix
+                                  verified_matrix
+                                  (rotate-loop (add1 tries) (matrix-rotate matrix (add1 tries)))))
+                            #f))
                       #f))
                 #f)))
     (trace (format "step4 qr points:~a" step4_qr_points) 1)
