@@ -19,6 +19,10 @@
                                  exact-nonnegative-integer? 
                                  exact-nonnegative-integer? 
                                  (or/c (listof list?) boolean?))]
+          [guess-finder-center-from-start (-> (listof list?) 
+                                               exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer?
+                                               pair?)]
+          [find-pattern (-> (listof list?) (values pair? pair? pair?))]
           ))
 
 (require racket/draw)
@@ -153,10 +157,16 @@
                       (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
                 (if (= (length (regexp-match* #rx"1011101" squashed_str)) 2)
                     (let ([points_str (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) (squash-points points_row guess_module_width)))])
-                      `(,guess_module_width ,@(map (lambda (item) (car item)) (regexp-match-positions* #rx"1011101" points_str))))
+                      `(,guess_module_width 
+                        ,@(map (lambda (item) 
+                                 (* guess_module_width (car item)))
+                               (regexp-match-positions* #rx"1011101" points_str))))
                     (loop (list-tail points guess_module_width))))
               (loop (cdr points)))
           #f))))
+
+(define (guess-finder-center-from-start matrix module_width start_x start_y)
+  '(0 . 0))
 
 (define (guess-matrix matrix)
   (printf "~a\n" (length matrix))
@@ -238,6 +248,9 @@
           (verify-matrix carved_matrix))
         #f)))
 
+(define (find-pattern matrix)
+  (values '(1 . 1) '(2 . 2) '(3 . 3)))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -262,33 +275,9 @@
 
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
-
     (points->pic step3_bw_points "step3_bw.png")
-
-    (set! step4_qr_points
-          (let rotate-loop ([tries 0]
-                            [matrix step3_bw_points])
-            (if (< tries rotate_max_tries)
-                (let ([guess_result (guess-matrix matrix)])
-                  (trace (format "try to rotate to find pattern[~a][~a]" tries guess_result) 1)
-                  (if guess_result
-                      (let* ([module_width (first guess_result)]
-                             [finder_pattern1_x (second guess_result)]
-                             [finder_pattern2_x (third guess_result)]
-                             [row_index (floor (/ (fourth guess_result) module_width))]
-                             [squashed_matrix (squash-matrix matrix module_width)])
-                        (if squashed_matrix
-                            (let ([verified_matrix (try-to-get-matrix squashed_matrix row_index finder_pattern1_x finder_pattern2_x)])
-                              (if verified_matrix
-                                  verified_matrix
-                                  (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0))))
-                            (begin
-                              (trace "fail:squashed_matrix is invalid." 1)
-                              (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0)))))
-                      (rotate-loop (add1 tries) (matrix-rotate matrix rotate_each_tries #:fill 0))))
-                #f)))
+    
+    (set! step4_qr_points (find-pattern step3_bw_points))
     (trace (format "step4 qr points:~a" step4_qr_points) 1)
-
-    (if step4_qr_points
-        (points->pic step4_qr_points "qr.png")
-        "")))
+    (points->pic step4_qr_points ".png")
+    ""))
