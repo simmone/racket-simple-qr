@@ -165,33 +165,6 @@
               (loop (cdr points)))
           #f))))
 
-(define (guess-finder-center-from-start matrix module_width start_x start_y)
-  (let ([matrix_rows (sub1 (length matrix))]
-        [center_point_list #f]
-        [template_line #f])
-
-    (let-values ([(half1 half2) (split-at (list-ref matrix start_x) (* start_y module_width))])
-      (if (< (length half2) (* module_width 7))
-          #f
-          (begin
-            (set! template_line (take half2 (* module_width 7)))
-
-            (set! center_point_list
-                  (let loop ([loop_x start_x]
-                             [result_list '()])
-                    (if (<= loop_x matrix_rows)
-                        (let-values ([(half1 half2) (split-at (list-ref matrix loop_x) (* start_y module_width))])
-                          (if (equal? (take half2 (* module_width 7)) template_line)
-                              (loop
-                               (add1 loop_x)
-                               (cons (cons loop_x (+ start_y (sub1 (* module_width 4)))) result_list))
-                              (reverse result_list)))
-                        (reverse result_list))))
-
-            (printf "~a\n" center_point_list)
-            
-            (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
-    
 (define (guess-matrix matrix)
   (printf "~a\n" (length matrix))
   (let loop ([rows matrix]
@@ -272,8 +245,51 @@
           (verify-matrix carved_matrix))
         #f)))
 
+(define (guess-finder-center-from-start matrix module_width start_x start_y)
+  (let ([matrix_rows (sub1 (length matrix))]
+        [center_point_list #f]
+        [template_line #f])
+
+    (let-values ([(half1 half2) (split-at (list-ref matrix start_x) start_y)])
+      (if (< (length half2) (* module_width 7))
+          #f
+          (begin
+            (set! template_line (take half2 (* module_width 7)))
+
+            (set! center_point_list
+                  (let loop ([loop_x start_x]
+                             [result_list '()])
+                    (if (<= loop_x matrix_rows)
+                        (let-values ([(half1 half2) (split-at (list-ref matrix loop_x) start_y)])
+                          (if (equal? (take half2 (* module_width 7)) template_line)
+                              (loop
+                               (add1 loop_x)
+                               (cons (cons loop_x (+ start_y (sub1 (* module_width 4)))) result_list))
+                              (reverse result_list)))
+                        (reverse result_list))))
+
+            (printf "~a\n" center_point_list)
+            
+            (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
+    
 (define (find-pattern matrix)
-  (values '(1 . 1) '(2 . 2) '(3 . 3)))
+  (let loop ([rows matrix]
+             [row_index 0]
+             [result_list '()])
+    (if (not (null? rows))
+        (let ([guess_results (guess-module-width (car rows))]
+              [points_get '()])
+          (for-each
+           (lambda (guess_result)
+             (let ([module_width (first guess_result)]
+                   [point_x (second guess_result)]
+                   [point_y (third guess_result)])
+               (let ([center_point (guess-finder-center-from-start matrix module_width point_x point_y)])
+                 (when center_point
+                       (set! points_get `(,@points_get ,center_point))))))
+           guess_results)
+          (loop (cdr rows) (add1 row_index) `(,@result_list ,@points_get)))
+        (reverse result_list))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
