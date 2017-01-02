@@ -155,26 +155,27 @@
                      [squashed_line (squash-points points guess_module_width)]
                      [squashed_str 
                       (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
-                (if (= (length (regexp-match* #rx"1011101" squashed_str)) 2)
-                    (let ([points_str (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) (squash-points points_row guess_module_width)))])
-                      `(,guess_module_width 
-                        ,@(map (lambda (item) 
-                                 (* guess_module_width (car item)))
-                               (regexp-match-positions* #rx"1011101" points_str))))
+                (if (regexp-match #rx"1011101" squashed_str)
+                    `(
+                      ,guess_module_width
+                      ,@(map
+                         (lambda (item)
+                           (* guess_module_width (car item)))
+                         (regexp-match-positions* #rx"1011101" squashed_str)))
                     (loop (list-tail points guess_module_width))))
               (loop (cdr points)))
           #f))))
 
 (define (guess-matrix matrix)
-  (printf "~a\n" (length matrix))
   (let loop ([rows matrix]
-             [row_index 0])
+             [row_index 0]
+             [result_list '()])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width (car rows))])
           (if guess_result
-              `(,@guess_result ,row_index)
-              (loop (cdr rows) (add1 row_index))))
-        #f)))
+              (loop (cdr rows) (add1 row_index) (cons `(,row_index ,@guess_result) result_list))
+              (loop (cdr rows) (add1 row_index) result_list)))
+        (reverse result_list))))
 
 (define (check-matrix-integrity matrix)
   (let ([width (length (car matrix))])
@@ -268,28 +269,29 @@
                               (reverse result_list)))
                         (reverse result_list))))
 
-            (printf "~a\n" center_point_list)
-            
             (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
     
 (define (find-pattern matrix)
-  (let loop ([rows matrix]
-             [row_index 0]
-             [result_list '()])
-    (if (not (null? rows))
-        (let ([guess_results (guess-module-width (car rows))]
-              [points_get '()])
-          (for-each
-           (lambda (guess_result)
-             (let ([module_width (first guess_result)]
-                   [point_x (second guess_result)]
-                   [point_y (third guess_result)])
-               (let ([center_point (guess-finder-center-from-start matrix module_width point_x point_y)])
-                 (when center_point
-                       (set! points_get `(,@points_get ,center_point))))))
-           guess_results)
-          (loop (cdr rows) (add1 row_index) `(,@result_list ,@points_get)))
-        (reverse result_list))))
+  (let ([guess_results (guess-matrix matrix)])
+    (printf "~a\n" guess_results)
+    (let loop ([guesses guess_results]
+               [result_list '()])
+      (if (not (null? guesses))
+          (let ([guess_result (car guesses)]
+                [points_get '()])
+            (let ([point_x (first guess_result)]
+                  [module_width (second guess_result)]
+                  [point_y_list (cddr guess_result)])
+                 (for-each
+                  (lambda (point_y)
+                    (let ([center_point (guess-finder-center-from-start matrix module_width point_x point_y)])
+                      (when center_point
+                            (set! points_get `(,@points_get ,center_point)))))
+                  point_y_list))
+            (loop (cdr guesses) `(,@result_list ,@points_get)))
+          (if (= (length result_list) 3)
+              (values (third result_list) (second result_list) (first result_list))
+              #f)))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
