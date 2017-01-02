@@ -255,10 +255,9 @@
 
       (check-equal? (guess-finder-center-from-start matrix 1 2 0) '(3 . 3))
       (check-equal? (guess-finder-center-from-start matrix 1 2 10) '(3 . 13))
-      (check-equal? (guess-finder-center-from-start matrix 1 13 0) '(13 . 3))
+      (check-equal? (guess-finder-center-from-start matrix 1 12 0) '(13 . 3))
 
       (check-equal? (guess-finder-center-from-start matrix 2 2 2) #f)
-      (check-equal? (guess-finder-center-from-start matrix 1 2 1) #f)
 
       (let-values ([(finder1_point finder2_point finder3_point)
                     (find-pattern matrix)])

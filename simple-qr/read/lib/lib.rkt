@@ -21,7 +21,7 @@
                                  (or/c (listof list?) boolean?))]
           [guess-finder-center-from-start (-> (listof list?) 
                                                exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer?
-                                               pair?)]
+                                               (or/c boolean? pair?))]
           [find-pattern (-> (listof list?) (values pair? pair? pair?))]
           ))
 
@@ -166,8 +166,32 @@
           #f))))
 
 (define (guess-finder-center-from-start matrix module_width start_x start_y)
-  '(0 . 0))
+  (let ([matrix_rows (sub1 (length matrix))]
+        [center_point_list #f]
+        [template_line #f])
 
+    (let-values ([(half1 half2) (split-at (list-ref matrix start_x) (* start_y module_width))])
+      (if (< (length half2) (* module_width 7))
+          #f
+          (begin
+            (set! template_line (take half2 (* module_width 7)))
+
+            (set! center_point_list
+                  (let loop ([loop_x start_x]
+                             [result_list '()])
+                    (if (<= loop_x matrix_rows)
+                        (let-values ([(half1 half2) (split-at (list-ref matrix loop_x) (* start_y module_width))])
+                          (if (equal? (take half2 (* module_width 7)) template_line)
+                              (loop
+                               (add1 loop_x)
+                               (cons (cons loop_x (+ start_y (sub1 (* module_width 4)))) result_list))
+                              (reverse result_list)))
+                        (reverse result_list))))
+
+            (printf "~a\n" center_point_list)
+            
+            (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
+    
 (define (guess-matrix matrix)
   (printf "~a\n" (length matrix))
   (let loop ([rows matrix]
