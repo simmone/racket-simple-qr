@@ -270,10 +270,39 @@
                         (reverse result_list))))
 
             (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
-    
+
+(define (find-pattern-center guess_results)
+  (let ([group_map (make-hash)])
+    (let loop ([guesses guess_results]
+               [group_start_x -1]
+               [group_end_x -1])
+      (when (not (null? guesses))
+            (let ([guess_result (car guesses)])
+              (let ([point_x (first guess_result)]
+                    [module_width (second guess_result)]
+                    [point_y_list (cddr guess_result)])
+
+                (if (not (= point_x group_end_x))
+                    (begin
+                      (set! group_start_x point_x)
+                      (set! group_end_x (add1 point_x)))
+                    (set! group_end_x (add1 group_end_x)))
+                
+                (for-each
+                 (lambda (point_y)
+                   (let ([start_point (cons group_start_x point_y)])
+                     (if (hash-has-key? group_map start_point)
+                         (hash-set! group_map start_point `(,@(hash-ref group_map start_point) ,(list point_x point_y module_width)))
+                         (hash-set! group_map start_point `(,(list point_x point_y module_width))))))
+                 point_y_list)))
+            (loop (cdr guesses) group_start_x group_end_x)))
+    group_map))
+
 (define (find-pattern matrix)
-  (let ([guess_results (guess-matrix matrix)])
+  (let* ([guess_results (guess-matrix matrix)]
+         [group_map (find-pattern-center guess_results)])
     (printf "~a\n" guess_results)
+    (printf "~a\n" group_map)
     (let loop ([guesses guess_results]
                [result_list '()])
       (if (not (null? guesses))
