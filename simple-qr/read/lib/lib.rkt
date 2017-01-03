@@ -22,6 +22,7 @@
           [guess-finder-center-from-start (-> (listof list?) 
                                                exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer?
                                                (or/c boolean? pair?))]
+          [point-distance (-> pair? pair? number?)]
           [find-pattern (-> (listof list?) (or/c boolean? list?))]
           ))
 
@@ -298,11 +299,26 @@
             (loop (cdr guesses) group_start_x group_end_x)))
     group_map))
 
+(define (point-distance point_x point_y)
+  (sqrt (+ 
+         (expt (- (car point_x) (car point_y)) 2)
+         (expt (- (cdr point_x) (cdr point_y)) 2))))
+
 (define (find-pattern matrix)
   (let* ([guess_results (guess-matrix matrix)]
-         [group_map (find-pattern-center guess_results)])
+         [group_map (find-pattern-center guess_results)]
+         [center_points
+          (map
+           (lambda (group_list)
+             (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
+                    [module_width (third center_point)]
+                    [point_x (first center_point)]
+                    [point_y (+ (second center_point) (sub1 (* 4 module_width)))])
+               (list point_x point_y module_width)))
+           (hash-values group_map))])
     (printf "~a\n" guess_results)
     (printf "~a\n" group_map)
+    (printf "~a\n" center_points)
     (let loop ([guesses guess_results]
                [result_list '()])
       (if (not (null? guesses))

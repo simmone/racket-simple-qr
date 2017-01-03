@@ -262,6 +262,12 @@
         (check-equal? (second finder_points) '(3 . 13))
         (check-equal? (third finder_points) '(13 . 3))
         )))
+   
+   (test-case
+    "test-point-distance"
+    
+    (check-true (> (point-distance '(0 . 0) '(1 . 1)) 1))
+    )
 
 ;   (test-case
 ;    "test-qr-read"
