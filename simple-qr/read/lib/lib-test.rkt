@@ -246,9 +246,9 @@
                     (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
                     (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
                     (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
+                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
+                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
+                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
                     (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
                     (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
                     )])
@@ -257,11 +257,10 @@
       (check-equal? (guess-finder-center-from-start matrix 1 2 10) '(3 . 13))
       (check-equal? (guess-finder-center-from-start matrix 1 12 0) '(13 . 3))
 
-      (let-values ([(finder1_point finder2_point finder3_point)
-                    (find-pattern matrix)])
-        (check-equal? finder1_point '(3 . 3))
-        (check-equal? finder2_point '(3 . 13))
-        (check-equal? finder3_point '(13 . 3))
+      (let ([finder_points (find-pattern matrix)])
+        (check-equal? (first finder_points) '(3 . 3))
+        (check-equal? (second finder_points) '(3 . 13))
+        (check-equal? (third finder_points) '(13 . 3))
         )))
 
 ;   (test-case

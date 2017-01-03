@@ -22,7 +22,7 @@
           [guess-finder-center-from-start (-> (listof list?) 
                                                exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer?
                                                (or/c boolean? pair?))]
-          [find-pattern (-> (listof list?) (values pair? pair? pair?))]
+          [find-pattern (-> (listof list?) (or/c boolean? list?))]
           ))
 
 (require racket/draw)
@@ -290,7 +290,7 @@
                   point_y_list))
             (loop (cdr guesses) `(,@result_list ,@points_get)))
           (if (= (length result_list) 3)
-              (values (third result_list) (second result_list) (first result_list))
+              (reverse result_list)
               #f)))))
 
 (define (qr-read pic_path)
