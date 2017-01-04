@@ -7,7 +7,7 @@
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
-          [guess-module-width (-> list? (or/c boolean? list?))]
+          [guess-module-width (-> (or/c #f exact-nonnegative-integer?) list? (or/c boolean? list?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
@@ -147,36 +147,41 @@
               (reverse (cons last_value result_list))
               (reverse result_list))))))
 
-(define (guess-module-width points_row)
+(define (guess-module-width guess_module_width points_row)
   (let ([max_module_width (floor (/ (length points_row) 14))])
     (let loop ([points points_row])
       (if (not (null? points))
           (if (= (car points) 1)
-              (let* ([guess_module_width (guess-first-dark-width points)]
-                     [squashed_line (squash-points points guess_module_width)]
-                     [squashed_str 
-                      (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
-                (if (regexp-match #rx"1011101" squashed_str)
-                    `(
-                      ,guess_module_width
-                      ,@(map
-                         (lambda (item)
-                           (* guess_module_width (car item)))
-                         (regexp-match-positions* #rx"1011101" squashed_str)))
-                    (loop (list-tail points guess_module_width))))
+              (begin
+                (when (not guess_module_width)
+                      (set! guess_module_width (guess-first-dark-width points)))
+
+                (let* ([squashed_line (squash-points points guess_module_width)]
+                       [squashed_str 
+                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
+                  (if (regexp-match #rx"1011101" squashed_str)
+                      (cons
+                       guess_module_width
+                       (map
+                        (lambda (item)
+                          (* guess_module_width (car item)))
+                        (regexp-match-positions* #rx"1011101" squashed_str)))
+                      (loop (list-tail points guess_module_width)))))
               (loop (cdr points)))
           #f))))
 
 (define (guess-matrix matrix)
   (let loop ([rows matrix]
              [row_index 0]
-             [result_list '()])
+             [result_list '()]
+             [guess_module_width #f])
     (if (not (null? rows))
-        (let ([guess_result (guess-module-width (car rows))])
-          (if guess_result
-              (loop (cdr rows) (add1 row_index) (cons `(,row_index ,@guess_result) result_list))
+        (let* ([guess_result (guess-module-width guess_module_width (car rows))]
+               [guess_module_width (car guess_result)])
+          (if (cdr guess_result)
+              (loop (cdr rows) (add1 row_index) (cons `(,row_index ,@(cdr guess_result)) result_list))
               (loop (cdr rows) (add1 row_index) result_list)))
-        (reverse result_list))))
+        (cons guess_module_width (reverse result_list)))))
 
 (define (check-matrix-integrity matrix)
   (let ([width (length (car matrix))])
@@ -280,7 +285,6 @@
       (when (not (null? guesses))
             (let ([guess_result (car guesses)])
               (let ([point_x (first guess_result)]
-                    [module_width (second guess_result)]
                     [point_y_list (cddr guess_result)])
 
                 (if (not (= point_x group_end_x))
@@ -293,8 +297,8 @@
                  (lambda (point_y)
                    (let ([start_point (cons group_start_x point_y)])
                      (if (hash-has-key? group_map start_point)
-                         (hash-set! group_map start_point `(,@(hash-ref group_map start_point) ,(list point_x point_y module_width)))
-                         (hash-set! group_map start_point `(,(list point_x point_y module_width))))))
+                         (hash-set! group_map start_point `(,@(hash-ref group_map start_point) ,(cons point_x point_y)))
+                         (hash-set! group_map start_point `(,(cons point_x point_y))))))
                  point_y_list)))
             (loop (cdr guesses) group_start_x group_end_x)))
     group_map))
@@ -306,19 +310,36 @@
 
 (define (find-pattern matrix)
   (let* ([guess_results (guess-matrix matrix)]
-         [group_map (find-pattern-center guess_results)]
+         [module_width (car guess_results)]
+         [group_map (find-pattern-center (cdr guess_results))]
          [center_points
           (map
            (lambda (group_list)
              (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
-                    [module_width (third center_point)]
                     [point_x (first center_point)]
                     [point_y (+ (second center_point) (sub1 (* 4 module_width)))])
                (list point_x point_y module_width)))
-           (hash-values group_map))])
+           (hash-values group_map))]
+         [points_distance_map (make-hash)]
+         )
     (printf "~a\n" guess_results)
     (printf "~a\n" group_map)
     (printf "~a\n" center_points)
+    
+    (let outer-loop ([points center_points])
+      (when (not (null? points))
+            (let inner-loop ([inner_points center_points])
+              (when (not (null? inner_points))
+                    (when (and
+                           (not (equal? (car points) (car inner_points)))
+                           (not (hash-has-key? points_distance_map (cons (car points) (car inner_points)))))
+                          (hash-set! points_distance_map (cons (car points) (car inner_points))
+                                     (point-distance (car points) (car inner_points))))
+                    (inner-loop (cdr inner_points))))
+            (outer-loop (cdr points))))
+    
+    (printf "~a\n" points_distance_map)
+
     (let loop ([guesses guess_results]
                [result_list '()])
       (if (not (null? guesses))

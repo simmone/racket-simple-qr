@@ -109,16 +109,16 @@
     "test-guess-module-width"
 
     (let ([test_points '(1 1)])
-      (check-equal? (guess-module-width test_points) #f))
+      (check-equal? (guess-module-width #f test_points) #f))
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
-      (check-equal? (guess-module-width test_points) (list 1 2 12)))
+      (check-equal? (guess-module-width #f test_points) (list 1 2 12)))
 
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)])
-      (check-equal? (guess-module-width test_points) #f))
+      (check-equal? (guess-module-width #f test_points) #f))
 
     (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)])
-      (check-equal? (guess-module-width test_points) (list 2 2 18)))
+      (check-equal? (guess-module-width #f test_points) (list 2 2 18)))
     )
 
    (test-case
