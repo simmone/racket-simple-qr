@@ -19,9 +19,6 @@
                                  exact-nonnegative-integer? 
                                  exact-nonnegative-integer? 
                                  (or/c (listof list?) boolean?))]
-          [guess-finder-center-from-start (-> (listof list?) 
-                                               exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer?
-                                               (or/c boolean? pair?))]
           [point-distance (-> pair? pair? number?)]
           [find-pattern (-> (listof list?) (or/c boolean? list?))]
           ))
@@ -156,7 +153,7 @@
                 (when (not guess_module_width)
                       (set! guess_module_width (guess-first-dark-width points)))
 
-                (let* ([squashed_line (squash-points points guess_module_width)]
+                (let* ([squashed_line (squash-points points_row guess_module_width)]
                        [squashed_str 
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
                   (if (regexp-match #rx"1011101" squashed_str)
@@ -166,7 +163,9 @@
                         (lambda (item)
                           (* guess_module_width (car item)))
                         (regexp-match-positions* #rx"1011101" squashed_str)))
-                      (loop (list-tail points guess_module_width)))))
+                      (if (> (length points) guess_module_width)
+                          (loop (list-tail points guess_module_width))
+                          #f))))
               (loop (cdr points)))
           #f))))
 
@@ -176,8 +175,11 @@
              [result_list '()]
              [guess_module_width #f])
     (if (not (null? rows))
-        (let* ([guess_result (guess-module-width guess_module_width (car rows))]
-               [guess_module_width (car guess_result)])
+        (let ([guess_result (guess-module-width guess_module_width (car rows))])
+
+          (if guess_result
+              (set!
+          (car guess_result)])
           (if (cdr guess_result)
               (loop (cdr rows) (add1 row_index) (cons `(,row_index ,@(cdr guess_result)) result_list))
               (loop (cdr rows) (add1 row_index) result_list)))
@@ -252,31 +254,6 @@
           (verify-matrix carved_matrix))
         #f)))
 
-(define (guess-finder-center-from-start matrix module_width start_x start_y)
-  (let ([matrix_rows (sub1 (length matrix))]
-        [center_point_list #f]
-        [template_line #f])
-
-    (let-values ([(half1 half2) (split-at (list-ref matrix start_x) start_y)])
-      (if (< (length half2) (* module_width 7))
-          #f
-          (begin
-            (set! template_line (take half2 (* module_width 7)))
-
-            (set! center_point_list
-                  (let loop ([loop_x start_x]
-                             [result_list '()])
-                    (if (<= loop_x matrix_rows)
-                        (let-values ([(half1 half2) (split-at (list-ref matrix loop_x) start_y)])
-                          (if (equal? (take half2 (* module_width 7)) template_line)
-                              (loop
-                               (add1 loop_x)
-                               (cons (cons loop_x (+ start_y (sub1 (* module_width 4)))) result_list))
-                              (reverse result_list)))
-                        (reverse result_list))))
-
-            (list-ref center_point_list (floor (/ (length center_point_list) 2))))))))
-
 (define (find-pattern-center guess_results)
   (let ([group_map (make-hash)])
     (let loop ([guesses guess_results]
@@ -339,25 +316,7 @@
             (outer-loop (cdr points))))
     
     (printf "~a\n" points_distance_map)
-
-    (let loop ([guesses guess_results]
-               [result_list '()])
-      (if (not (null? guesses))
-          (let ([guess_result (car guesses)]
-                [points_get '()])
-            (let ([point_x (first guess_result)]
-                  [module_width (second guess_result)]
-                  [point_y_list (cddr guess_result)])
-                 (for-each
-                  (lambda (point_y)
-                    (let ([center_point (guess-finder-center-from-start matrix module_width point_x point_y)])
-                      (when center_point
-                            (set! points_get `(,@points_get ,center_point)))))
-                  point_y_list))
-            (loop (cdr guesses) `(,@result_list ,@points_get)))
-          (if (= (length result_list) 3)
-              (reverse result_list)
-              #f)))))
+    ))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
