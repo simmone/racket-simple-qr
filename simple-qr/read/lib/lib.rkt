@@ -176,13 +176,17 @@
              [guess_module_width #f])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
-
           (if guess_result
-              (set!
-          (car guess_result)])
-          (if (cdr guess_result)
-              (loop (cdr rows) (add1 row_index) (cons `(,row_index ,@(cdr guess_result)) result_list))
-              (loop (cdr rows) (add1 row_index) result_list)))
+              (loop 
+               (cdr rows) 
+               (add1 row_index) 
+               (cons `(,row_index ,@(cdr guess_result)) result_list)
+               (car guess_result))
+              (loop 
+               (cdr rows) 
+               (add1 row_index) 
+               result_list
+               guess_module_width)))
         (cons guess_module_width (reverse result_list)))))
 
 (define (check-matrix-integrity matrix)
@@ -262,7 +266,7 @@
       (when (not (null? guesses))
             (let ([guess_result (car guesses)])
               (let ([point_x (first guess_result)]
-                    [point_y_list (cddr guess_result)])
+                    [point_y_list (cdr guess_result)])
 
                 (if (not (= point_x group_end_x))
                     (begin
@@ -285,6 +289,9 @@
          (expt (- (car point_x) (car point_y)) 2)
          (expt (- (cdr point_x) (cdr point_y)) 2))))
 
+(define (point->str point)
+  (string-append (number->string (car point)) "-" (number->string (cdr point))))
+
 (define (find-pattern matrix)
   (let* ([guess_results (guess-matrix matrix)]
          [module_width (car guess_results)]
@@ -293,9 +300,9 @@
           (map
            (lambda (group_list)
              (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
-                    [point_x (first center_point)]
-                    [point_y (+ (second center_point) (sub1 (* 4 module_width)))])
-               (list point_x point_y module_width)))
+                    [point_x (car center_point)]
+                    [point_y (+ (cdr center_point) (sub1 (* 4 module_width)))])
+               (cons point_x point_y)))
            (hash-values group_map))]
          [points_distance_map (make-hash)]
          )
@@ -309,13 +316,14 @@
               (when (not (null? inner_points))
                     (when (and
                            (not (equal? (car points) (car inner_points)))
-                           (not (hash-has-key? points_distance_map (cons (car points) (car inner_points)))))
-                          (hash-set! points_distance_map (cons (car points) (car inner_points))
+                           (not (hash-has-key? points_distance_map (cons (point->str (car points)) (point->str (car inner_points))))))
+                          (hash-set! points_distance_map (cons (point->str (car points)) (point->str (car inner_points)))
                                      (point-distance (car points) (car inner_points))))
                     (inner-loop (cdr inner_points))))
             (outer-loop (cdr points))))
     
     (printf "~a\n" points_distance_map)
+    #f
     ))
 
 (define (qr-read pic_path)
