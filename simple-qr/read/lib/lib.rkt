@@ -22,6 +22,7 @@
           [point-distance (-> pair? pair? number?)]
           [find-pattern (-> (listof list?) (or/c boolean? list?))]
           [check-center-points-valid (-> hash? boolean?)]
+          [get-center-points (-> hash? list?)]
           ))
 
 (require racket/draw)
@@ -286,7 +287,6 @@
     group_map))
 
 (define (check-center-points-valid points_distance_map)
-  (printf "~a\n" (hash->list points_distance_map))
   (if (not (= (hash-count points_distance_map) 6))
       #f
       (if (not 
@@ -303,6 +303,28 @@
             (hash->list points_distance_map)))
           #f
           #t)))
+
+(define (get-center-points points_distance_map)
+  (let ([points_hash (make-hash)]
+        [max_distance 0]
+        [point_a #f]
+        [point_b #f]
+        [pint_c #f])
+
+    (hash-for-each
+     points_distance_map
+     (lambda (points_pair distance)
+       (when (> distance max_distance)
+             (set! max_distance distance))
+
+       (hash-set! points_hash (car points_pair) "")))
+
+    (let ([center_points (hash-keys points_hash)])
+      (if (= (hash-ref (cons (list-ref center_points 0) (list-ref center_points 1)) points_distance_map) max_distance)
+          (set! point_a (list-ref center_points 2))
+          (if (= (hash-ref (cons (list-ref center_points 0) (list-ref center_points 2)) points_distance_map) max_distance)
+              (set! point_a (list-ref center_points 1))
+              (set! point_a (list-ref center_points 0))))
 
 (define (point-distance point_x point_y)
   (ceiling
