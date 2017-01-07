@@ -308,23 +308,79 @@
   (let ([points_hash (make-hash)]
         [max_distance 0]
         [point_a #f]
+        [point_maybe_b #f]
+        [point_maybe_c #f]
         [point_b #f]
-        [pint_c #f])
+        [point_c #f])
 
     (hash-for-each
      points_distance_map
      (lambda (points_pair distance)
        (when (> distance max_distance)
              (set! max_distance distance))
-
        (hash-set! points_hash (car points_pair) "")))
 
     (let ([center_points (hash-keys points_hash)])
-      (if (= (hash-ref (cons (list-ref center_points 0) (list-ref center_points 1)) points_distance_map) max_distance)
-          (set! point_a (list-ref center_points 2))
-          (if (= (hash-ref (cons (list-ref center_points 0) (list-ref center_points 2)) points_distance_map) max_distance)
-              (set! point_a (list-ref center_points 1))
-              (set! point_a (list-ref center_points 0))))
+      (if (= (hash-ref points_distance_map (cons (list-ref center_points 0) (list-ref center_points 1))) max_distance)
+          (begin
+            (set! point_a (str->point (list-ref center_points 2)))
+            (set! point_maybe_b (str->point (list-ref center_points 0)))
+            (set! point_maybe_c (str->point (list-ref center_points 1))))
+          (if (= (hash-ref points_distance_map (cons (list-ref center_points 0) (list-ref center_points 2))) max_distance)
+              (begin
+                (set! point_a (str->point (list-ref center_points 1)))
+                (set! point_maybe_b (str->point (list-ref center_points 0)))
+                (set! point_maybe_c (str->point (list-ref center_points 2))))
+              (begin
+                (set! point_a (str->point (list-ref center_points 0)))
+                (set! point_maybe_b (str->point (list-ref center_points 1)))
+                (set! point_maybe_c (str->point (list-ref center_points 2)))))))
+
+    (let ([point_a_x (car point_a)]
+          [point_a_y (cdr point_a)])
+      (cond
+       [(and
+         (>= (cdr point_maybe_b) point_a_y)
+         (>= (cdr point_maybe_c) point_a_y))
+        (if (< (car point_maybe_b) (car point_maybe_c))
+            (begin
+              (set! point_b point_maybe_b)
+              (set! point_c point_maybe_c))
+            (begin
+              (set! point_b point_maybe_c)
+              (set! point_c point_maybe_b)))]
+       [(and
+         (<= (cdr point_maybe_b) point_a_y)
+         (<= (cdr point_maybe_c) point_a_y))
+        (if (> (car point_maybe_b) (car point_maybe_c))
+            (begin
+              (set! point_b point_maybe_b)
+              (set! point_c point_maybe_c))
+            (begin
+              (set! point_b point_maybe_c)
+              (set! point_c point_maybe_b)))]
+       [(and
+         (>= (car point_maybe_b) point_a_x)
+         (>= (car point_maybe_c) point_a_x))
+        (if (> (cdr point_maybe_b) (cdr point_maybe_c))
+            (begin
+              (set! point_b point_maybe_b)
+              (set! point_c point_maybe_c))
+            (begin
+              (set! point_b point_maybe_c)
+              (set! point_c point_maybe_b)))]
+       [(and
+         (<= (car point_maybe_b) point_a_x)
+         (<= (car point_maybe_c) point_a_x))
+        (if (< (cdr point_maybe_b) (cdr point_maybe_c))
+            (begin
+              (set! point_b point_maybe_b)
+              (set! point_c point_maybe_c))
+            (begin
+              (set! point_b point_maybe_c)
+              (set! point_c point_maybe_b)))]))
+
+      (list point_a point_b point_c)))
 
 (define (point-distance point_x point_y)
   (ceiling
@@ -335,11 +391,15 @@
 (define (point->str point)
   (string-append (number->string (car point)) "-" (number->string (cdr point))))
 
+(define (str->point str)
+  (let ([items (regexp-split #rx"-" str)])
+    (cons (string->number (first items)) (string->number (second items)))))
+
 (define (find-pattern matrix)
   (let* ([guess_results (guess-matrix matrix)]
          [module_width (car guess_results)]
          [group_map (find-pattern-center (cdr guess_results))]
-         [center_points
+         [all_center_points
           (map
            (lambda (group_list)
              (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
@@ -348,14 +408,15 @@
                (cons point_x point_y)))
            (hash-values group_map))]
          [points_distance_map (make-hash)]
+         [center_points #f]
          )
     (printf "~a\n" guess_results)
     (printf "~a\n" group_map)
-    (printf "~a\n" center_points)
+    (printf "~a\n" all_center_points)
     
-    (let outer-loop ([points center_points])
+    (let outer-loop ([points all_center_points])
       (when (not (null? points))
-            (let inner-loop ([inner_points center_points])
+            (let inner-loop ([inner_points all_center_points])
               (when (not (null? inner_points))
                     (when (not (equal? (car points) (car inner_points)))
                           (hash-set! points_distance_map 
@@ -367,7 +428,10 @@
     (printf "~a\n" points_distance_map)
 
     (if (check-center-points-valid points_distance_map)
-        #f
+        (begin
+          (set! center_points (get-center-points points_distance_map))
+          (printf "~a\n" center_points)
+          #f)
         #f)
     ))
 

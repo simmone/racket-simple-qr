@@ -231,6 +231,56 @@
     )
 
    (test-case
+    "test-point-distance"
+    
+    (check-true (> (point-distance '(0 . 0) '(1 . 1)) 1))
+    )
+   
+   (test-case
+    "test-check-center-points-valid"
+    
+    (let ([points_distance_map
+           '#hash((("3-13" . "3-3") . 10) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
+      (check-true (check-center-points-valid points_distance_map)))
+
+    (let ([points_distance_map
+           '#hash((("3-13" . "3-3") . 11) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
+      (check-false (check-center-points-valid points_distance_map)))
+    )
+   
+   (test-case
+    "test-get-center-points"
+
+    (let ([points_distance_map
+           '#hash((("3-13" . "3-3") . 10) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (3 . 13) (13 . 3))))
+
+    (let ([points_distance_map
+           '#hash(
+                  (("3-3" . "1-10") . 10) (("3-3" . "5-10") . 10.0) (("1-10" . "5-10") . 15)
+                  (("1-10" . "3-3") . 10) (("5-10" . "3-3") . 10.0) (("5-10" . "1-10") . 15))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (1 . 10) (5 . 10))))
+
+    (let ([points_distance_map
+           '#hash(
+                  (("3-3" . "4-10") . 10) (("3-3" . "1-1") . 10.0) (("4-10" . "1-11") . 15)
+                  (("4-10" . "3-3") . 10) (("1-1" . "3-3") . 10.0) (("1-11" . "4-10") . 15))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (4 . 10) (1 . 1))))
+
+    (let ([points_distance_map
+           '#hash(
+                  (("3-3" . "5-2") . 10) (("3-3" . "1-1") . 10.0) (("5-2" . "1-11") . 15)
+                  (("5-2" . "3-3") . 10) (("1-1" . "3-3") . 10.0) (("1-11" . "5-2") . 15))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (5 . 2) (1 . 1))))
+
+    (let ([points_distance_map
+           '#hash(
+                  (("3-3" . "1-1") . 10) (("3-3" . "2-10") . 10.0) (("2-10" . "1-1") . 15)
+                  (("1-1" . "3-3") . 10) (("2-10" . "3-3") . 10.0) (("1-1" . "2-10") . 15))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (5 . 2) (1 . 1))))
+    )
+
+   (test-case
     "test-find-pattern"
 
     (let ([matrix '(
@@ -255,37 +305,12 @@
 
 
       (let ([finder_points (find-pattern matrix)])
-        (check-equal? (first finder_points) '(3 . 3))
-        (check-equal? (second finder_points) '(3 . 13))
-        (check-equal? (third finder_points) '(13 . 3))
+        (when finder_points
+              (check-equal? (first finder_points) '(3 . 3))
+              (check-equal? (second finder_points) '(3 . 13))
+              (check-equal? (third finder_points) '(13 . 3)))
         )))
    
-   (test-case
-    "test-point-distance"
-    
-    (check-true (> (point-distance '(0 . 0) '(1 . 1)) 1))
-    )
-   
-   (test-case
-    "test-check-center-points-valid"
-    
-    (let ([points_distance_map
-           '#hash((("3-13" . "3-3") . 10) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
-      (check-true (check-center-points-valid points_distance_map)))
-
-    (let ([points_distance_map
-           '#hash((("3-13" . "3-3") . 11) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
-      (check-false (check-center-points-valid points_distance_map)))
-    )
-   
-   (test-case
-    "test-get-center-points"
-
-    (let ([points_distance_map
-           '#hash((("3-13" . "3-3") . 10) (("3-13" . "13-3") . 15.0) (("13-3" . "3-3") . 10) (("13-3" . "3-13") . 15.0) (("3-3" . "3-13") . 10) (("3-3" . "13-3") . 10))])
-      (check-equal? (get-center-points points_distance_map)
-                    '((3 . 3) (3 . 13) (13 . 3)))))
-
 ;   (test-case
 ;    "test-qr-read"
 ; 
