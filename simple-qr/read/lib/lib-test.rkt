@@ -265,6 +265,18 @@
     
     (check-true (> (point-distance '(0 . 0) '(1 . 1)) 1))
     )
+   
+   (test-case
+    "test-check-center-points-valid"
+    
+    (let ([points_distance_map
+           '#hash(((3-13 . 3-3) . 10) ((3-13 . 13-3) . 15.0) ((13-3 . 3-3) . 10) ((13-3 . 3-13) . 15.0) ((3-3 . 3-13) . 10) ((3-3 . 13-3) . 10))])
+      (check-true (check-center-points-valid points_distance_map)))
+
+    (let ([points_distance_map
+           '#hash(((3-13 . 3-3) . 11) ((3-13 . 13-3) . 15.0) ((13-3 . 3-3) . 10) ((13-3 . 3-13) . 15.0) ((3-3 . 3-13) . 10) ((3-3 . 13-3) . 10))])
+      (check-false (check-center-points-valid points_distance_map)))
+    )
 
 ;   (test-case
 ;    "test-qr-read"

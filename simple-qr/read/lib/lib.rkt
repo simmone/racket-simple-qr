@@ -21,6 +21,7 @@
                                  (or/c (listof list?) boolean?))]
           [point-distance (-> pair? pair? number?)]
           [find-pattern (-> (listof list?) (or/c boolean? list?))]
+          [check-center-points-valid (-> hash? boolean?)]
           ))
 
 (require racket/draw)
@@ -284,10 +285,30 @@
             (loop (cdr guesses) group_start_x group_end_x)))
     group_map))
 
+(define (check-center-points-valid points_distance_map)
+  (printf "~a\n" (hash->list points_distance_map))
+  (if (not (= (hash-count points_distance_map) 6))
+      #f
+      (if (not 
+           (andmap
+            (lambda (item)
+              (let* ([point_pair (car item)]
+                     [distance (cdr item)]
+                     [point_a (car point_pair)]
+                     [point_b (cdr point_pair)]
+                     [opposite_pair (cons point_b point_a)])
+                (and
+                 (hash-has-key? points_distance_map opposite_pair)
+                 (= distance (hash-ref points_distance_map opposite_pair)))))
+            (hash->list points_distance_map)))
+          #f
+          #t)))
+
 (define (point-distance point_x point_y)
-  (sqrt (+ 
-         (expt (- (car point_x) (car point_y)) 2)
-         (expt (- (cdr point_x) (cdr point_y)) 2))))
+  (ceiling
+   (sqrt (+ 
+          (expt (- (car point_x) (car point_y)) 2)
+          (expt (- (cdr point_x) (cdr point_y)) 2)))))
 
 (define (point->str point)
   (string-append (number->string (car point)) "-" (number->string (cdr point))))
@@ -314,16 +335,18 @@
       (when (not (null? points))
             (let inner-loop ([inner_points center_points])
               (when (not (null? inner_points))
-                    (when (and
-                           (not (equal? (car points) (car inner_points)))
-                           (not (hash-has-key? points_distance_map (cons (point->str (car points)) (point->str (car inner_points))))))
-                          (hash-set! points_distance_map (cons (point->str (car points)) (point->str (car inner_points)))
+                    (when (not (equal? (car points) (car inner_points)))
+                          (hash-set! points_distance_map 
+                                     (cons (point->str (car points)) (point->str (car inner_points)))
                                      (point-distance (car points) (car inner_points))))
                     (inner-loop (cdr inner_points))))
             (outer-loop (cdr points))))
-    
+
     (printf "~a\n" points_distance_map)
-    #f
+
+    (if (check-center-points-valid points_distance_map)
+        #f
+        #f)
     ))
 
 (define (qr-read pic_path)
