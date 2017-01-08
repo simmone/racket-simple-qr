@@ -263,21 +263,21 @@
 
     (let ([points_distance_map
            '#hash(
-                  (("3-3" . "4-10") . 10) (("3-3" . "1-1") . 10.0) (("4-10" . "1-11") . 15)
-                  (("4-10" . "3-3") . 10) (("1-1" . "3-3") . 10.0) (("1-11" . "4-10") . 15))])
-      (check-equal? (get-center-points points_distance_map) '((3 . 3) (4 . 10) (1 . 1))))
+                  (("3-3" . "4-10") . 10) (("3-3" . "11-1") . 10.0) (("4-10" . "11-1") . 15)
+                  (("4-10" . "3-3") . 10) (("11-1" . "3-3") . 10.0) (("11-1" . "4-10") . 15))])
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (4 . 10) (11 . 1))))
 
     (let ([points_distance_map
            '#hash(
-                  (("3-3" . "5-2") . 10) (("3-3" . "1-1") . 10.0) (("5-2" . "1-11") . 15)
-                  (("5-2" . "3-3") . 10) (("1-1" . "3-3") . 10.0) (("1-11" . "5-2") . 15))])
+                  (("3-3" . "5-2") . 10) (("3-3" . "1-1") . 10.0) (("5-2" . "1-1") . 15)
+                  (("5-2" . "3-3") . 10) (("1-1" . "3-3") . 10.0) (("1-1" . "5-2") . 15))])
       (check-equal? (get-center-points points_distance_map) '((3 . 3) (5 . 2) (1 . 1))))
 
     (let ([points_distance_map
            '#hash(
                   (("3-3" . "1-1") . 10) (("3-3" . "2-10") . 10.0) (("2-10" . "1-1") . 15)
                   (("1-1" . "3-3") . 10) (("2-10" . "3-3") . 10.0) (("1-1" . "2-10") . 15))])
-      (check-equal? (get-center-points points_distance_map) '((3 . 3) (5 . 2) (1 . 1))))
+      (check-equal? (get-center-points points_distance_map) '((3 . 3) (1 . 1) (2 . 10))))
     )
 
    (test-case
@@ -304,22 +304,22 @@
                     )])
 
 
-      (let ([finder_points (find-pattern matrix)])
+      (let ([finder_points (find-pattern-center-points matrix)])
         (when finder_points
               (check-equal? (first finder_points) '(3 . 3))
               (check-equal? (second finder_points) '(3 . 13))
               (check-equal? (third finder_points) '(13 . 3)))
         )))
    
-;   (test-case
-;    "test-qr-read"
-; 
-;    (parameterize
-;     ([*trace_level* 1])
-;     (qr-read "test.png")
-;;     (qr-read "test1.jpg")
-;    )
-;    )
+   (test-case
+    "test-qr-read"
+ 
+    (parameterize
+     ([*trace_level* 1])
+     (qr-read "test.png")
+;     (qr-read "test1.jpg")
+    )
+    )
 
    ))
 

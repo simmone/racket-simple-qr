@@ -2,7 +2,7 @@
 
 (provide (contract-out
           [pic->points (-> path-string? list?)]
-          [points->pic (-> (listof list?) path-string? any)]
+          [points->pic (-> (listof list?) path-string? hash? any)]
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [print-points (-> list? void?)]
@@ -20,7 +20,7 @@
                                  exact-nonnegative-integer? 
                                  (or/c (listof list?) boolean?))]
           [point-distance (-> pair? pair? number?)]
-          [find-pattern (-> (listof list?) (or/c boolean? list?))]
+          [find-pattern-center-points (-> (listof list?) (or/c boolean? list?))]
           [check-center-points-valid (-> hash? boolean?)]
           [get-center-points (-> hash? list?)]
           ))
@@ -92,23 +92,28 @@
               (printf "\n")))
         (row-loop (cdr loop_row_list)))))
 
-(define (points->pic points_list pic_path)
+(define (points->pic points_list pic_path pixel_map)
   (let* ([width (length (car points_list))]
          [height (length points_list)]
          [points_pic (make-object bitmap% width height)])
     (send points_pic set-argb-pixels 0 0 width height 
           (let loop ([rows points_list]
+                     [row_index 0]
                      [bytes_list '()])
             (if (not (null? rows))
                 (loop
                  (cdr rows)
+                 (add1 row_index)
                  (cons
                   (let col-loop ([cols (car rows)]
+                                 [col_index 0]
                                  [col_bytes_list '()])
                     (if (not (null? cols))
-                        (if (= (car cols) 0)
-                            (col-loop (cdr cols) (cons 255 (cons 255 (cons 255 (cons 255 col_bytes_list)))))
-                            (col-loop (cdr cols) (cons 0 (cons 0 (cons 0 (cons 255 col_bytes_list))))))
+                        (if (hash-has-key? pixel_map (cons row_index col_index))
+                            (col-loop (cdr cols) (add1 col_index) `(,@(hash-ref pixel_map (cons row_index col_index)) ,@col_bytes_list))
+                            (if (= (car cols) 0)
+                                (col-loop (cdr cols) (add1 col_index) (cons 255 (cons 255 (cons 255 (cons 255 col_bytes_list)))))
+                                (col-loop (cdr cols) (add1 col_index) (cons 0 (cons 0 (cons 0 (cons 255 col_bytes_list)))))))
                         (reverse col_bytes_list)))
                   bytes_list))
                 (list->bytes (foldr (lambda (a b) (append a b)) '() (reverse bytes_list))))))
@@ -395,7 +400,7 @@
   (let ([items (regexp-split #rx"-" str)])
     (cons (string->number (first items)) (string->number (second items)))))
 
-(define (find-pattern matrix)
+(define (find-pattern-center-points matrix)
   (let* ([guess_results (guess-matrix matrix)]
          [module_width (car guess_results)]
          [group_map (find-pattern-center (cdr guess_results))]
@@ -410,9 +415,10 @@
          [points_distance_map (make-hash)]
          [center_points #f]
          )
-    (printf "~a\n" guess_results)
-    (printf "~a\n" group_map)
-    (printf "~a\n" all_center_points)
+
+    (trace (format "step4 guess_results:~a" guess_results) 1)
+    (trace (format "step4 group_map:~a" group_map) 1)
+    (trace (format "step4 all_center_points:~a" all_center_points) 1)
     
     (let outer-loop ([points all_center_points])
       (when (not (null? points))
@@ -425,15 +431,12 @@
                     (inner-loop (cdr inner_points))))
             (outer-loop (cdr points))))
 
-    (printf "~a\n" points_distance_map)
+    (trace (format "step4 points_distance_map:~a" points_distance_map) 1)
 
     (if (check-center-points-valid points_distance_map)
-        (begin
-          (set! center_points (get-center-points points_distance_map))
-          (printf "~a\n" center_points)
-          #f)
+        (get-center-points points_distance_map)
         #f)
-    ))
+    #f))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -443,7 +446,7 @@
          [rotate_each_tries #f]
          [step2_threshold #f]
          [step3_bw_points #f]
-         [step4_qr_points #f])
+         [step4_pattern_center_points #f])
 
     (set! step1_points_list (pic->points pic_path))
     (set! original_width (length step1_points_list))
@@ -459,9 +462,15 @@
 
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
-    (points->pic step3_bw_points "step3_bw.png")
+    (points->pic step3_bw_points "step3_bw.png" (make-hash))
     
-    (set! step4_qr_points (find-pattern step3_bw_points))
-    (trace (format "step4 qr points:~a" step4_qr_points) 1)
-    (points->pic step4_qr_points ".png")
+    (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
+    (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
+    (when step4_pattern_center_points
+          (let ([pixel_map (make-hash)])
+            (hash-set! pixel_map (first step4_pattern_center_points) '(0 0 255 255))
+            (hash-set! pixel_map (second step4_pattern_center_points) '(0 255 0 255))
+            (hash-set! pixel_map (third step4_pattern_center_points) '(255 0 0 255))
+
+            (points->pic step4_pattern_center_points "step4_pattern_center.png" pixel_map)))
     ""))
