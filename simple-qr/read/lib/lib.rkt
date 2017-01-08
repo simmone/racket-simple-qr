@@ -12,13 +12,7 @@
           [*trace_level* parameter?]
           [trace (-> string? exact-nonnegative-integer? void?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
-          [verify-matrix (-> (listof list?) (or/c (listof list?) boolean?))]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
-          [try-to-get-matrix (-> (listof list?) 
-                                 exact-nonnegative-integer? 
-                                 exact-nonnegative-integer? 
-                                 exact-nonnegative-integer? 
-                                 (or/c (listof list?) boolean?))]
           [point-distance (-> pair? pair? number?)]
           [find-pattern-center-points (-> (listof list?) (or/c boolean? list?))]
           [check-center-points-valid (-> hash? boolean?)]
@@ -163,13 +157,16 @@
                 (let* ([squashed_line (squash-points points_row guess_module_width)]
                        [squashed_str 
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
-                  (if (regexp-match #rx"1011101" squashed_str)
-                      (cons
-                       guess_module_width
-                       (map
-                        (lambda (item)
-                          (* guess_module_width (car item)))
-                        (regexp-match-positions* #rx"1011101" squashed_str)))
+
+                  (if (regexp-match #rx"010111010" squashed_str)
+                      (begin
+                        (printf "~a\n" squashed_str)
+                        (cons
+                         guess_module_width
+                         (map
+                          (lambda (item)
+                            (* guess_module_width (add1 (car item))))
+                          (regexp-match-positions* #rx"010111010" squashed_str))))
                       (if (> (length points) guess_module_width)
                           (loop (list-tail points guess_module_width))
                           #f))))
@@ -183,6 +180,7 @@
              [guess_module_width #f])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
+          (printf "row:~a\n" row_index)
           (if guess_result
               (loop 
                (cdr rows) 
@@ -231,39 +229,6 @@
                (take (drop (list-ref matrix loop_index) start_y) (add1 (- end_y start_y)))
                result_list))
         (reverse result_list)))))
-
-(define (verify-matrix matrix)
-  (let* ([matrix_width (length matrix)]
-         [expected_matrix '(
-                            (1 1 1 1 1 1 1)
-                            (1 0 0 0 0 0 1)
-                            (1 0 1 1 1 0 1)
-                            (1 0 1 1 1 0 1)
-                            (1 0 1 1 1 0 1)
-                            (1 0 0 0 0 0 1)
-                            (1 1 1 1 1 1 1)
-                            )]
-         [finder_up_left (carve-matrix matrix '(0 . 0) '(6 . 6))]
-         [finder_up_right (carve-matrix matrix (cons 0 (- matrix_width 7)) (cons 6 (sub1 matrix_width)))]
-         [finder_down_left (carve-matrix matrix (cons (- matrix_width 7) 0) (cons (sub1 matrix_width) 6))])
-    (if (and
-         (equal? finder_up_left expected_matrix)
-         (equal? finder_up_right expected_matrix)
-         (equal? finder_down_left expected_matrix))
-        matrix
-        #f)))
-
-(define (try-to-get-matrix matrix row_index finder_pattern1_index finder_pattern2_index)
-  (let* ([matrix_width (length matrix)]
-         [matrix_height (length (car matrix))]
-         [guess_matrix_width (+ (- finder_pattern2_index finder_pattern1_index) 7)]
-         [left_up_point (cons (- row_index 2) finder_pattern1_index)]
-         [right_down_point (cons (sub1 (+ (- row_index 2) guess_matrix_width)) (+ finder_pattern2_index 6))])
-    (trace (format "left_up_point:~a, right_down_point:~a" left_up_point right_down_point) 1)
-    (if (and (>= (car left_up_point) 0) (<= (cdr right_down_point) (sub1 matrix_width)))
-        (let ([carved_matrix (carve-matrix matrix left_up_point right_down_point)])
-          (verify-matrix carved_matrix))
-        #f)))
 
 (define (find-pattern-center guess_results)
   (let ([group_map (make-hash)])
