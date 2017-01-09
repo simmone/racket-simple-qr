@@ -112,14 +112,14 @@
       (check-equal? (guess-module-width #f test_points) #f))
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
-      (check-equal? (guess-module-width #f test_points) (list 1 2 12)))
+      (check-equal? (guess-module-width #f test_points) (list 1 2)))
 
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0)])
       (check-equal? (guess-module-width #f test_points) '(1 2)))
 
-    (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1)])
-      (check-equal? (guess-module-width #f test_points) (list 2 2 18)))
-    )
+    (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 0 0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 0)])
+      (check-equal? (guess-module-width #f test_points) (list 2 2 20)))
+   )
 
    (test-case
     "test-squash-matrix"
@@ -189,31 +189,31 @@
     "test-find-pattern"
 
     (let ([matrix '(
-                    (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
-                    (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)
-                    (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
-                    (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
-                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
-                    (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
-                    (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
-                    (1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1)
-                    (1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1)
-                    (1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1)
+                    (0 1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1 0)
+                    (0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1 0)
+                    (0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0)
+                    (0 1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1 0)
+                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+                    (0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)
+                    (0 1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1 0)
+                    (0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1 0)
+                    (0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1 0)
+                    (0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0)
+                    (0 1 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 1 0)
                     )])
 
 
       (let ([finder_points (find-pattern-center-points matrix)])
         (when finder_points
-              (check-equal? (first finder_points) '(3 . 3))
-              (check-equal? (second finder_points) '(3 . 13))
-              (check-equal? (third finder_points) '(13 . 3)))
+              (check-equal? (first finder_points) '(3 . 4))
+              (check-equal? (second finder_points) '(3 . 14))
+              (check-equal? (third finder_points) '(13 . 4)))
         )))
    
    (test-case

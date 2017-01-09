@@ -180,7 +180,10 @@
              [guess_module_width #f])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
-          (trace (format "row:~a" row_index) 1)
+          (when guess_result 
+                (trace (format "row:~a" row_index) 1)
+                (trace (format "guess_result:~a" guess_result) 1))
+
           (if guess_result
               (loop 
                (cdr rows) 
@@ -403,8 +406,7 @@
 
     (if (check-center-points-valid points_distance_map)
         (get-center-points points_distance_map)
-        #f)
-    #f))
+        #f)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -440,5 +442,5 @@
             (hash-set! pixel_map (second step4_pattern_center_points) '(0 255 0 255))
             (hash-set! pixel_map (third step4_pattern_center_points) '(255 0 0 255))
 
-            (points->pic step4_pattern_center_points "step4_pattern_center.png" pixel_map)))
+            (points->pic step3_bw_points "step4_pattern_center.png" pixel_map)))
     ""))
