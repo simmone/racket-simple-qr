@@ -160,7 +160,7 @@
 
                   (if (regexp-match #rx"010111010" squashed_str)
                       (begin
-                        (printf "~a\n" squashed_str)
+                        (trace (format "~a" squashed_str) 1)
                         (cons
                          guess_module_width
                          (map
@@ -180,7 +180,7 @@
              [guess_module_width #f])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
-          (printf "row:~a\n" row_index)
+          (trace (format "row:~a" row_index) 1)
           (if guess_result
               (loop 
                (cdr rows) 
@@ -369,6 +369,8 @@
   (let* ([guess_results (guess-matrix matrix)]
          [module_width (car guess_results)]
          [group_map (find-pattern-center (cdr guess_results))]
+         [group_list
+          (take (sort (hash-values group_map) (lambda (c d) (> (length c) (length d)))) 3)]
          [all_center_points
           (map
            (lambda (group_list)
@@ -376,13 +378,14 @@
                     [point_x (car center_point)]
                     [point_y (+ (cdr center_point) (sub1 (* 4 module_width)))])
                (cons point_x point_y)))
-           (hash-values group_map))]
+           group_list)]
          [points_distance_map (make-hash)]
          [center_points #f]
          )
 
     (trace (format "step4 guess_results:~a" guess_results) 1)
     (trace (format "step4 group_map:~a" group_map) 1)
+    (trace (format "step4 group_map first 3 group:~a" group_list) 1)
     (trace (format "step4 all_center_points:~a" all_center_points) 1)
     
     (let outer-loop ([points all_center_points])
