@@ -379,7 +379,7 @@
            (lambda (group_list)
              (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
                     [point_x (car center_point)]
-                    [point_y (+ (cdr center_point) (sub1 (* 4 module_width)))])
+                    [point_y (+ (cdr center_point) (* 3 module_width) (floor (/ module_width 2)))])
                (cons point_x point_y)))
            group_list)]
          [points_distance_map (make-hash)]
