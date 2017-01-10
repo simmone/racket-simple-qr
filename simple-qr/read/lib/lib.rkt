@@ -414,13 +414,18 @@
               (get-center-points points_distance_map)
               #f)))))
 
+(define (calculate-rotate-ratio point_a point_b)
+  0.0)
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
          [original_width #f]
          [step2_threshold #f]
          [step3_bw_points #f]
-         [step4_pattern_center_points #f])
+         [step4_pattern_center_points #f]
+         [step5_rotate_ratio #f]
+         )
 
     (set! step1_points_list (pic->points pic_path))
     (set! original_width (length step1_points_list))
@@ -443,4 +448,8 @@
             (hash-set! pixel_map (third step4_pattern_center_points) '(255 0 0 255))
 
             (points->pic step3_bw_points "step4_pattern_center.png" pixel_map)))
+    
+    (set! step5_rotate_ratio (calculate-rotate-ratio (first step4_pattern_center_points) (second step4_pattern_center_points)))
+    (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
+
     ""))
