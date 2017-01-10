@@ -372,48 +372,52 @@
   (let* ([guess_results (guess-matrix matrix)]
          [module_width (car guess_results)]
          [group_map (find-pattern-center (cdr guess_results))]
-         [group_list
-          (take (sort (hash-values group_map) (lambda (c d) (> (length c) (length d)))) 3)]
-         [all_center_points
-          (map
-           (lambda (group_list)
-             (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
-                    [point_x (car center_point)]
-                    [point_y (+ (cdr center_point) (* 3 module_width) (floor (/ module_width 2)))])
-               (cons point_x point_y)))
-           group_list)]
+         [group_list #f]
+         [all_center_points #f]
          [points_distance_map (make-hash)]
          [center_points #f]
          )
-
-    (trace (format "step4 guess_results:~a" guess_results) 1)
-    (trace (format "step4 group_map:~a" group_map) 1)
-    (trace (format "step4 group_map first 3 group:~a" group_list) 1)
-    (trace (format "step4 all_center_points:~a" all_center_points) 1)
     
-    (let outer-loop ([points all_center_points])
-      (when (not (null? points))
-            (let inner-loop ([inner_points all_center_points])
-              (when (not (null? inner_points))
-                    (when (not (equal? (car points) (car inner_points)))
-                          (hash-set! points_distance_map 
-                                     (cons (point->str (car points)) (point->str (car inner_points)))
-                                     (point-distance (car points) (car inner_points))))
-                    (inner-loop (cdr inner_points))))
-            (outer-loop (cdr points))))
+    (if (< (hash-count group_map) 3)
+        #f
+        (begin
+          (set! group_list (take (sort (hash-values group_map) (lambda (c d) (> (length c) (length d)))) 3))
 
-    (trace (format "step4 points_distance_map:~a" points_distance_map) 1)
+          (set! all_center_points
+                (map
+                 (lambda (group_list)
+                   (let* ([center_point (list-ref group_list (floor (/ (length group_list) 2)))]
+                          [point_x (car center_point)]
+                          [point_y (+ (cdr center_point) (* 3 module_width) (floor (/ module_width 2)))])
+                     (cons point_x point_y)))
+                 group_list))
 
-    (if (check-center-points-valid points_distance_map)
-        (get-center-points points_distance_map)
-        #f)))
+          (trace (format "step4 guess_results:~a" guess_results) 1)
+          (trace (format "step4 group_map:~a" group_map) 1)
+          (trace (format "step4 group_map first 3 group:~a" group_list) 1)
+          (trace (format "step4 all_center_points:~a" all_center_points) 1)
+    
+          (let outer-loop ([points all_center_points])
+            (when (not (null? points))
+                  (let inner-loop ([inner_points all_center_points])
+                    (when (not (null? inner_points))
+                          (when (not (equal? (car points) (car inner_points)))
+                                (hash-set! points_distance_map 
+                                           (cons (point->str (car points)) (point->str (car inner_points)))
+                                           (point-distance (car points) (car inner_points))))
+                          (inner-loop (cdr inner_points))))
+                  (outer-loop (cdr points))))
+
+          (trace (format "step4 points_distance_map:~a" points_distance_map) 1)
+
+          (if (check-center-points-valid points_distance_map)
+              (get-center-points points_distance_map)
+              #f)))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
          [original_width #f]
-         [rotate_max_tries #f]
-         [rotate_each_tries #f]
          [step2_threshold #f]
          [step3_bw_points #f]
          [step4_pattern_center_points #f])
@@ -423,10 +427,6 @@
     (set! original_height (length (car step1_points_list)))
     (trace (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height) 1)
     
-    (set! rotate_max_tries (- (+ (* original_width 2) (* original_height 2)) 4))
-    (set! rotate_each_tries 1)
-    (trace (format "max rotate tries[~a]" rotate_max_tries) 1)
-
     (set! step2_threshold (find-threshold step1_points_list))
     (trace (format "step2:find threshold is ~a" step2_threshold) 1)
 
