@@ -215,6 +215,11 @@
               (check-equal? (second finder_points) '(3 . 14))
               (check-equal? (third finder_points) '(13 . 4)))
         )))
+
+   (test-cae
+    "test-calculate-rotate-ratio"
+    
+    )
    
    (test-case
     "test-qr-read"

@@ -17,6 +17,7 @@
           [find-pattern-center-points (-> (listof list?) (or/c boolean? list?))]
           [check-center-points-valid (-> hash? boolean?)]
           [get-center-points (-> hash? list?)]
+          [calculate-rotate-ratio (-> pair? pair? exact-nonnegative-integer? number?)]
           ))
 
 (require racket/draw)
@@ -414,7 +415,7 @@
               (get-center-points points_distance_map)
               #f)))))
 
-(define (calculate-rotate-ratio point_a point_b)
+(define (calculate-rotate-ratio point_a point_b radius_length)
   0.0)
 
 (define (qr-read pic_path)
