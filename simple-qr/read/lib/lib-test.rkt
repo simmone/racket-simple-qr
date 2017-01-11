@@ -5,7 +5,7 @@
 (require matrix-rotate)
 
 (require racket/runtime-path)
-(define-runtime-path test_file "test.png")
+(define-runtime-path test_file "normal.png")
 
 (define test-lib
   (test-suite 
@@ -216,8 +216,39 @@
               (check-equal? (third finder_points) '(13 . 4)))
         )))
 
-   (test-cae
+   (test-case
     "test-calculate-rotate-ratio"
+    
+    (let ([point_a '(2 . 2)]
+          [point_b '(2 . 4)]
+          [radius 2])
+      
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) 0))
+
+    (let ([point_a '(2 . 2)]
+          [point_b '(3 . 4)]
+          [point_c '(4 . 4)]
+          [radius 2])
+      
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 1 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 2 16))
+      )
+
+    (let ([point_a '(2 . 2)]
+          [point_b '(4 . 3)]
+          [point_c '(4 . 0)]
+          [radius 2])
+      
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 3 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 6 16))
+      )
+
+    (let ([point_a '(2 . 2)]
+          [point_b '(3 . 0)]
+          [radius 2])
+      
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 7 16))
+      )
     
     )
    
@@ -226,8 +257,9 @@
  
     (parameterize
      ([*trace_level* 1])
+     (void)
 ;     (qr-read "test.png")
-     (qr-read "real.jpg")
+;     (qr-read "real.jpg")
     )
     )
 

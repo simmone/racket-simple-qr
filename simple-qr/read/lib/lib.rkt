@@ -415,8 +415,32 @@
               (get-center-points points_distance_map)
               #f)))))
 
-(define (calculate-rotate-ratio point_a point_b radius_length)
-  0.0)
+(define (calculate-rotate-ratio point_a point_b radius)
+  (let ([point_a_x (car point_a)]
+        [point_a_y (cdr point_a)]
+        [point_b_x (car point_b)]
+        [point_b_y (cdr point_b)]
+        [matrix_count (* radius 2 4)]
+        [move_count #f])
+    
+    (cond
+     [(and
+       (= point_b_x point_a_x)
+       (> point_b_y point_a_y))
+      (set! move_count 0)]
+     [(and
+       (> point_b_x point_a_x)
+       (>= point_b_y (+ point_a_y radius)))
+      (set! move_count (- point_b_x point_a_x))]
+     [(>= point_b_x (+ point_a_x radius))
+      (set! move_count (+ (- (* radius 2) point_b_y) radius))]
+     [(and
+       (<= point_b_y (- point_a_y radius))
+       (>= point_b_x point_a_x))
+      (set! move_count (+ (- point_b_x point_a_x) (* radius 3)))]
+     )
+    
+    (/ move_count matrix_count)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
