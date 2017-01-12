@@ -431,13 +431,35 @@
      [(and
        (> point_b_x point_a_x)
        (>= point_b_y (+ point_a_y radius)))
-      (set! move_count (- point_b_x point_a_x))]
-     [(>= point_b_x (+ point_a_x radius))
-      (set! move_count (+ (- (* radius 2) point_b_y) radius))]
+      (set! move_count (* -1 (- point_b_x point_a_x)))]
+     [(and
+       (>= point_b_x (+ point_a_x radius))
+       (>= point_b_y point_a_y))
+      (set! move_count (* -1 (+ radius (- radius (- point_b_y point_a_y)))))]
+     [(and
+       (>= point_b_x (+ point_a_x radius))
+       (< point_b_y point_a_y))
+      (set! move_count (* -1 (+ (- point_a_y point_b_y) (* radius 2))))]
      [(and
        (<= point_b_y (- point_a_y radius))
        (>= point_b_x point_a_x))
-      (set! move_count (+ (- point_b_x point_a_x) (* radius 3)))]
+      (set! move_count (* -1 (+ (- radius (- point_b_x point_a_x)) (* radius 3))))]
+     [(and
+       (<= point_b_y (- point_a_y radius))
+       (< point_b_x point_a_x))
+      (set! move_count (+ (- radius (- point_a_x point_b_x)) (* radius 3)))]
+     [(and
+       (<= point_b_x (- point_a_x radius))
+       (<= point_b_y point_a_y))
+      (set! move_count (+ (- point_a_y point_b_y) (* radius 2)))]
+     [(and
+       (<= point_b_x (- point_a_x radius))
+       (> point_b_y point_a_y))
+      (set! move_count (+ (- radius (- point_b_y point_a_y)) radius))]
+     [(and
+       (>= point_b_y (+ point_a_y radius))
+       (< point_b_x point_a_x))
+      (set! move_count (- point_a_x point_b_x))]
      )
     
     (/ move_count matrix_count)))
