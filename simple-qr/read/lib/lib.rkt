@@ -357,10 +357,11 @@
       (list point_a point_b point_c)))
 
 (define (point-distance point_x point_y)
-  (ceiling
-   (sqrt (+ 
-          (expt (- (car point_x) (car point_y)) 2)
-          (expt (- (cdr point_x) (cdr point_y)) 2)))))
+  (inexact->exact
+   (floor
+    (sqrt (+ 
+           (expt (- (car point_x) (car point_y)) 2)
+           (expt (- (cdr point_x) (cdr point_y)) 2))))))
 
 (define (point->str point)
   (string-append (number->string (car point)) "-" (number->string (cdr point))))
@@ -423,6 +424,8 @@
         [matrix_count (* radius 2 4)]
         [move_count #f])
     
+    (trace (format "calculate rotate ratio:~a,~a,~a" point_a point_b radius) 1)
+    
     (cond
      [(and
        (= point_b_x point_a_x)
@@ -472,6 +475,8 @@
          [step3_bw_points #f]
          [step4_pattern_center_points #f]
          [step5_rotate_ratio #f]
+         [step6_rotated_points #f]
+         [step7_pattern_center_points #f]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -494,9 +499,27 @@
             (hash-set! pixel_map (second step4_pattern_center_points) '(0 255 0 255))
             (hash-set! pixel_map (third step4_pattern_center_points) '(255 0 0 255))
 
-            (points->pic step3_bw_points "step4_pattern_center.png" pixel_map)))
+            (points->pic step3_bw_points "step4_pattern_center.png" pixel_map))
     
-    (set! step5_rotate_ratio (calculate-rotate-ratio (first step4_pattern_center_points) (second step4_pattern_center_points)))
-    (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
+          (set! step5_rotate_ratio (calculate-rotate-ratio 
+                                    (first step4_pattern_center_points) 
+                                    (second step4_pattern_center_points) 
+                                    (point-distance (first step4_pattern_center_points) (second step4_pattern_center_points))))
+          (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
+    
+          (if (= step5_rotate_ratio 0)
+              (set! step6_rotated_points step3_bw_points)
+              (set! step6_rotated_points (matrix-rotate step3_bw_points step5_rotate_ratio #:fill 0)))
 
+          (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
+          (trace (format "step7 pattern center points:~a" step7_pattern_center_points) 1)
+
+          (when step7_pattern_center_points
+                (let ([pixel_map (make-hash)])
+                  (hash-set! pixel_map (first step7_pattern_center_points) '(0 0 255 255))
+                  (hash-set! pixel_map (second step7_pattern_center_points) '(0 255 0 255))
+                  (hash-set! pixel_map (third step7_pattern_center_points) '(255 0 0 255))
+
+                  (points->pic step6_rotated_points "step7_pattern_center.png" pixel_map)))
+          )
     ""))

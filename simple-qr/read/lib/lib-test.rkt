@@ -138,7 +138,9 @@
    (test-case
     "test-point-distance"
     
-    (check-true (> (point-distance '(0 . 0) '(1 . 1)) 1))
+    (let ([point_distance (point-distance '(0 . 0) '(1 . 1))])
+      (check-true (>= point_distance 1))
+      )
     )
    
    (test-case
@@ -304,9 +306,9 @@
  
     (parameterize
      ([*trace_level* 1])
-     (void)
-;     (qr-read "test.png")
-;     (qr-read "real.jpg")
+;     (void)
+;     (qr-read "normal.png")
+     (qr-read "real.jpg")
     )
     )
 
