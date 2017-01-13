@@ -14,7 +14,7 @@
           [qr-read (-> path-string? (or/c string? boolean?))]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
           [point-distance (-> pair? pair? number?)]
-          [find-pattern-center-points (-> (listof list?) (or/c boolean? list?))]
+          [find-pattern-center-points (-> (listof list?) (or/c boolean? pair?))]
           [check-center-points-valid (-> hash? boolean?)]
           [get-center-points (-> hash? list?)]
           [calculate-rotate-ratio (-> pair? pair? exact-nonnegative-integer? number?)]
@@ -413,7 +413,7 @@
           (trace (format "step4 points_distance_map:~a" points_distance_map) 1)
 
           (if (check-center-points-valid points_distance_map)
-              (get-center-points points_distance_map)
+              (cons module_width (get-center-points points_distance_map))
               #f)))))
 
 (define (calculate-rotate-ratio point_a point_b radius)
@@ -477,6 +477,7 @@
          [step5_rotate_ratio #f]
          [step6_rotated_points #f]
          [step7_pattern_center_points #f]
+         [step8_squashed_points #f]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -494,32 +495,40 @@
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
     (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
     (when step4_pattern_center_points
-          (let ([pixel_map (make-hash)])
-            (hash-set! pixel_map (first step4_pattern_center_points) '(0 0 255 255))
-            (hash-set! pixel_map (second step4_pattern_center_points) '(0 255 0 255))
-            (hash-set! pixel_map (third step4_pattern_center_points) '(255 0 0 255))
+          (let ([pixel_map (make-hash)]
+                [center_points (cdr step4_pattern_center_points)])
+            (hash-set! pixel_map (first center_points) '(0 0 255 255))
+            (hash-set! pixel_map (second center_points) '(0 255 0 255))
+            (hash-set! pixel_map (third center_points) '(255 0 0 255))
 
-            (points->pic step3_bw_points "step4_pattern_center.png" pixel_map))
+            (points->pic step3_bw_points "step4_pattern_center.png" pixel_map)
     
-          (set! step5_rotate_ratio (calculate-rotate-ratio 
-                                    (first step4_pattern_center_points) 
-                                    (second step4_pattern_center_points) 
-                                    (point-distance (first step4_pattern_center_points) (second step4_pattern_center_points))))
-          (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
+            (set! step5_rotate_ratio (calculate-rotate-ratio 
+                                      (first center_points) 
+                                      (second center_points) 
+                                      (point-distance (first center_points) (second center_points))))
+            (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
     
-          (if (= step5_rotate_ratio 0)
-              (set! step6_rotated_points step3_bw_points)
-              (set! step6_rotated_points (matrix-rotate step3_bw_points step5_rotate_ratio #:fill 0)))
+            (if (= step5_rotate_ratio 0)
+                (set! step6_rotated_points step3_bw_points)
+                (set! step6_rotated_points (matrix-rotate step3_bw_points step5_rotate_ratio #:fill 0)))
 
-          (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
-          (trace (format "step7 pattern center points:~a" step7_pattern_center_points) 1)
+            (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
+            (trace (format "step7 pattern center points:~a" step7_pattern_center_points) 1)
+            
+            (when step7_pattern_center_points
+                  (let ([pixel_map (make-hash)]
+                        [module_width (car step7_pattern_center_points)]
+                        [center_points (cdr step7_pattern_center_points)])
+                    
+                    (points->pic (squash-matrix step6_rotated_points module_width) "step8_squashed_matrix.png" (make-hash))
+                    
+                    (hash-set! pixel_map (first center_points) '(0 0 255 255))
+                    (hash-set! pixel_map (second center_points) '(0 255 0 255))
+                    (hash-set! pixel_map (third center_points) '(255 0 0 255))
 
-          (when step7_pattern_center_points
-                (let ([pixel_map (make-hash)])
-                  (hash-set! pixel_map (first step7_pattern_center_points) '(0 0 255 255))
-                  (hash-set! pixel_map (second step7_pattern_center_points) '(0 255 0 255))
-                  (hash-set! pixel_map (third step7_pattern_center_points) '(255 0 0 255))
-
-                  (points->pic step6_rotated_points "step7_pattern_center.png" pixel_map)))
+                    (points->pic step6_rotated_points "step7_pattern_center.png" pixel_map)))
+            
+            ))
           )
-    ""))
+    "")
