@@ -228,9 +228,9 @@
 
       (let ([finder_points (find-pattern-center-points matrix)])
         (when finder_points
-              (check-equal? (first finder_points) '(3 . 4))
-              (check-equal? (second finder_points) '(3 . 14))
-              (check-equal? (third finder_points) '(13 . 4)))
+              (check-equal? (first (cdr finder_points)) '(3 . 4))
+              (check-equal? (second (cdr finder_points)) '(3 . 14))
+              (check-equal? (third (cdr finder_points)) '(13 . 4)))
         )))
 
    (test-case

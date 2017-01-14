@@ -18,6 +18,7 @@
           [check-center-points-valid (-> hash? boolean?)]
           [get-center-points (-> hash? list?)]
           [calculate-rotate-ratio (-> pair? pair? exact-nonnegative-integer? number?)]
+          [align-matrix (-> (listof list?) any/c (listof list?))]
           ))
 
 (require racket/draw)
@@ -200,8 +201,13 @@
 
 (define (align-matrix matrix fill)
   (let ([max_length 
-         (max
-    
+         (apply max (map (lambda (row) (length row)) matrix))])
+    (map
+     (lambda (row)
+       (if (< (length row) max_length)
+           (append row (build-list (- max_length (length row)) (lambda (x) fill)))
+           row))
+     matrix)))
 
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
@@ -209,14 +215,13 @@
           (lambda (row)
             (squash-points row module_width))
           matrix)])
-        (let* ([rotate_matrix (matrix-row->col (align squash_matrix_x 0))]
+        (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
                [squash_matrix_y
                 (map
                  (lambda (row)
                    (squash-points row module_width))
                  rotate_matrix)])
           (align-matrix squash_matrix_y 0))))
-
 
 (define (carve-matrix matrix left_up_point right_down_point)
   (let ([start_x (car left_up_point)]
