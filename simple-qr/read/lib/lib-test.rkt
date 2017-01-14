@@ -106,6 +106,21 @@
     )
 
    (test-case
+    "test-align-matrix"
+    
+    (let ([matrix 
+           '((1 2 3)
+             (1 2 3 4)
+             (1)
+             ())])
+      (check-equal? (align-matrix matrix 0)
+                    '((1 2 3 0)
+                      (1 2 3 4)
+                      (1 0 0 0)
+                      (0 0 0 0)))))
+
+
+   (test-case
     "test-guess-module-width"
 
     (let ([test_points '(1 1)])
@@ -306,9 +321,9 @@
  
     (parameterize
      ([*trace_level* 1])
-;     (void)
+     (void)
 ;     (qr-read "normal.png")
-     (qr-read "real.jpg")
+;     (qr-read "real.jpg")
     )
     )
 

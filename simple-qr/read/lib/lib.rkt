@@ -198,9 +198,10 @@
                guess_module_width)))
         (cons guess_module_width (reverse result_list)))))
 
-(define (check-matrix-integrity matrix)
-  (let ([width (length (car matrix))])
-    (andmap (lambda (item) (= (length item) width)) matrix)))
+(define (align-matrix matrix fill)
+  (let ([max_length 
+         (max
+    
 
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
@@ -208,17 +209,14 @@
           (lambda (row)
             (squash-points row module_width))
           matrix)])
-    (if (check-matrix-integrity squash_matrix_x)
-        (let* ([rotate_matrix (matrix-row->col squash_matrix_x)]
+        (let* ([rotate_matrix (matrix-row->col (align squash_matrix_x 0))]
                [squash_matrix_y
                 (map
                  (lambda (row)
                    (squash-points row module_width))
                  rotate_matrix)])
-          (if (check-matrix-integrity squash_matrix_y)
-              (matrix-col->row squash_matrix_y)
-              #f))
-        #f)))
+          (align-matrix squash_matrix_y 0))))
+
 
 (define (carve-matrix matrix left_up_point right_down_point)
   (let ([start_x (car left_up_point)]
