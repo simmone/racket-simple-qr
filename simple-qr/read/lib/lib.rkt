@@ -496,7 +496,11 @@
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
     (points->pic step3_bw_points "step3_bw.png" (make-hash))
 
-    (let ([points_pic (make-object bitmap% original_width original_height)])
+    (let* ([img (make-object bitmap% "step3_bw.png")]
+           [img_dc (send img make-dc)])
+      (send img_dc rotate 90)
+      (send img_dc set-bitmap img)
+      (send img save-file "rotated.png" 'png))
     
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
     (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
