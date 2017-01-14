@@ -215,13 +215,14 @@
           (lambda (row)
             (squash-points row module_width))
           matrix)])
-        (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
-               [squash_matrix_y
-                (map
-                 (lambda (row)
-                   (squash-points row module_width))
-                 rotate_matrix)])
-          (align-matrix squash_matrix_y 0))))
+
+    (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
+           [squash_matrix_y
+            (map
+             (lambda (row)
+               (squash-points row module_width))
+             rotate_matrix)])
+      (matrix-col->row (align-matrix squash_matrix_y 0)))))
 
 (define (carve-matrix matrix left_up_point right_down_point)
   (let ([start_x (car left_up_point)]
@@ -494,6 +495,8 @@
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
     (points->pic step3_bw_points "step3_bw.png" (make-hash))
+
+    (let ([points_pic (make-object bitmap% original_width original_height)])
     
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
     (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)

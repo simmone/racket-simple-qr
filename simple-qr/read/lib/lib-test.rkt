@@ -119,7 +119,6 @@
                       (1 0 0 0)
                       (0 0 0 0)))))
 
-
    (test-case
     "test-guess-module-width"
 
@@ -321,9 +320,9 @@
  
     (parameterize
      ([*trace_level* 1])
-     (void)
+;     (void)
 ;     (qr-read "normal.png")
-;     (qr-read "real.jpg")
+     (qr-read "real.jpg")
     )
     )
 
