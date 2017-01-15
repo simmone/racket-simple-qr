@@ -27,7 +27,7 @@
 (let* ([bitmap (make-object bitmap% 400 400)]
        [dc (send bitmap make-dc)])
   (send dc translate 200 200)
-  (send dc rotate 2)
+  (send dc rotate 6.5)
   (send dc draw-bitmap 
         (make-object bitmap% "step3_bw.png" 'png)
         0 0)
