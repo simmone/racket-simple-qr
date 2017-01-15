@@ -22,7 +22,8 @@
           ))
 
 (require racket/draw)
-(require matrix-rotate)
+
+(require "../matrix-rotate/lib.rkt")
 
 (define *trace_level* (make-parameter 0))
 
