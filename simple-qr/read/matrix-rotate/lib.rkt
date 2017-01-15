@@ -6,6 +6,9 @@
           [circles->matrix (-> list? (listof list?))]
           [shift-list (-> list? exact-integer? list?)]
           [print-matrix (-> (listof list?) void?)]
+          [matrix-rotate (->* ((listof list?) number?) (#:fill any/c) (listof list?))]
+          [matrix-row->col (-> (listof list?) (listof list?))]
+          [matrix-col->row (-> (listof list?) (listof list?))]
           ))
 
 (define (matrix->square matrix #:fill [fill #f])
@@ -173,3 +176,60 @@
       row)
      (printf "\n"))
    matrix))
+
+(define (matrix-rotate matrix rotate_ratio #:fill [fill #f])
+  (let* ([square_matrix (matrix->square matrix #:fill fill)]
+         [circles (matrix->circles square_matrix)]
+         [outtest_circle_length (length (car circles))]
+         [rotate_number (inexact->exact (floor (* outtest_circle_length rotate_ratio)))])
+    (circles->matrix
+     (let loop ([loop_circles circles]
+                [new_circles '()])
+       (if (not (null? loop_circles))
+           (loop
+            (cdr loop_circles)
+            (cons
+             (shift-list (car loop_circles) (floor (* (/ (length (car loop_circles)) outtest_circle_length) rotate_number)))
+             new_circles))
+           (reverse new_circles))))))
+
+(define (matrix-row->col matrix)
+  (let ([matrix_width (length (car matrix))]
+        [matrix_height (length matrix)])
+    (let loop-row ([index 0]
+                   [result_list '()])
+      (if (< index matrix_width)
+          (loop-row (add1 index)
+                (cons
+                 (let loop-col ([rows matrix]
+                                [row '()])
+                   (if (not (null? rows))
+                       (loop-col
+                        (cdr rows)
+                        (cons
+                         (list-ref (car rows) index)
+                         row))
+                       row))
+                 result_list))
+          (reverse result_list)))))
+
+(define (matrix-col->row matrix)
+  (let ([matrix_width (length (car matrix))]
+        [matrix_height (length matrix)])
+    (let loop-row ([index (sub1 matrix_width)]
+                   [result_list '()])
+      (if (>= index 0)
+          (loop-row (sub1 index)
+                (cons
+                 (let loop-col ([rows matrix]
+                                [row '()])
+                   (if (not (null? rows))
+                       (loop-col
+                        (cdr rows)
+                        (cons
+                         (list-ref (car rows) index)
+                         row))
+                       (reverse row)))
+                 result_list))
+          (reverse result_list)))))
+
