@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 (require rackunit "lib.rkt")
-(require matrix-rotate)
+(require rackunit "../matrix-rotate/lib.rkt")
 
 (require racket/runtime-path)
 (define-runtime-path test_file "normal.png")

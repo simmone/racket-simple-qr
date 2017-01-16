@@ -472,13 +472,15 @@
     
     (/ move_count matrix_count)))
 
-(define (rotate-bmp bmp_file ratio output_file)
-  (let* ([bitmap (make-object bitmap% 700 700)]
-         [dc (send bitmap make-dc)])
-    (send dc translate 350 350)
+(define (rotate-and-cut-bmp bmp_file ratio point_a distance_ab module_width output_file)
+  (let* ([origin_bmp (make-object bitmap% bmp_file 'png)]
+         [dest_width (+ distance_ab (* 12 module_width))]
+         [dest_bmp (make-object bitmap% dest_width dest_width)]
+         [dc (send dest_bmp make-dc)])
+    (send dc translate 0 0)
     (send dc rotate (* (* pi 2) ratio))
-    (send dc draw-bitmap (make-object bitmap% bmp_file 'png) 0 0)
-    (send bitmap save-file output_file 'png)))
+    (send dc draw-bitmap origin_bmp (+ (* -1 (cdr point_a)) (* 6 module_width)) (+ (* -1 (car point_a)) (* 6 module_width)))
+    (send dest_bmp save-file output_file 'png)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -509,6 +511,7 @@
     (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
     (when step4_pattern_center_points
           (let ([pixel_map (make-hash)]
+                [module_width (car step4_pattern_center_points)]
                 [center_points (cdr step4_pattern_center_points)])
             (hash-set! pixel_map (first center_points) '(0 0 255 255))
             (hash-set! pixel_map (second center_points) '(0 255 0 255))
@@ -525,7 +528,12 @@
             (if (= step5_rotate_ratio 0)
                 (set! step6_rotated_points step3_bw_points)
                 (begin
-                  (rotate-bmp "step3_bw.png" step5_rotate_ratio "step6_rotated.png")
+                  (rotate-and-cut-bmp "step3_bw.png" 
+                                      step5_rotate_ratio 
+                                      (first center_points) 
+                                      (point-distance (first center_points) (second center_points)) 
+                                      module_width
+                                      "step6_rotated.png")
                   (set! step6_rotated_points (pic->points "step6_rotated.png"))))
 
             (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
