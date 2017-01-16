@@ -246,8 +246,8 @@
           [point_c '(4 . 4)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -1 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -2 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 1 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 1 8))
       )
 
     (let ([point_a '(2 . 2)]
@@ -255,8 +255,8 @@
           [point_c '(4 . 2)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -3 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -4 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 3 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 4 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -264,8 +264,8 @@
           [point_c '(4 . 0)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -5 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -6 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 5 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 6 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -273,8 +273,8 @@
           [point_c '(2 . 0)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -7 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -8 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 7 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 8 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -282,8 +282,8 @@
           [point_c '(0 . 0)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 7 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 6 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -7 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -6 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -291,8 +291,8 @@
           [point_c '(0 . 2)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 5 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 4 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -5 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -4 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -300,8 +300,8 @@
           [point_c '(0 . 4)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 3 16))
-      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 2 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -3 16))
+      (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ -2 16))
       )
 
     (let ([point_a '(2 . 2)]
@@ -309,10 +309,9 @@
           [point_c '(2 . 4)]
           [radius 2])
       
-      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ 1 16))
+      (check-equal? (calculate-rotate-ratio point_a point_b radius) (/ -1 16))
       (check-equal? (calculate-rotate-ratio point_a point_c radius) (/ 0 16))
       )
-    
     )
    
    (test-case

@@ -439,38 +439,46 @@
      [(and
        (> point_b_x point_a_x)
        (>= point_b_y (+ point_a_y radius)))
-      (set! move_count (* -1 (- point_b_x point_a_x)))]
+      (set! move_count (- point_b_x point_a_x))]
      [(and
        (>= point_b_x (+ point_a_x radius))
        (>= point_b_y point_a_y))
-      (set! move_count (* -1 (+ radius (- radius (- point_b_y point_a_y)))))]
+      (set! move_count (+ radius (- radius (- point_b_y point_a_y))))]
      [(and
        (>= point_b_x (+ point_a_x radius))
        (< point_b_y point_a_y))
-      (set! move_count (* -1 (+ (- point_a_y point_b_y) (* radius 2))))]
+      (set! move_count (+ (- point_a_y point_b_y) (* radius 2)))]
      [(and
        (<= point_b_y (- point_a_y radius))
        (>= point_b_x point_a_x))
-      (set! move_count (* -1 (+ (- radius (- point_b_x point_a_x)) (* radius 3))))]
+      (set! move_count (+ (- radius (- point_b_x point_a_x)) (* radius 3)))]
      [(and
        (<= point_b_y (- point_a_y radius))
        (< point_b_x point_a_x))
-      (set! move_count (+ (- radius (- point_a_x point_b_x)) (* radius 3)))]
+      (set! move_count (* -1 (+ (- radius (- point_a_x point_b_x)) (* radius 3))))]
      [(and
        (<= point_b_x (- point_a_x radius))
        (<= point_b_y point_a_y))
-      (set! move_count (+ (- point_a_y point_b_y) (* radius 2)))]
+      (set! move_count (* -1 (+ (- point_a_y point_b_y) (* radius 2))))]
      [(and
        (<= point_b_x (- point_a_x radius))
        (> point_b_y point_a_y))
-      (set! move_count (+ (- radius (- point_b_y point_a_y)) radius))]
+      (set! move_count (* -1 (+ (- radius (- point_b_y point_a_y)) radius)))]
      [(and
        (>= point_b_y (+ point_a_y radius))
        (< point_b_x point_a_x))
-      (set! move_count (- point_a_x point_b_x))]
+      (set! move_count (* -1 (- point_a_x point_b_x)))]
      )
     
     (/ move_count matrix_count)))
+
+(define (rotate-bmp bmp_file ratio output_file)
+  (let* ([bitmap (make-object bitmap% 700 700)]
+         [dc (send bitmap make-dc)])
+    (send dc translate 350 350)
+    (send dc rotate (* (* pi 2) ratio))
+    (send dc draw-bitmap (make-object bitmap% bmp_file 'png) 0 0)
+    (send bitmap save-file output_file 'png)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -497,12 +505,6 @@
     (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
     (points->pic step3_bw_points "step3_bw.png" (make-hash))
 
-    (let ([img (make-object bitmap% "step3_bw.png")]
-          [img_dc (make-object bitmap-dc%)])
-      (send img_dc transform '#(0 0 0 0 0 0))
-      (send img_dc set-rotation 180.0)
-      (send img save-file "rotated.png" 'png))
-    
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
     (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
     (when step4_pattern_center_points
@@ -519,10 +521,12 @@
                                       (second center_points) 
                                       (point-distance (first center_points) (second center_points))))
             (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
-    
+            
             (if (= step5_rotate_ratio 0)
                 (set! step6_rotated_points step3_bw_points)
-                (set! step6_rotated_points (matrix-rotate step3_bw_points step5_rotate_ratio #:fill 0)))
+                (begin
+                  (rotate-bmp "step3_bw.png" step5_rotate_ratio "step6_rotated.png")
+                  (set! step6_rotated_points (pic->points "step6_rotated.png"))))
 
             (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
             (trace (format "step7 pattern center points:~a" step7_pattern_center_points) 1)
