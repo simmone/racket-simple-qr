@@ -36,7 +36,7 @@
    (lambda (row)
      (for-each
       (lambda (col)
-        (printf "~a " (~a #:width 2 #:align 'right #:pad-string "0" col)))
+        (printf "~a " (~a #:width 1 #:align 'right #:pad-string "0" col)))
       row)
      (printf "\n"))
    matrix))
@@ -226,6 +226,8 @@
           (lambda (row)
             (squash-points row module_width))
           matrix)])
+
+    (print-matrix squash_matrix_x)
 
     (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
            [squash_matrix_y
@@ -543,18 +545,11 @@
                                       (point-distance (first center_points) (second center_points)) 
                                       module_width
                                       "step6_rotated.png")
-                  (set! step6_rotated_points (pic->points "step6_rotated.png"))))
+                  (set! step6_rotated_points (points->bw (pic->points "step6_rotated.png") step2_threshold))))
 
             (set! step7_squashed_points (squash-matrix step6_rotated_points module_width))
-
-            (let ([squash_matrix_x
-                   (map
-                    (lambda (row)
-                      (squash-points row module_width))
-                    step6_rotated_points)])
-              (print-matrix squash_matrix_x))
-
+            (points->pic step7_squashed_points "step7_squashed.png" (make-hash))
             (print-matrix step7_squashed_points)
             ))
-          )
-    "")
+    )
+  "")
