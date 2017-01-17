@@ -220,6 +220,13 @@
            row))
      matrix)))
 
+(define (clear-noise matrix)
+  (let ([length_standard (length (car matrix))])
+    (filter
+     (lambda (row)
+       (= (length row) length_standard))
+     matrix)))
+
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
          (map
@@ -227,9 +234,10 @@
             (squash-points row module_width))
           matrix)])
 
-    (print-matrix squash_matrix_x)
+;    (print-matrix squash_matrix_x)
+    (print-matrix (clear-noise squash_matrix_x))
 
-    (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
+    (let* ([rotate_matrix (matrix-row->col (clear-noise squash_matrix_x))]
            [squash_matrix_y
             (map
              (lambda (row)
