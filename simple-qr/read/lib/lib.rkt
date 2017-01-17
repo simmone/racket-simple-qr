@@ -31,6 +31,16 @@
   (when (>= (*trace_level*) trace_level)
         (printf "t[~a]=~a\n" trace_level data)))
 
+(define (print-matrix matrix)
+  (for-each
+   (lambda (row)
+     (for-each
+      (lambda (col)
+        (printf "~a " (~a #:width 2 #:align 'right #:pad-string "0" col)))
+      row)
+     (printf "\n"))
+   matrix))
+
 (define (pic->points pic_path)
   (let* ([img (make-object bitmap% pic_path)]
          [width (send img get-width)]
@@ -491,8 +501,7 @@
          [step4_pattern_center_points #f]
          [step5_rotate_ratio #f]
          [step6_rotated_points #f]
-         [step7_pattern_center_points #f]
-         [step8_squashed_points #f]
+         [step7_squashed_points #f]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -536,22 +545,16 @@
                                       "step6_rotated.png")
                   (set! step6_rotated_points (pic->points "step6_rotated.png"))))
 
-            (set! step7_pattern_center_points (find-pattern-center-points step6_rotated_points))
-            (trace (format "step7 pattern center points:~a" step7_pattern_center_points) 1)
-            
-            (when step7_pattern_center_points
-                  (let ([pixel_map (make-hash)]
-                        [module_width (car step7_pattern_center_points)]
-                        [center_points (cdr step7_pattern_center_points)])
-                    
-                    (points->pic (squash-matrix step6_rotated_points module_width) "step8_squashed_matrix.png" (make-hash))
-                    
-                    (hash-set! pixel_map (first center_points) '(0 0 255 255))
-                    (hash-set! pixel_map (second center_points) '(0 255 0 255))
-                    (hash-set! pixel_map (third center_points) '(255 0 0 255))
+            (set! step7_squashed_points (squash-matrix step6_rotated_points module_width))
 
-                    (points->pic step6_rotated_points "step7_pattern_center.png" pixel_map)))
-            
+            (let ([squash_matrix_x
+                   (map
+                    (lambda (row)
+                      (squash-points row module_width))
+                    step6_rotated_points)])
+              (print-matrix squash_matrix_x))
+
+            (print-matrix step7_squashed_points)
             ))
           )
     "")
