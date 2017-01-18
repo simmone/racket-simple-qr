@@ -237,22 +237,16 @@
         (reverse result_list))))
 
 (define (trim-matrix matrix)
-  ;; delete the unregular lines
-  (let ([length_standard (length (car matrix))])
-
-    ;; trim four direction
+  ;; trim four direction
+  (matrix-row->col
+   (trim-blank-lines
     (matrix-row->col
      (trim-blank-lines
       (matrix-row->col
        (trim-blank-lines
-        (matrix-row->col
-         (trim-blank-lines
-          (matrix-row->col 
-           (trim-blank-lines 
-            (filter
-             (lambda (row)
-               (= (length row) length_standard))
-             matrix)))))))))))
+        (matrix-row->col 
+         (trim-blank-lines 
+          matrix)))))))))
 
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
@@ -261,10 +255,10 @@
             (squash-points row module_width))
           matrix)])
 
-    (print-matrix squash_matrix_x)
+;    (print-matrix squash_matrix_x)
 ;    (print-matrix (trim-matrix squash_matrix_x))
 
-    (let* ([rotate_matrix (matrix-row->col (trim-matrix squash_matrix_x))]
+    (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
            [squash_matrix_y
             (map
              (lambda (row)
@@ -524,7 +518,8 @@
          [step4_pattern_center_points #f]
          [step5_rotate_ratio #f]
          [step6_rotated_points #f]
-         [step7_squashed_points #f]
+         [step7_trimed_points #f]
+         [step8_squashed_points #f]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -568,12 +563,15 @@
                                       "step6_rotated.png")
                   (set! step6_rotated_points (points->bw (pic->points "step6_rotated.png") step2_threshold))))
             
-            (printf "~a\n" (list-ref step6_rotated_points 14))
-            (printf "~a\n" (list-ref step6_rotated_points 70))
+            (set! step7_trimed_points (trim-matrix step6_rotated_points))
+            (points->pic step7_trimed_points "step7_trimed.png" (make-hash))
+            
+;            (printf "~a\n" (list-ref step6_rotated_points 14))
+;            (printf "~a\n" (list-ref step6_rotated_points 70))
 
-            (set! step7_squashed_points (squash-matrix step6_rotated_points module_width))
-            (points->pic step7_squashed_points "step7_squashed.png" (make-hash))
-            (print-matrix step7_squashed_points)
+            (set! step8_squashed_points (squash-matrix step7_trimed_points module_width))
+            (points->pic step8_squashed_points "step8_squashed.png" (make-hash))
+            (print-matrix step8_squashed_points)
             ))
     )
   "")
