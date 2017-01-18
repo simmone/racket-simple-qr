@@ -88,16 +88,14 @@
     
     (let ([test_points '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1)])
       (check-equal? (squash-points test_points 1) '(0 0 1 0 1 1 1 0 1 0 0 0 1 0 1 1 1 0 1))
-
       (check-equal? (squash-points test_points 2) '(0 1 0 1 1 0 1 0 0 1 0 1 1 0 1))
-
-      (check-equal? (squash-points test_points 3) '(0 1 0 1 0 1 0 1 0 1 0 1))
-
+      (check-equal? (squash-points test_points 3) '(0 1 0 1))
       (check-equal? (squash-points test_points 4) '(0 1 0 1))
+      (check-equal? (squash-points test_points 5) '(1 0 1))
 
       (check-equal? (squash-points '(0 0 0 0 0 0 0 0 0 0) 5) '(0 0))
       (check-equal? (squash-points '(0 0 0 0 0 0 0 0 0 0 0) 5) '(0 0))
-      (check-equal? (squash-points '(0 0 0 0 0 0 0 0 0 0 0 0) 5) '(0 0 0))
+      (check-equal? (squash-points '(0 0 0 0 0 0 0 0 0 0 0 0) 5) '(0 0))
       (check-equal? (squash-points '(0 0 0 0 0 0 0 0 0 0 0 0 0) 5) '(0 0 0))
       )
 
@@ -108,6 +106,14 @@
     (let ([test_points '(0 0 0 0 0 1 1 1 1 1  0 0 0 0 0 0 0 1 1 1)])
       (check-equal? (squash-points test_points 4) '(0 1 0 0 1))
     )
+
+    (let ([test_points
+           '(0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)])
+      (check-equal? (squash-points test_points 5) '(0 0 1 1 1 1 1 1 1 0 1 1 1 1 1 0 1 0 0 1 0 0 1 0 1 1 1 1 1 1 1 0 0 0)))
+
+    (let ([test_points
+           '(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)])
+      (check-equal? (squash-points test_points 5) '(0 0 1 1 1 0 1 1 0 0 1 0 0 0 0 0 0 0 1 1 0 0 1 0 1 0 1 0 0 1 0 0 0 0)))
     )
 
    (test-case
@@ -340,9 +346,9 @@
  
     (parameterize
      ([*trace_level* 1])
-;     (void)
+     (void)
 ;     (qr-read "normal.png")
-     (qr-read "real.jpg")
+;     (qr-read "real.jpg")
     )
     )
 

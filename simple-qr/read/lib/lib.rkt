@@ -139,7 +139,7 @@
         dark_length)))
 
 (define (squash-points points width)
-  (let ([min_width (floor (* width 0.5))])
+  (let ([min_width (ceiling (* width 0.5))])
     (let loop ([loop_points points]
                [last_value -1]
                [same_count 0]
