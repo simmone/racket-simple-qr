@@ -145,7 +145,7 @@
                          (0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 1)
                          )
                        ])
-      (check-equal? (squash-matrix test_points 4) '((0 1 0 0 1)))
+      (check-equal? (squash-matrix test_points 4) '((1 0 0 1)))
       )
     )
 
@@ -315,13 +315,29 @@
     )
    
    (test-case
+    "test-trim-matrix"
+    
+    (let ([matrix 
+           '(
+             (0 0 0 0 0 0 0)
+             (0 0 0 0 0 0 0)
+             (0 0 0 0 1 0 0)
+             (0 0 0 0 0 0 0)
+             (0 0 1 1 1 1 0)
+             (0 0 0 0 0 0 0))])
+      (check-equal? (trim-matrix matrix)
+                    '((0 0 1 0)
+                      (0 0 0 0)
+                      (1 1 1 1)))))
+   
+   (test-case
     "test-qr-read"
  
     (parameterize
      ([*trace_level* 1])
-;     (void)
+     (void)
 ;     (qr-read "normal.png")
-     (qr-read "real.jpg")
+;     (qr-read "real.jpg")
     )
     )
 

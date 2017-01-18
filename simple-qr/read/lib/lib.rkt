@@ -19,6 +19,7 @@
           [get-center-points (-> hash? list?)]
           [calculate-rotate-ratio (-> pair? pair? exact-nonnegative-integer? number?)]
           [align-matrix (-> (listof list?) any/c (listof list?))]
+          [trim-matrix (-> (listof list?) (listof list?))]
           ))
 
 (require racket/draw)
@@ -220,12 +221,38 @@
            row))
      matrix)))
 
-(define (clear-noise matrix)
+(define (trim-blank-lines matrix)
+  (let loop ([loop_list matrix]
+             [start #t]
+             [result_list '()])
+    (if (not (null? loop_list))
+        (if start
+            (if (andmap
+                 (lambda (item)
+                   (= item 0))
+                 (car loop_list))
+                (loop (cdr loop_list) #t result_list)
+                (loop (cdr loop_list) #f (cons (car loop_list) result_list)))
+            (loop (cdr loop_list) #f (cons (car loop_list) result_list)))
+        (reverse result_list))))
+
+(define (trim-matrix matrix)
+  ;; delete the unregular lines
   (let ([length_standard (length (car matrix))])
-    (filter
-     (lambda (row)
-       (= (length row) length_standard))
-     matrix)))
+
+    ;; trim four direction
+    (matrix-row->col
+     (trim-blank-lines
+      (matrix-row->col
+       (trim-blank-lines
+        (matrix-row->col
+         (trim-blank-lines
+          (matrix-row->col 
+           (trim-blank-lines 
+            (filter
+             (lambda (row)
+               (= (length row) length_standard))
+             matrix)))))))))))
 
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
@@ -235,29 +262,15 @@
           matrix)])
 
 ;    (print-matrix squash_matrix_x)
-    (print-matrix (clear-noise squash_matrix_x))
+;    (print-matrix (trim-matrix squash_matrix_x))
 
-    (let* ([rotate_matrix (matrix-row->col (clear-noise squash_matrix_x))]
+    (let* ([rotate_matrix (matrix-row->col (trim-matrix squash_matrix_x))]
            [squash_matrix_y
             (map
              (lambda (row)
                (squash-points row module_width))
              rotate_matrix)])
       (matrix-col->row (align-matrix squash_matrix_y 0)))))
-
-(define (carve-matrix matrix left_up_point right_down_point)
-  (let ([start_x (car left_up_point)]
-        [start_y (cdr left_up_point)]
-        [end_x (car right_down_point)]
-        [end_y (cdr right_down_point)])
-  (let loop ([loop_index start_x]
-             [result_list '()])
-    (if (<= loop_index end_x)
-        (loop (add1 loop_index)
-              (cons
-               (take (drop (list-ref matrix loop_index) start_y) (add1 (- end_y start_y)))
-               result_list))
-        (reverse result_list)))))
 
 (define (find-pattern-center guess_results)
   (let ([group_map (make-hash)])
