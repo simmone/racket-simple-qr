@@ -261,7 +261,7 @@
             (squash-points row module_width))
           matrix)])
 
-;    (print-matrix squash_matrix_x)
+    (print-matrix squash_matrix_x)
 ;    (print-matrix (trim-matrix squash_matrix_x))
 
     (let* ([rotate_matrix (matrix-row->col (trim-matrix squash_matrix_x))]
@@ -567,6 +567,9 @@
                                       module_width
                                       "step6_rotated.png")
                   (set! step6_rotated_points (points->bw (pic->points "step6_rotated.png") step2_threshold))))
+            
+            (printf "~a\n" (list-ref step6_rotated_points 14))
+            (printf "~a\n" (list-ref step6_rotated_points 70))
 
             (set! step7_squashed_points (squash-matrix step6_rotated_points module_width))
             (points->pic step7_squashed_points "step7_squashed.png" (make-hash))
