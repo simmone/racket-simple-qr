@@ -248,6 +248,15 @@
          (trim-blank-lines 
           matrix)))))))))
 
+(define (end-trim-matrix matrix)
+  (trim-matrix
+   (let loop ([loop_list matrix])
+     (if (not (null? loop_list))
+         (if (equal? (take (car loop_list) 5) '(1 1 1 1 1))
+             loop_list
+             (loop (cdr loop_list)))
+         '()))))
+
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
          (map
@@ -520,6 +529,7 @@
          [step6_rotated_points #f]
          [step7_trimed_points #f]
          [step8_squashed_points #f]
+         [step9_end_points #f]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -572,6 +582,10 @@
             (set! step8_squashed_points (squash-matrix step7_trimed_points module_width))
             (points->pic step8_squashed_points "step8_squashed.png" (make-hash))
             (print-matrix step8_squashed_points)
+
+            (set! step9_end_points (end-trim-matrix step8_squashed_points))
+            (points->pic step9_end_points "step9_end.png" (make-hash))
+            (print-matrix step9_end_points)
             ))
     )
   "")
