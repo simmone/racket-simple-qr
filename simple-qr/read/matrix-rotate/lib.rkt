@@ -172,7 +172,7 @@
    (lambda (row)
      (for-each
       (lambda (col)
-        (printf "~a " (~a #:width 2 #:align 'right #:pad-string "0" col)))
+        (printf "~a" (~a #:width 2 #:align 'right #:pad-string "0" col)))
       row)
      (printf "\n"))
    matrix))

@@ -37,10 +37,11 @@
    (lambda (row)
      (for-each
       (lambda (col)
-        (printf "~a " (~a #:width 1 #:align 'right #:pad-string "0" col)))
+        (printf "~a" (~a #:width 1 #:align 'right #:pad-string "0" col)))
       row)
      (printf "\n"))
-   matrix))
+   matrix)
+  (printf "\n"))
 
 (define (pic->points pic_path)
   (let* ([img (make-object bitmap% pic_path)]
@@ -248,14 +249,17 @@
          (trim-blank-lines 
           matrix)))))))))
 
-(define (end-trim-matrix matrix)
-  (trim-matrix
-   (let loop ([loop_list matrix])
-     (if (not (null? loop_list))
-         (if (equal? (take (car loop_list) 5) '(1 1 1 1 1))
-             loop_list
-             (loop (cdr loop_list)))
-         '()))))
+(define (trim-tail matrix)
+  (let loop ([loop_list matrix]
+             [result_list '()]
+             [pattern_count 0])
+    (if (not (null? loop_list))
+        (if (= pattern_count 6)
+            (reverse (cons (cadr loop_list) (cons (car loop_list) result_list)))
+            (if (equal? (take (car loop_list) 7) '(1 0 1 1 1 0 1))
+                (loop (cdr loop_list) (cons (car loop_list) result_list) (add1 pattern_count))
+                (loop (cdr loop_list) (cons (car loop_list) result_list) pattern_count)))
+        (reverse result_list))))
 
 (define (squash-matrix matrix module_width)
   (let ([squash_matrix_x
@@ -263,17 +267,25 @@
           (lambda (row)
             (squash-points row module_width))
           matrix)])
+    
+;    (print-matrix matrix)
 
 ;    (print-matrix squash_matrix_x)
-;    (print-matrix (trim-matrix squash_matrix_x))
 
-    (let* ([rotate_matrix (matrix-row->col (align-matrix squash_matrix_x 0))]
-           [squash_matrix_y
+    (let ([rotate_matrix (matrix-col->row (align-matrix squash_matrix_x 0))]
+          [squash_matrix_y #f])
+
+;      (print-matrix rotate_matrix)
+
+      (set! squash_matrix_y
             (map
              (lambda (row)
                (squash-points row module_width))
-             rotate_matrix)])
-      (matrix-col->row (align-matrix squash_matrix_y 0)))))
+             rotate_matrix))
+
+;      (print-matrix squash_matrix_y)
+
+      (matrix-row->col (align-matrix squash_matrix_y 0)))))
 
 (define (find-pattern-center guess_results)
   (let ([group_map (make-hash)])
@@ -576,14 +588,11 @@
             (set! step7_trimed_points (trim-matrix step6_rotated_points))
             (points->pic step7_trimed_points "step7_trimed.png" (make-hash))
             
-;            (printf "~a\n" (list-ref step6_rotated_points 14))
-;            (printf "~a\n" (list-ref step6_rotated_points 70))
-
             (set! step8_squashed_points (squash-matrix step7_trimed_points module_width))
             (points->pic step8_squashed_points "step8_squashed.png" (make-hash))
             (print-matrix step8_squashed_points)
 
-            (set! step9_end_points (end-trim-matrix step8_squashed_points))
+            (set! step9_end_points (trim-matrix (trim-tail step8_squashed_points)))
             (points->pic step9_end_points "step9_end.png" (make-hash))
             (print-matrix step9_end_points)
             ))
