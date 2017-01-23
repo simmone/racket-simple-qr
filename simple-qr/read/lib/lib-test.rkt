@@ -364,7 +364,7 @@
      ([*trace_level* 1])
 ;     (void)
 ;     (qr-read "normal.png")
-     (qr-read "real.jpg")
+     (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")
     )
     )
 

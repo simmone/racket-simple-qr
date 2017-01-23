@@ -595,6 +595,14 @@
             (set! step9_end_points (trim-matrix (trim-tail step8_squashed_points)))
             (points->pic step9_end_points "step9_end.png" (make-hash))
             (print-matrix step9_end_points)
+            
+            (let* ([init_matrix step9_end_points]
+                   [version (add1 (/ (- (length (car init_matrix)) 21) 4))])
+              (printf "width:~a, version:~a\n" (length (car init_matrix)) version)
+              (if (or (not (exact-nonnegative-integer? version)) (> version 40))
+                  ""
+                  (void))
+              )
             ))
     )
   "")
