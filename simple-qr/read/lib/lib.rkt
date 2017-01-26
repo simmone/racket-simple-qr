@@ -530,6 +530,44 @@
     (send dc draw-bitmap origin_bmp (+ (* -1 (cdr point_a)) (* 6 module_width)) (+ (* -1 (car point_a)) (* 6 module_width)))
     (send dest_bmp save-file output_file 'png)))
 
+(define (get-format-information matrix)
+  (let ([width (length (car matrix))])
+    (list
+     (reverse
+      (list 
+       (list-ref (list-ref matrix 0) 8)
+       (list-ref (list-ref matrix 1) 8)
+       (list-ref (list-ref matrix 2) 8)
+       (list-ref (list-ref matrix 3) 8)
+       (list-ref (list-ref matrix 4) 8)
+       (list-ref (list-ref matrix 5) 8)
+       (list-ref (list-ref matrix 7) 8)
+       (list-ref (list-ref matrix 8) 8)
+       (list-ref (list-ref matrix 8) 7)
+       (list-ref (list-ref matrix 8) 5)
+       (list-ref (list-ref matrix 8) 4)
+       (list-ref (list-ref matrix 8) 3)
+       (list-ref (list-ref matrix 8) 2)
+       (list-ref (list-ref matrix 8) 1)
+       (list-ref (list-ref matrix 8) 0)))
+      (reverse
+       (list 
+        (list-ref (list-ref matrix 8) (- width 1))
+        (list-ref (list-ref matrix 8) (- width 2))
+        (list-ref (list-ref matrix 8) (- width 3))
+        (list-ref (list-ref matrix 8) (- width 4))
+        (list-ref (list-ref matrix 8) (- width 5))
+        (list-ref (list-ref matrix 8) (- width 6))
+        (list-ref (list-ref matrix 8) (- width 7))
+        (list-ref (list-ref matrix 8) (- width 8))
+        (list-ref (list-ref matrix (- width 7)) 8)
+        (list-ref (list-ref matrix (- width 6)) 8)
+        (list-ref (list-ref matrix (- width 5)) 8)
+        (list-ref (list-ref matrix (- width 4)) 8)
+        (list-ref (list-ref matrix (- width 3)) 8)
+        (list-ref (list-ref matrix (- width 2)) 8)
+        (list-ref (list-ref matrix (- width 1)) 8))))))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -597,8 +635,11 @@
             (print-matrix step9_end_points)
             
             (let* ([init_matrix step9_end_points]
-                   [version (add1 (/ (- (length (car init_matrix)) 21) 4))])
-              (printf "width:~a, version:~a\n" (length (car init_matrix)) version)
+                   [version (add1 (/ (- (length (car init_matrix)) 21) 4))]
+                   [format_information (get-format-information init_matrix)])
+
+              (printf "width:~a, version:~a, format_information:~a\n" (length (car init_matrix)) version format_information)
+
               (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                   ""
                   (void))
