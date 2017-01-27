@@ -569,6 +569,34 @@
         (list-ref (list-ref matrix (- width 2)) 8)
         (list-ref (list-ref matrix (- width 1)) 8))))))
 
+(define (transform-points-list points_list start_point_pair)
+  (map
+   (lambda (point)
+     (cons (+ (sub1 (car start_point_pair)) (sub1 (car point))) (+ (sub1 (cdr start_point_pair)) (sub1 (cdr point)))))
+   points_list))
+
+(define (exclude-finder-pattern width exclude_points_map)
+  (for-each
+   (lambda (start_point)
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair #t))
+      (transform-points-list (first (get-finder-pattern)) start_point))
+
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair #t))
+      (transform-points-list (second (get-finder-pattern)) start_point))
+
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair #t))
+      (transform-points-list (third (get-finder-pattern)) start_point)))
+   '(
+     (0 . 0)
+     (0 . (- width 7))
+     ((- width 7) . (- width 7)))))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -636,15 +664,19 @@
             (print-matrix step9_end_points)
             
             (let* ([init_matrix step9_end_points]
+                   [width (length (car init_matrix))]
                    [version #f]
                    [format_information #f]
-                   [error_level #f])
+                   [error_level #f]
+                   [exclude_points_map (make-hash)])
 
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
                    (set! format_information (get-format-information init_matrix))
                    (set! error_level (get-error-level (car format_information)))
 
-              (printf "width:~a, version:~a, format_information:~a, error_level:~a\n" (length (car init_matrix)) version (car format_information) error_level)
+              (printf "width:~a, version:~a, format_information:~a, error_level:~a\n" width version (car format_information) error_level)
+
+              (exclude-finder-pattern width exclude_points_map)
 
               (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                   ""
