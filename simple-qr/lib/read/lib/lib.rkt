@@ -25,6 +25,7 @@
 (require racket/draw)
 
 (require "../matrix-rotate/lib.rkt")
+(require "../../share/format-information.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -635,10 +636,15 @@
             (print-matrix step9_end_points)
             
             (let* ([init_matrix step9_end_points]
-                   [version (add1 (/ (- (length (car init_matrix)) 21) 4))]
-                   [format_information (get-format-information init_matrix)])
+                   [version #f]
+                   [format_information #f]
+                   [error_level #f])
 
-              (printf "width:~a, version:~a, format_information:~a\n" (length (car init_matrix)) version format_information)
+                   (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
+                   (set! format_information (get-format-information init_matrix))
+                   (set! error_level (get-error-level (car format_information)))
+
+              (printf "width:~a, version:~a, format_information:~a, error_level:~a\n" (length (car init_matrix)) version (car format_information) error_level)
 
               (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                   ""

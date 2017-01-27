@@ -1,10 +1,12 @@
 #lang racket
 
 (provide (contract-out
-          [*error_level_code_hash* hash?]
+          [get-error-code-hash (-> hash?)]
+          [get-code-error-hash (-> hash?)]
+          [get-error-level (-> list? (or/c pair? #f))]
           ))
 
-(define *error_level_code_hash*
+(define (get-error-code-hash)
   '#hash(
          ("L-0".  "111011111000100")
          ("L-1" . "111001011110011")
@@ -38,3 +40,20 @@
          ("H-5" . "000001001010101")
          ("H-6" . "000110100001100")
          ("H-7" . "000100000111011")))
+
+(define (get-code-error-hash)
+  (let ([data_map (make-hash)])
+    (hash-for-each
+     (get-error-code-hash)
+     (lambda (error code)
+       (hash-set! data_map code error)))
+    data_map))
+
+(define (get-error-level format_information_list)
+  (let ([format_information_str 
+            (foldr (lambda (a b) (string-append a b)) "" (map (lambda (item) (number->string item)) format_information_list))]
+        [code_error_hash (get-code-error-hash)])
+    (if (hash-has-key? code_error_hash format_information_str)
+        (let ([items (regexp-split #rx"-" (hash-ref code_error_hash format_information_str))])
+          (cons (first items) (second items)))
+        #f)))

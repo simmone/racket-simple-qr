@@ -5,7 +5,8 @@
 (require rackunit "../matrix-rotate/lib.rkt")
 
 (require racket/runtime-path)
-(define-runtime-path test_file "normal.png")
+(define-runtime-path normal_file "normal.png")
+(define-runtime-path real_file "real.png")
 
 (define test-lib
   (test-suite 
@@ -16,7 +17,7 @@
    (test-case
     "tests"
 
-    (let ([points_list (pic->points test_file)])
+    (let ([points_list (pic->points normal_file)])
       (check-equal? (length points_list) 165)
       (check-equal? (length (car points_list)) 165)
 
@@ -59,7 +60,7 @@
    (test-case
     "test-points-rotate"
 
-    (let* ([points_list (pic->points test_file)]
+    (let* ([points_list (pic->points normal_file)]
            [bw_points (points->bw points_list 50)]
            [rotated_points (matrix-rotate bw_points 164)])
       (void)
