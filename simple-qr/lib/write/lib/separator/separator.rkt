@@ -1,37 +1,11 @@
 #lang racket
 
 (require "../func/func.rkt")
+(require "../../../share/separator.rkt")
 
 (provide (contract-out
           [draw-separator (-> exact-nonnegative-integer? hash? hash? void?)]
           ))
-
-(define *separator_points*
-  '(
-    (                                                        (1 . 8)
-                                                             (2 . 8)
-                                                             (3 . 8)
-                                                             (4 . 8)
-                                                             (5 . 8)
-                                                             (6 . 8)
-                                                             (7 . 8)
-     (8 . 1) (8 . 2) (8 . 3) (8 . 4) (8 . 5) (8 . 6) (8 . 7) (8 . 8))
-    ((1 . 1) (1 . 2) (1 . 3) (1 . 4) (1 . 5) (1 . 6) (1 . 7) (1 . 8)
-                                                             (2 . 8)
-                                                             (3 . 8)
-                                                             (4 . 8)
-                                                             (5 . 8)
-                                                             (6 . 8)
-                                                             (7 . 8)
-                                                             (8 . 8))
-    ((1 . 1) 
-     (2 . 1)
-     (3 . 1)
-     (4 . 1)
-     (5 . 1)
-     (6 . 1)
-     (7 . 1)
-     (8 . 1) (8 . 2) (8 . 3) (8 . 4) (8 . 5) (8 . 6) (8 . 7) (8 . 8))))
 
 (define (draw-separator modules points_map type_map)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
@@ -43,14 +17,14 @@
     (for-each
      (lambda (point_pair)
        (add-point point_pair "0" "separator" points_map type_map))
-     (transform-points-list (first *separator_points*) top_left_point))
+     (transform-points-list (first (get-separator)) top_left_point))
 
      (for-each
       (lambda (point_pair)
         (add-point point_pair "0" "separator" points_map type_map))
-      (transform-points-list (second *separator_points*) new_bottom_left_point))
+      (transform-points-list (second (get-separator)) new_bottom_left_point))
 
      (for-each
       (lambda (point_pair)
         (add-point point_pair "0" "separator" points_map type_map))
-      (transform-points-list (third *separator_points*) new_bottom_point))))
+      (transform-points-list (third (get-separator)) new_bottom_point))))

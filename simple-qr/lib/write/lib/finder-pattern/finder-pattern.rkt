@@ -1,7 +1,7 @@
 #lang racket
 
 (require "../func/func.rkt")
-(require "../../../share/format-information.rkt")
+(require "../../../share/finder-pattern.rkt")
 
 (provide (contract-out
           [draw-finder-pattern (-> exact-nonnegative-integer? hash? hash? void?)]

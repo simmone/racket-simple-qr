@@ -26,6 +26,8 @@
 
 (require "../matrix-rotate/lib.rkt")
 (require "../../share/format-information.rkt")
+(require "../../share/finder-pattern.rkt")
+(require "../../share/separator.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -572,7 +574,7 @@
 (define (transform-points-list points_list start_point_pair)
   (map
    (lambda (point)
-     (cons (+ (sub1 (car start_point_pair)) (sub1 (car point))) (+ (sub1 (cdr start_point_pair)) (sub1 (cdr point)))))
+     (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
    points_list))
 
 (define (exclude-finder-pattern width exclude_points_map)
@@ -580,22 +582,44 @@
    (lambda (start_point)
      (for-each
       (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair #t))
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
       (transform-points-list (first (get-finder-pattern)) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair #t))
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
       (transform-points-list (second (get-finder-pattern)) start_point))
 
      (for-each
       (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair #t))
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
       (transform-points-list (third (get-finder-pattern)) start_point)))
-   '(
-     (0 . 0)
-     (0 . (- width 7))
-     ((- width 7) . (- width 7)))))
+   (list
+    (cons 0 0)
+    (cons 0 (- width 7))
+    (cons (- width 7) 0))))
+
+(define (exclude-separator width exclude_points_map)
+  (for-each
+   (lambda (start_point)
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+     (transform-points-list (first (get-separator)) '(0 . 0)))
+
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+      (transform-points-list (second (get-separator)) (cons (- width 8) 0)))
+
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+      (transform-points-list (third (get-separator)) (cons 0 (- width 8)))))
+   (list
+    (cons 0 0)
+    (cons 0 (- width 7))
+    (cons (- width 7) 0))))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -677,6 +701,9 @@
               (printf "width:~a, version:~a, format_information:~a, error_level:~a\n" width version (car format_information) error_level)
 
               (exclude-finder-pattern width exclude_points_map)
+              (points->pic init_matrix "step91_exclude_finder_pattern.png" exclude_points_map)
+              (exclude-separator width exclude_points_map)
+              (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
 
               (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                   ""
