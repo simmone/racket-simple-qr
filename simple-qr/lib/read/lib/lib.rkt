@@ -28,6 +28,7 @@
 (require "../../share/format-information.rkt")
 (require "../../share/finder-pattern.rkt")
 (require "../../share/separator.rkt")
+(require "../../share/timing-pattern.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -621,6 +622,15 @@
     (cons 0 (- width 7))
     (cons (- width 7) 0))))
 
+(define (exclude-timing-pattern width exclude_points_map)
+  (for-each
+   (lambda (timing_points)
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+      timing_points))
+   (get-timing-pattern-points width)))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -704,6 +714,8 @@
               (points->pic init_matrix "step91_exclude_finder_pattern.png" exclude_points_map)
               (exclude-separator width exclude_points_map)
               (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
+              (exclude-timing-pattern width exclude_points_map)
+              (points->pic init_matrix "step93_exclude_timing_pattern.png" exclude_points_map)
 
               (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                   ""
