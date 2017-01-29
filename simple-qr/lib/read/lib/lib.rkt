@@ -29,6 +29,7 @@
 (require "../../share/finder-pattern.rkt")
 (require "../../share/separator.rkt")
 (require "../../share/timing-pattern.rkt")
+(require "../../share/alignment-pattern.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -584,11 +585,12 @@
     (cons 0 (- width 7))
     (cons (- width 7) 0))))
 
-(define (exclude-timing-pattern width exclude_points_map)
+(define (exclude-timing-pattern width exclude_points_map timing_points_map)
   (for-each
    (lambda (timing_points)
      (for-each
       (lambda (point_pair)
+        (hash-set! timing_points_map (cons (sub1 (car point_pair)) (sub1 (cdr point_pair))) "timing")
         (hash-set! exclude_points_map (cons (sub1 (car point_pair)) (sub1 (cdr point_pair))) '(0 0 255 255)))
       timing_points))
    (get-timing-pattern-points width)))
@@ -608,6 +610,16 @@
    (lambda (point_pair)
      (hash-set! exclude_points_map point_pair '(0 0 255 255)))
    (transform-points-list (third (get-format-information)) (cons (- width 8) 0))))
+
+(define (exclude-alignment-pattern version exclude_points_map timing_points_map)
+  (for-each
+   (lambda (center_point)
+     (for-each
+      (lambda (point_pair)
+        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+      (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
+             (fill-alignment-pattern-points (cons (sub1 (car center_point)) (sub1 (cdr center_point)))))))
+   (get-alignment-pattern-center-points version exclude_points_map timing_points_map)))
 
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
@@ -680,7 +692,8 @@
                    [version #f]
                    [format_information #f]
                    [error_level #f]
-                   [exclude_points_map (make-hash)])
+                   [exclude_points_map (make-hash)]
+                   [timing_points_map (make-hash)])
 
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
 
@@ -690,10 +703,12 @@
                    (points->pic init_matrix "step91_exclude_finder_pattern.png" exclude_points_map)
                    (exclude-separator width exclude_points_map)
                    (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
-                   (exclude-timing-pattern width exclude_points_map)
+                   (exclude-timing-pattern width exclude_points_map timing_points_map)
                    (points->pic init_matrix "step93_exclude_timing_pattern.png" exclude_points_map)
                    (exclude-format-information width exclude_points_map)
                    (points->pic init_matrix "step94_exclude_format_information.png" exclude_points_map)
+                   (exclude-alignment-pattern version exclude_points_map timing_points_map)
+                   (points->pic init_matrix "step95_exclude_alignment_pattern.png" exclude_points_map)
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""
