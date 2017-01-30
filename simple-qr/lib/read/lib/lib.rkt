@@ -30,6 +30,7 @@
 (require "../../share/separator.rkt")
 (require "../../share/timing-pattern.rkt")
 (require "../../share/alignment-pattern.rkt")
+(require "../../share/version-information.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -621,6 +622,18 @@
              (fill-alignment-pattern-points (cons (sub1 (car center_point)) (sub1 (cdr center_point)))))))
    (get-alignment-pattern-center-points version exclude_points_map timing_points_map)))
 
+(define (exclude-version version width exclude_points_map)
+  (when (>= version 7)
+        (for-each
+         (lambda (point_pair)
+           (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+         (transform-points-list (first (get-version-points)) (cons 0 (- width 11))))
+
+          (for-each
+           (lambda (point_pair)
+             (hash-set! exclude_points_map point_pair '(0 0 255 255)))
+           (transform-points-list (second (get-version-points)) (cons (- width 11) 0)))))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -705,10 +718,12 @@
                    (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
                    (exclude-timing-pattern width exclude_points_map timing_points_map)
                    (points->pic init_matrix "step93_exclude_timing_pattern.png" exclude_points_map)
-                   (exclude-format-information width exclude_points_map)
-                   (points->pic init_matrix "step94_exclude_format_information.png" exclude_points_map)
                    (exclude-alignment-pattern version exclude_points_map timing_points_map)
-                   (points->pic init_matrix "step95_exclude_alignment_pattern.png" exclude_points_map)
+                   (points->pic init_matrix "step94_exclude_alignment_pattern.png" exclude_points_map)
+                   (exclude-format-information width exclude_points_map)
+                   (points->pic init_matrix "step95_exclude_format_information.png" exclude_points_map)
+                   (exclude-version version width exclude_points_map)
+                   (points->pic init_matrix "step96_exclude_version.png" exclude_points_map)
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""

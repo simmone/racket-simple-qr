@@ -364,7 +364,7 @@
     (parameterize
      ([*trace_level* 1])
 ;     (void)
-;     (qr-read "normal.png")
+;     (check-equal? (qr-read "normal.png") "https://github.com/simmoneslkdfjslkdfjlaksdjfl")
      (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")
     )
     )

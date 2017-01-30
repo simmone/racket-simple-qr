@@ -1,41 +1,12 @@
 #lang racket
 
 (require "../func/func.rkt")
+(require "../../../share/version-information.rkt")
 
 (provide (contract-out
           [draw-reserved-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? hash? void?)]
           [draw-version-information (-> exact-nonnegative-integer? exact-nonnegative-integer? hash? hash? void?)]
           ))
-
-(define *version_points*
-  '(
-    ((1 . 1) (1 . 2) (1 . 3)
-     (2 . 1) (2 . 2) (2 . 3)
-     (3 . 1) (3 . 2) (3 . 3)
-     (4 . 1) (4 . 2) (4 . 3)
-     (5 . 1) (5 . 2) (5 . 3)
-     (6 . 1) (6 . 2) (6 . 3))
-    ((1 . 1) (1 . 2) (1 . 3) (1 . 4) (1 . 5) (1 . 6)
-     (2 . 1) (2 . 2) (2 . 3) (2 . 4) (2 . 5) (2 . 6)
-     (3 . 1) (3 . 2) (3 . 3) (3 . 4) (3 . 5) (3 . 6))
-    ))
-
-(define (draw-reserved-version-information version modules points_map type_map)
-  (when (>= version 7)
-        (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
-               [bottom_left_point (second finder_pattern_start_points)]
-               [top_right_point (third finder_pattern_start_points)]
-               [new_bottom_left_point (cons (- (car bottom_left_point) 4) (cdr bottom_left_point))]
-               [new_top_right_point (cons (car top_right_point) (- (cdr top_right_point) 4))])
-          (for-each
-           (lambda (point_pair)
-             (add-point point_pair "0" "version" points_map type_map))
-           (transform-points-list (first *version_points*) new_top_right_point))
-
-          (for-each
-           (lambda (point_pair)
-             (add-point point_pair "0" "version" points_map type_map))
-           (transform-points-list (second *version_points*) new_bottom_left_point)))))
 
 (define *trace_points*
   '(
@@ -78,6 +49,23 @@
          (38 . "100110101001100100")
          (39 . "100111010101000001")
          (40 . "101000110001101001")))
+
+(define (draw-reserved-version-information version modules points_map type_map)
+  (when (>= version 7)
+        (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
+               [bottom_left_point (second finder_pattern_start_points)]
+               [top_right_point (third finder_pattern_start_points)]
+               [new_bottom_left_point (cons (- (car bottom_left_point) 4) (cdr bottom_left_point))]
+               [new_top_right_point (cons (car top_right_point) (- (cdr top_right_point) 4))])
+          (for-each
+           (lambda (point_pair)
+             (add-point point_pair "0" "version" points_map type_map))
+           (transform-points-list (first (get-version-points)) new_top_right_point))
+
+          (for-each
+           (lambda (point_pair)
+             (add-point point_pair "0" "version" points_map type_map))
+           (transform-points-list (second (get-version-points)) new_bottom_left_point)))))
 
 (define (draw-version-information version modules points_map type_map)
   (when (>= version 7)
