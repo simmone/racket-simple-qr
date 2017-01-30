@@ -31,6 +31,8 @@
 (require "../../share/timing-pattern.rkt")
 (require "../../share/alignment-pattern.rkt")
 (require "../../share/version-information.rkt")
+(require "../../share/dark-module.rkt")
+(require "../../share/fill-data.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -634,6 +636,10 @@
              (hash-set! exclude_points_map point_pair '(0 0 255 255)))
            (transform-points-list (second (get-version-points)) (cons (- width 11) 0)))))
 
+(define (exclude-dark-module version exclude_points_map)
+  (let ([dark_point (get-dark-point version)])
+    (hash-set! exclude_points_map (cons (sub1 (car dark_point)) (sub1 (cdr dark_point))) '(0 0 255 255))))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -724,6 +730,10 @@
                    (points->pic init_matrix "step95_exclude_format_information.png" exclude_points_map)
                    (exclude-version version width exclude_points_map)
                    (points->pic init_matrix "step96_exclude_version.png" exclude_points_map)
+                   (exclude-dark-module version exclude_points_map)
+                   (points->pic init_matrix "step97_exclude_dark_module.png" exclude_points_map)
+
+                   (let ([trace_list (get-data-socket-list modules #:skip_points_hash exclude_points_map)])
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""

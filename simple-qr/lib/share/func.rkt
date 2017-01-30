@@ -4,7 +4,12 @@
 
 (provide (contract-out
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
+          [get-points (-> (listof list?) (listof pair?) any)]
           ))
+
+(define (get-points matrix trace_list)
+  (let loop ([
+  (list-ref (list-ref matrix (car pair)) (cdr pair)))
 
 (define (get-points-between start_point end_point #:direction direction)
   (let ([is_valid? #f])

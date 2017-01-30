@@ -16,6 +16,7 @@
 (require "lib/mask-data/mask-data.rkt")
 (require "lib/lib.rkt")
 (require "lib/func/func.rkt")
+(require "../share/fill-data.rkt")
 
 (require racket/draw)
 
@@ -49,7 +50,7 @@
       (trace (format "remain_points:~a\n" (- sum_count (hash-count points_map))) 1)
 
       (let ([data_list (string->list (matrix-data data #:version version #:mode mode #:error_level error_level))]
-            [trace_list (snake-modules modules #:skip_points_hash points_map)])
+            [trace_list (get-data-socket-list modules #:skip_points_hash points_map)])
         (trace (format "data_length:~a trace_length:~a\n" (length data_list) (length trace_list)) 1)
         (draw-data data_list trace_list points_map type_map))
 
