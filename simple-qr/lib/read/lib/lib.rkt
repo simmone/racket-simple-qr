@@ -33,6 +33,7 @@
 (require "../../share/version-information.rkt")
 (require "../../share/dark-module.rkt")
 (require "../../share/fill-data.rkt")
+(require "../../share/data-encoding.rkt")
 (require "../../share/func.rkt")
 
 (define *trace_level* (make-parameter 0))
@@ -641,6 +642,28 @@
   (let ([dark_point (get-dark-point version)])
     (hash-set! exclude_points_map (cons (sub1 (car dark_point)) (sub1 (cdr dark_point))) '(0 0 255 255))))
 
+(define (get-data-head bits)
+  (let ([mode #f]
+        [mode1 #f]
+        [mode2 #f]
+        [remain_bits bits]
+        [char_count #f]
+        )
+
+    (set! mode1 (get-indicator-mode (substring bits 0 4)))
+    (set! remain_bits (substring remain_bits 4))
+    
+    (if (string=? mode1 "E")
+        (let ([mode2 (get-indicator-mode (substring remain_bits 0 4))])
+          (when mode2
+                (set! mode (string-append mode1 mode2))
+                (set! remain_bits (substring remain_bits 4))))
+        (set! mode mode1))
+
+    (if mode
+        (list mode (string->number (substring remain_bits 0 8) 2) (substring remain_bits 8))
+        #f)))
+
 (define (qr-read pic_path)
   (let* ([step1_points_list #f]
          [original_height #f]
@@ -739,7 +762,8 @@
                          (let* ([trace_list (get-data-socket-list width #:skip_points_hash exclude_points_map)]
                                 [original_data_str #f]
                                 [onezero_bits (string->number (get-onezero-bits (length trace_list)) 2)]
-                                [unmask_data #f])
+                                [unmask_data #f]
+                                [mode #f])
 
                            (set! original_data_str (foldr (lambda (a b) (string-append a b)) "" 
                                                           (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
@@ -751,6 +775,15 @@
                            (set! unmask_data (~r #:base 2 #:min-width (length trace_list) #:pad-string "0" 
                                                  (bitwise-xor (string->number original_data_str 2) (string->number onezero_bits 2))))
                            (printf "unmask  :~a\n" unmask_data)
+
+                           (let ([data_head (get-data-head unmask_data)])
+                             (if data_head
+                                 (let ([mode (first data_head)]
+                                       [count (second data_head)]
+                                       [data (third data_head)])
+                                   (printf "mode:~a, count:~a\n" mode count)
+                                   (printf "data:~a\n" data))
+                                 #f))
                            )
                          ))))))
   "")

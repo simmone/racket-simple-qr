@@ -2,7 +2,6 @@
 
 (provide (contract-out 
           [get-version (-> string? string? string? exact-nonnegative-integer?)]
-          [get-mode-indicator (-> string? string?)]
           [get-character-count-indicator (-> exact-nonnegative-integer? exact-nonnegative-integer? string? string?)]
           [encode-b (-> string? string?)]
           [encode-n (-> string? string?)]
@@ -18,13 +17,9 @@
 (require "../func/capacity/capacity-dic.rkt")
 (require "../func/character-count/character-bit-width.rkt")
 (require "../func/code-info/code-info-func.rkt")
+(require "../../../share/data-encoding.rkt")
 
 (require racket/format)
-
-(define *mode_bit_table* '#hash(("N" . "0001") ("A" . "0010") ("B" . "0100") ("K" . "1000") ("E" . "0111")))
-
-(define (get-mode-indicator mode)
-  (hash-ref *mode_bit_table* mode))
 
 (define (get-version content mode error_level)
   (get-version-origin (string-length content) mode error_level))
