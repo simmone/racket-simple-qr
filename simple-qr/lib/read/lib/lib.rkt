@@ -33,6 +33,7 @@
 (require "../../share/version-information.rkt")
 (require "../../share/dark-module.rkt")
 (require "../../share/fill-data.rkt")
+(require "../../share/func.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -262,7 +263,7 @@
              [result_list '()]
              [pattern_count 0])
     (if (not (null? loop_list))
-        (if (= pattern_count 6)
+        (if (> pattern_count 6)
             (reverse (cons (cadr loop_list) (cons (car loop_list) result_list)))
             (if (equal? (take (car loop_list) 7) '(1 0 1 1 1 0 1))
                 (loop (cdr loop_list) (cons (car loop_list) result_list) (add1 pattern_count))
@@ -715,30 +716,41 @@
                    [timing_points_map (make-hash)])
 
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
-
                    (printf "width:~a, version:~a\n" width version)
-
-                   (exclude-finder-pattern width exclude_points_map)
-                   (points->pic init_matrix "step91_exclude_finder_pattern.png" exclude_points_map)
-                   (exclude-separator width exclude_points_map)
-                   (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
-                   (exclude-timing-pattern width exclude_points_map timing_points_map)
-                   (points->pic init_matrix "step93_exclude_timing_pattern.png" exclude_points_map)
-                   (exclude-alignment-pattern version exclude_points_map timing_points_map)
-                   (points->pic init_matrix "step94_exclude_alignment_pattern.png" exclude_points_map)
-                   (exclude-format-information width exclude_points_map)
-                   (points->pic init_matrix "step95_exclude_format_information.png" exclude_points_map)
-                   (exclude-version version width exclude_points_map)
-                   (points->pic init_matrix "step96_exclude_version.png" exclude_points_map)
-                   (exclude-dark-module version exclude_points_map)
-                   (points->pic init_matrix "step97_exclude_dark_module.png" exclude_points_map)
-
-                   (let ([trace_list (get-data-socket-list modules #:skip_points_hash exclude_points_map)])
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""
-                       (void))
-                   )
-            ))
-    )
+                       (begin
+                         (exclude-finder-pattern width exclude_points_map)
+                         (points->pic init_matrix "step91_exclude_finder_pattern.png" exclude_points_map)
+                         (exclude-separator width exclude_points_map)
+                         (points->pic init_matrix "step92_exclude_separator.png" exclude_points_map)
+                         (exclude-timing-pattern width exclude_points_map timing_points_map)
+                         (points->pic init_matrix "step93_exclude_timing_pattern.png" exclude_points_map)
+                         (exclude-alignment-pattern version exclude_points_map timing_points_map)
+                         (points->pic init_matrix "step94_exclude_alignment_pattern.png" exclude_points_map)
+                         (exclude-format-information width exclude_points_map)
+                         (points->pic init_matrix "step95_exclude_format_information.png" exclude_points_map)
+                         (exclude-version version width exclude_points_map)
+                         (points->pic init_matrix "step96_exclude_version.png" exclude_points_map)
+                         (exclude-dark-module version exclude_points_map)
+                         (points->pic init_matrix "step97_exclude_dark_module.png" exclude_points_map)
+
+                         (let* ([trace_list (get-data-socket-list width #:skip_points_hash exclude_points_map)]
+                                [original_data_str #f]
+                                [onezero_bits (string->number (get-onezero-bits (length trace_list)) 2)]
+                                [unmask_data #f])
+
+                           (set! original_data_str (foldr (lambda (a b) (string-append a b)) "" 
+                                                          (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
+                           (printf "original:~a\n" original_data_str)
+
+                           (set! onezero_bits (get-onezero-bits (length trace_list)))
+                           (printf "onezero :~a\n" onezero_bits)
+
+                           (set! unmask_data (~r #:base 2 #:min-width (length trace_list) #:pad-string "0" 
+                                                 (bitwise-xor (string->number original_data_str 2) (string->number onezero_bits 2))))
+                           (printf "unmask  :~a\n" unmask_data)
+                           )
+                         ))))))
   "")

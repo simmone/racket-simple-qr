@@ -5,11 +5,23 @@
 (provide (contract-out
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
+          [get-onezero-bits (-> exact-nonnegative-integer? string?)]
           ))
 
+(define (get-onezero-bits width)
+  (let loop ([loop_width width]
+             [result_list '()]
+             [bit "1"])
+    (if (> loop_width 0)
+        (loop (sub1 loop_width) (cons bit result_list) (if (string=? bit "1") "0" "1"))
+        (foldr (lambda (a b) (string-append a b)) "" (reverse result_list)))))
+
 (define (get-points matrix trace_list)
-  (let loop ([
-  (list-ref (list-ref matrix (car pair)) (cdr pair)))
+  (let loop ([loop_list trace_list]
+             [result_list '()])
+    (if (not (null? loop_list))
+        (loop (cdr loop_list) (cons (list-ref (list-ref matrix (sub1 (car (car loop_list)))) (sub1 (cdr (car loop_list)))) result_list))
+        (reverse result_list))))
 
 (define (get-points-between start_point end_point #:direction direction)
   (let ([is_valid? #f])
