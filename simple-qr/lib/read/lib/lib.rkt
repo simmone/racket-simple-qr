@@ -264,7 +264,7 @@
              [result_list '()]
              [pattern_count 0])
     (if (not (null? loop_list))
-        (if (> pattern_count 6)
+        (if (>= pattern_count 6)
             (reverse (cons (cadr loop_list) (cons (car loop_list) result_list)))
             (if (equal? (take (car loop_list) 7) '(1 0 1 1 1 0 1))
                 (loop (cdr loop_list) (cons (car loop_list) result_list) (add1 pattern_count))
@@ -760,23 +760,14 @@
                          (points->pic init_matrix "step97_exclude_dark_module.png" exclude_points_map)
 
                          (let* ([trace_list (get-data-socket-list width #:skip_points_hash exclude_points_map)]
-                                [original_data_str #f]
-                                [onezero_bits (string->number (get-onezero-bits (length trace_list)) 2)]
-                                [unmask_data #f]
+                                [data_bits #f]
                                 [mode #f])
 
-                           (set! original_data_str (foldr (lambda (a b) (string-append a b)) "" 
+                           (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
                                                           (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
-                           (printf "original:~a\n" original_data_str)
+                           (printf "data:~a\n" data_bits)
 
-                           (set! onezero_bits (get-onezero-bits (length trace_list)))
-                           (printf "onezero :~a\n" onezero_bits)
-
-                           (set! unmask_data (~r #:base 2 #:min-width (length trace_list) #:pad-string "0" 
-                                                 (bitwise-xor (string->number original_data_str 2) (string->number onezero_bits 2))))
-                           (printf "unmask  :~a\n" unmask_data)
-
-                           (let ([data_head (get-data-head unmask_data)])
+                           (let ([data_head (get-data-head data_bits)])
                              (if data_head
                                  (let ([mode (first data_head)]
                                        [count (second data_head)]
