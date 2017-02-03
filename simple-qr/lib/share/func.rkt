@@ -5,9 +5,20 @@
 (provide (contract-out
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
+          [get-unmask-points (-> (listof list?) (listof pair?) any)]
           ))
 
 (define (get-points matrix trace_list)
+  (let loop ([loop_list trace_list]
+             [result_list '()])
+    (if (not (null? loop_list))
+        (let* ([i (sub1 (caar loop_list))]
+               [j (sub1 (cdar loop_list))]
+               [val (list-ref (list-ref matrix i) j)])
+          (loop (cdr loop_list) (cons val result_list)))
+        (reverse result_list))))
+
+(define (get-unmask-points matrix trace_list)
   (let loop ([loop_list trace_list]
              [result_list '()])
     (if (not (null? loop_list))

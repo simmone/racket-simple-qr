@@ -763,9 +763,12 @@
                                 [data_bits #f]
                                 [mode #f])
 
+                           (printf "mask data:~a\n" 
+                                   (foldr (lambda (a b) (string-append a b)) "" 
+                                          (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
                            (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
-                                                          (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
-                           (printf "data:~a\n" data_bits)
+                                                          (map (lambda (item) (number->string item)) (get-unmask-points init_matrix trace_list))))
+                           (printf "unmask data:~a\n" data_bits)
 
                            (let ([data_head (get-data-head data_bits)])
                              (if data_head
