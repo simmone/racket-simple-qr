@@ -736,7 +736,8 @@
                    [format_information #f]
                    [error_level #f]
                    [exclude_points_map (make-hash)]
-                   [timing_points_map (make-hash)])
+                   [timing_points_map (make-hash)]
+                   [new_exclude_points_map (make-hash)])
 
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
                    (printf "width:~a, version:~a\n" width version)
@@ -758,14 +759,20 @@
                          (points->pic init_matrix "step96_exclude_version.png" exclude_points_map)
                          (exclude-dark-module version exclude_points_map)
                          (points->pic init_matrix "step97_exclude_dark_module.png" exclude_points_map)
+                         
+                         (hash-for-each
+                          exclude_points_map
+                          (lambda (point val)
+                            (hash-set! new_exclude_points_map (cons (add1 (car point)) (add1 (cdr point))) '(0 0 255 255))))
 
-                         (let* ([trace_list (get-data-socket-list width #:skip_points_hash exclude_points_map)]
+                         (let* ([trace_list (get-data-socket-list width #:skip_points_hash new_exclude_points_map)]
                                 [data_bits #f]
                                 [mode #f])
 
                            (printf "mask data:~a\n" 
                                    (foldr (lambda (a b) (string-append a b)) "" 
                                           (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
+                           (printf "tracelist:~a\n" trace_list)
                            (let* ([unmask_data (get-unmask-points init_matrix trace_list)]
                                   [data (car unmask_data)]
                                   [mask_list (cdr unmask_data)])
