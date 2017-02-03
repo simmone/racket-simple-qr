@@ -26,7 +26,9 @@
         (let* ([i (sub1 (caar loop_list))]
                [j (sub1 (cdar loop_list))]
                [val (list-ref (list-ref matrix i) j)]
-               [mask (if (= (remainder (+ i j) 2) 0) 1 0)])
+               [row (add1 i)]
+               [column (add1 j)]
+               [mask (if (= (modulo (+ row column) 2) 0) 1 0)])
           (loop (cdr loop_list) (cons (bitwise-xor val mask) result_list) (cons mask mask_list)))
         (cons (reverse result_list) (reverse mask_list)))))
 

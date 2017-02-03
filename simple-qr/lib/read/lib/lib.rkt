@@ -676,6 +676,7 @@
          [step7_trimed_points #f]
          [step8_squashed_points #f]
          [step9_end_points #f]
+         [data_str ""]
          )
 
     (set! step1_points_list (pic->points pic_path))
@@ -772,7 +773,6 @@
                            (printf "mask data:~a\n" 
                                    (foldr (lambda (a b) (string-append a b)) "" 
                                           (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
-                           (printf "tracelist:~a\n" trace_list)
                            (let* ([unmask_data (get-unmask-points init_matrix trace_list)]
                                   [data (car unmask_data)]
                                   [mask_list (cdr unmask_data)])
@@ -789,8 +789,18 @@
                                        [count (second data_head)]
                                        [data (third data_head)])
                                    (printf "mode:~a, count:~a\n" mode count)
-                                   (printf "data:~a\n" data))
-                                 #f))
-                           )
-                         ))))))
-  "")
+                                   (printf "data:~a\n" data)
+                                   (set! data_str
+                                         (bytes->string/utf-8
+                                          (bytes (string->number (substring data 0 8) 2)
+                                                 (string->number (substring data 8 16) 2)
+                                                 (string->number (substring data 16 24) 2)
+                                                 (string->number (substring data 24 32) 2)
+                                                 (string->number (substring data 32 40) 2)
+                                                 (string->number (substring data 40 48) 2)
+                                                 (string->number (substring data 48 56) 2)
+                                                 (string->number (substring data 56 64) 2)
+                                                 ))))
+                                 #f)))
+                         )))))
+  data_str))
