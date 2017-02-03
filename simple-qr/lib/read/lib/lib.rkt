@@ -766,9 +766,15 @@
                            (printf "mask data:~a\n" 
                                    (foldr (lambda (a b) (string-append a b)) "" 
                                           (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
-                           (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
-                                                          (map (lambda (item) (number->string item)) (get-unmask-points init_matrix trace_list))))
-                           (printf "unmask data:~a\n" data_bits)
+                           (let* ([unmask_data (get-unmask-points init_matrix trace_list)]
+                                  [data (car unmask_data)]
+                                  [mask_list (cdr unmask_data)])
+                             (printf "mask list:~a\n" 
+                                   (foldr (lambda (a b) (string-append a b)) "" 
+                                          (map (lambda (item) (number->string item)) mask_list)))
+                             (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
+                                                    (map (lambda (item) (number->string item)) data)))
+                             (printf "unmask data:~a\n" data_bits))
 
                            (let ([data_head (get-data-head data_bits)])
                              (if data_head

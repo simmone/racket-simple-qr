@@ -5,7 +5,7 @@
 (provide (contract-out
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
-          [get-unmask-points (-> (listof list?) (listof pair?) any)]
+          [get-unmask-points (-> (listof list?) (listof pair?) pair?)]
           ))
 
 (define (get-points matrix trace_list)
@@ -20,13 +20,15 @@
 
 (define (get-unmask-points matrix trace_list)
   (let loop ([loop_list trace_list]
-             [result_list '()])
+             [result_list '()]
+             [mask_list '()])
     (if (not (null? loop_list))
         (let* ([i (sub1 (caar loop_list))]
                [j (sub1 (cdar loop_list))]
-               [val (list-ref (list-ref matrix i) j)])
-          (loop (cdr loop_list) (cons (if (= (remainder (+ i j) 2) 0) (bitwise-xor val 1) val) result_list)))
-        (reverse result_list))))
+               [val (list-ref (list-ref matrix i) j)]
+               [mask (if (= (remainder (+ i j) 2) 0) 1 0)])
+          (loop (cdr loop_list) (cons (bitwise-xor val mask) result_list) (cons mask mask_list)))
+        (cons (reverse result_list) (reverse mask_list)))))
 
 (define (get-points-between start_point end_point #:direction direction)
   (let ([is_valid? #f])
