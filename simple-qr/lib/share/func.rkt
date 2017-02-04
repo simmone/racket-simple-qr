@@ -14,9 +14,21 @@
     (if (not (null? loop_list))
         (let* ([i (sub1 (caar loop_list))]
                [j (sub1 (cdar loop_list))]
-               [val (list-ref (list-ref matrix i) j)])
+               [val (bitwise-xor (list-ref (list-ref matrix i) j) 1)])
           (loop (cdr loop_list) (cons val result_list)))
         (reverse result_list))))
+
+(define *mask_proc_hash*
+  (hash
+   0 (lambda (row column) (= (modulo (+ row column) 2) 0))
+   1 (lambda (row column) (= (modulo row 2) 0))
+   2 (lambda (row column) (= (modulo column 3) 0))
+   3 (lambda (row column) (= (modulo (+ row column) 3) 0))
+   4 (lambda (row column) (= (modulo (+ (floor (/ row 2)) (floor (/ column 3))) 2) 0))
+   5 (lambda (row column) (= (+ (modulo (* row column) 2) (modulo (* row column) 3)) 0))
+   6 (lambda (row column) (= (modulo (+ (modulo (* row column) 2) (modulo (* row column) 3)) 2) 0))
+   7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
+   ))
 
 (define (get-unmask-points matrix trace_list)
   (let loop ([loop_list trace_list]
@@ -25,7 +37,7 @@
     (if (not (null? loop_list))
         (let* ([i (sub1 (caar loop_list))]
                [j (sub1 (cdar loop_list))]
-               [val (list-ref (list-ref matrix i) j)]
+               [val (bitwise-xor (list-ref (list-ref matrix i) j) 1)]
                [row (add1 i)]
                [column (add1 j)]
                [mask (if (= (modulo (+ row column) 2) 0) 1 0)])
