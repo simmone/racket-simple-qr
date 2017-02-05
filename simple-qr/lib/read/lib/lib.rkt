@@ -736,12 +736,31 @@
                    [version #f]
                    [format_information #f]
                    [error_level #f]
+                   [mask_pattern #f]
                    [exclude_points_map (make-hash)]
                    [timing_points_map (make-hash)]
                    [new_exclude_points_map (make-hash)])
 
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
-                   (printf "width:~a, version:~a\n" width version)
+
+
+                   (set! format_information 
+                         (~r #:base 2 #:min-width 5 #:pad-string "0"
+                             (bitwise-xor 
+                              #b10101
+                              (string->number 
+                               (foldr (lambda (a b) 
+                                        (string-append a b)) "" 
+                                        (map (lambda (item) (number->string item)) 
+                                             (take
+                                              (get-points init_matrix 
+                                                          (reverse 
+                                                           (transform-points-list (first (get-format-information)) '(1 . 1))))
+                                              5)))
+                               2))))
+                   (set! error_level (substring format_information 0 2))
+                   (set! mask_pattern (substring format_information 2 3))
+                   (printf "width:~a, version:~a, error_level:~a, mask_pattern:~a\n" width version error_level mask_pattern)
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""
