@@ -5,7 +5,7 @@
 (provide (contract-out
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
-          [get-unmask-points (-> (listof list?) (listof pair?) pair?)]
+          [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
           ))
 
 (define (get-points matrix trace_list)
@@ -18,19 +18,7 @@
           (loop (cdr loop_list) (cons val result_list)))
         (reverse result_list))))
 
-(define *mask_proc_hash*
-  (hash
-   0 (lambda (row column) (= (modulo (+ row column) 2) 0))
-   1 (lambda (row column) (= (modulo row 2) 0))
-   2 (lambda (row column) (= (modulo column 3) 0))
-   3 (lambda (row column) (= (modulo (+ row column) 3) 0))
-   4 (lambda (row column) (= (modulo (+ (floor (/ row 2)) (floor (/ column 3))) 2) 0))
-   5 (lambda (row column) (= (+ (modulo (* row column) 2) (modulo (* row column) 3)) 0))
-   6 (lambda (row column) (= (modulo (+ (modulo (* row column) 2) (modulo (* row column) 3)) 2) 0))
-   7 (lambda (row column) (= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0))
-   ))
-
-(define (get-unmask-points matrix trace_list)
+(define (get-unmask-points matrix trace_list mask-proc)
   (let loop ([loop_list trace_list]
              [result_list '()]
              [mask_list '()])
@@ -38,7 +26,7 @@
         (let* ([i (sub1 (caar loop_list))]
                [j (sub1 (cdar loop_list))]
                [val (list-ref (list-ref matrix i) j)]
-               [mask (if (= (modulo (+ i j) 2) 0) 1 0)])
+               [mask (if (mask-proc i j) 1 0)])
           (loop (cdr loop_list) (cons (bitwise-xor val mask) result_list) (cons mask mask_list)))
         (cons (reverse result_list) (reverse mask_list)))))
 

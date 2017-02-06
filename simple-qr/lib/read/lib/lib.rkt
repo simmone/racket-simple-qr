@@ -739,7 +739,7 @@
                    [format_information #f]
                    [error_level #f]
                    [mask_pattern #f]
-                   [mask_proc #f]
+                   [mask-proc #f]
                    [exclude_points_map (make-hash)]
                    [timing_points_map (make-hash)]
                    [new_exclude_points_map (make-hash)])
@@ -758,7 +758,7 @@
                    (set! mask_pattern (substring format_information 2 3))
                    (printf "width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
                            width version format_information error_level mask_pattern)
-                   (set! mask_proc (get-mask-proc (string->number mask_pattern)))
+                   (set! mask-proc (get-mask-proc (string->number mask_pattern)))
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""
@@ -784,13 +784,14 @@
                             (hash-set! new_exclude_points_map (cons (add1 (car point)) (add1 (cdr point))) '(0 0 255 255))))
 
                          (let* ([trace_list (get-data-socket-list width #:skip_points_hash new_exclude_points_map)]
+                                [data_list (get-points init_matrix trace_list)]
                                 [data_bits #f]
                                 [mode #f])
 
                            (printf "mask data:~a\n" 
                                    (foldr (lambda (a b) (string-append a b)) "" 
-                                          (map (lambda (item) (number->string item)) (get-points init_matrix trace_list))))
-                           (let* ([unmask_data (get-unmask-points init_matrix trace_list)]
+                                          (map (lambda (item) (number->string item)) data_list)))
+                           (let* ([unmask_data (get-unmask-points init_matrix trace_list mask-proc)]
                                   [data (car unmask_data)]
                                   [mask_list (cdr unmask_data)])
                              (printf "mask list:~a\n" 
