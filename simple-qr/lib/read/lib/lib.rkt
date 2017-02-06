@@ -34,6 +34,7 @@
 (require "../../share/dark-module.rkt")
 (require "../../share/fill-data.rkt")
 (require "../../share/data-encoding.rkt")
+(require "../../share/mask-data.rkt")
 (require "../../share/func.rkt")
 
 (define *trace_level* (make-parameter 0))
@@ -734,9 +735,11 @@
             (let* ([init_matrix step9_end_points]
                    [width (length (car init_matrix))]
                    [version #f]
+                   [format_code_error_hash (get-code-error-hash)]
                    [format_information #f]
                    [error_level #f]
                    [mask_pattern #f]
+                   [mask_proc #f]
                    [exclude_points_map (make-hash)]
                    [timing_points_map (make-hash)]
                    [new_exclude_points_map (make-hash)])
@@ -744,23 +747,18 @@
                    (set! version (add1 (/ (- (length (car init_matrix)) 21) 4)))
 
 
-                   (set! format_information 
-                         (~r #:base 2 #:min-width 5 #:pad-string "0"
-                             (bitwise-xor 
-                              #b10101
-                              (string->number 
-                               (foldr (lambda (a b) 
-                                        (string-append a b)) "" 
-                                        (map (lambda (item) (number->string item)) 
-                                             (take
-                                              (get-points init_matrix 
-                                                          (reverse 
-                                                           (transform-points-list (first (get-format-information)) '(1 . 1))))
-                                              5)))
-                               2))))
-                   (set! error_level (substring format_information 0 2))
+                   (set! format_information (hash-ref format_code_error_hash 
+                                                      (foldr (lambda (a b) 
+                                                               (string-append a b)) "" 
+                                                               (map (lambda (item) (number->string item))
+                                                                    (reverse
+                                                                     (get-points init_matrix 
+                                                                                 (transform-points-list (first (get-format-information)) '(1 . 1))))))))
+                   (set! error_level (substring format_information 0 1))
                    (set! mask_pattern (substring format_information 2 3))
-                   (printf "width:~a, version:~a, error_level:~a, mask_pattern:~a\n" width version error_level mask_pattern)
+                   (printf "width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
+                           width version format_information error_level mask_pattern)
+                   (set! mask_proc (get-mask-proc (string->number mask_pattern)))
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
                        ""
