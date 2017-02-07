@@ -14,6 +14,7 @@
 (require "func/remainder-bits/remainder-bits-func.rkt")
 (require "data-encoding/data-encoding.rkt")
 (require "error-correct-code/error-correct-code.rkt")
+(require "../../share/data-group.rkt")
 
 (define (matrix-data data #:version version #:mode mode #:error_level error_level)
   (let ([data_grouped #f]

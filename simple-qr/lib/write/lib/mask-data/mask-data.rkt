@@ -67,7 +67,7 @@
   result_mask_number))
 
 (define (mask-func data_list mask_number)
-  (let ([mask-lb (get-mask-proc mask mask_number)])
+  (let ([mask-lb (get-mask-proc mask_number)])
     (reverse
      (let loop ([loop_list data_list]
                 [result_list '()])

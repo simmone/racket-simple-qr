@@ -20,12 +20,6 @@
     (check-equal? (get-ec-count 40 "Q") 30)
     )
 
-   (test-case
-    "test-get-group-width"
-
-    (check-equal? (get-group-width 40 "Q") #((34 . 24) (34 . 25)))
-    )
-
    ))
 
 (run-tests test-code-info-func)
