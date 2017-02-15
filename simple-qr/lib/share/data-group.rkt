@@ -2,6 +2,7 @@
 
 (provide (contract-out
      [get-group-width (-> exact-nonnegative-integer? string? vector?)]
+     [defines->count-list (-> vector? list?)]
      ))
 
 (define (get-group-width version error_level)
@@ -169,3 +170,20 @@
                 ("40-H" . #((20 . 15) (61 . 16))))])
 
   (hash-ref group_map (string-append (number->string version) "-" error_level))))
+
+(define (defines->count-list defines)
+  (let loop ([loop_defines (vector->list defines)]
+             [result_list '()])
+    (if (not (null? loop_defines))
+        (loop
+         (cdr loop_defines)
+         (append
+          (let loop-count ([occur_count (caar loop_defines)]
+                           [inner_list '()])
+            (if (> occur_count 0)
+                (loop-count
+                 (sub1 occur_count)
+                 (cons (cdar loop_defines) inner_list))
+                inner_list))
+          result_list))
+        (reverse result_list))))
