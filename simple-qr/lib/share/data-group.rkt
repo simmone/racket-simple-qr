@@ -3,6 +3,7 @@
 (provide (contract-out
      [get-group-width (-> exact-nonnegative-integer? string? vector?)]
      [defines->count-list (-> vector? list?)]
+     [count_list->sequence_list (-> list? list?)]
      ))
 
 (define (get-group-width version error_level)
@@ -185,5 +186,23 @@
                  (sub1 occur_count)
                  (cons (cdar loop_defines) inner_list))
                 inner_list))
+          result_list))
+        (reverse result_list))))
+
+(define (count_list->sequence_list count_list)
+  (let loop ([loop_list count_list]
+             [count 0]
+             [result_list '()])
+    (if (not (null? loop_list))
+        (loop
+         (cdr loop_list)
+         (+ count (car loop_list))
+         (cons 
+          (let inner-loop ([loop_count (car loop_list)]
+                           [start_count count]
+                           [inner_result_list '()])
+            (if (> loop_count 0)
+                (inner-loop (sub1 loop_count) (add1 start_count) (cons start_count inner_result_list))
+                (reverse inner_result_list)))
           result_list))
         (reverse result_list))))
