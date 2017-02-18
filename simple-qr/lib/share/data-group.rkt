@@ -4,6 +4,7 @@
      [get-group-width (-> exact-nonnegative-integer? string? vector?)]
      [defines->count-list (-> vector? list?)]
      [count_list->sequence_list (-> list? list?)]
+     [sequence_list->sequence (-> (listof list?) list?)]
      ))
 
 (define (get-group-width version error_level)
@@ -206,3 +207,21 @@
                 (reverse inner_result_list)))
           result_list))
         (reverse result_list))))
+
+(define (sequence_list->sequence sequence_list)
+  (let ([max_length (apply max (map (lambda (row) (length row)) sequence_list))])
+    (let loop ([col_index 0]
+               [result_list '()])
+      (if (< col_index max_length)
+          (loop
+           (add1 col_index)
+           (cons
+            (let inner-loop ([row_index 0]
+                             [inner_result_list '()])
+              (if (< row_index (length sequence_list))
+                  (if (< col_index (length (list-ref sequence_list row_index)))
+                      (inner-loop (add1 row_index) (cons (list-ref (list-ref sequence_list row_index) col_index) inner_result_list))
+                      (inner-loop (add1 row_index) inner_result_list))
+                  (reverse inner_result_list)))
+            result_list))
+          (flatten (reverse result_list))))))

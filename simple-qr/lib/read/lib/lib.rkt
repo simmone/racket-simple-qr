@@ -36,6 +36,7 @@
 (require "../../share/data-encoding.rkt")
 (require "../../share/mask-data.rkt")
 (require "../../share/func.rkt")
+(require "../../share/data-group.rkt")
 
 (define *trace_level* (make-parameter 0))
 
@@ -800,33 +801,8 @@
                              (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
                                                     (map (lambda (item) (number->string item)) data)))
                              (printf "unmask data:~a\n" data_bits))
-
-                           (let ([data_head (get-data-head data_bits)])
-                             (if data_head
-                                 (let ([mode (first data_head)]
-                                       [count (second data_head)]
-                                       [data (third data_head)])
-                                   (printf "mode:~a, count:~a\n" mode count)
-                                   (printf "data:~a\n" data)
-                                   (set! data_str
-                                         (bytes->string/utf-8
-                                          (bytes (string->number (substring data 0 8) 2)
-                                                 (string->number (substring data 8 16) 2)
-                                                 (string->number (substring data 16 24) 2)
-                                                 (string->number (substring data 24 32) 2)
-                                                 (string->number (substring data 32 40) 2)
-                                                 (string->number (substring data 40 48) 2)
-                                                 (string->number (substring data 48 56) 2)
-                                                 (string->number (substring data 56 64) 2)
-                                                 (string->number (substring data 64 72) 2)
-                                                 (string->number (substring data 72 80) 2)
-                                                 (string->number (substring data 80 88) 2)
-                                                 (string->number (substring data 88 96) 2)
-                                                 (string->number (substring data 96 104) 2)
-                                                 (string->number (substring data 104 112) 2)
-                                                 (string->number (substring data 112 120) 2)
-                                                 (string->number (substring data 120 128) 2)
-                                                 ))))
-                                 #f)))
-                         )))))
+                           
+                             (printf "group width:~a\n" (get-group-width version error_level))
+                           ))
+                         ))))
   data_str))
