@@ -5,6 +5,9 @@
      [defines->count-list (-> vector? list?)]
      [count_list->sequence_list (-> list? list?)]
      [sequence_list->sequence (-> (listof list?) list?)]
+     [split-data->groups (-> string? exact-nonnegative-integer? list?)]
+     [combine-data-sequence (-> (listof string?) (listof exact-nonnegative-integer?) (listof pair?))]
+     [rearrange-data (-> string? list? string?)]
      ))
 
 (define (get-group-width version error_level)
@@ -225,3 +228,41 @@
                   (reverse inner_result_list)))
             result_list))
           (flatten (reverse result_list))))))
+
+(define (split-data->groups data_str group_count)
+  (let loop ([loop_count group_count]
+             [loop_str data_str]
+             [result_list '()])
+    (if (> loop_count 0)
+        (loop 
+         (sub1 loop_count)
+         (substring loop_str 8)
+         (cons (substring loop_str 0 8) result_list))
+        (reverse result_list))))
+
+(define (combine-data-sequence data_list sequence_list)
+  (let loop ([data_loop data_list]
+             [sequence_loop sequence_list]
+             [result_list '()])
+    (if (not (null? data_loop))
+        (loop
+         (cdr data_loop)
+         (cdr sequence_loop)
+         (cons (cons (car data_loop) (car sequence_loop)) result_list))
+        (reverse result_list))))
+
+(define (rearrange-data data_bits data_group)
+  (foldr
+   (lambda (a b)
+     (string-append a b))
+   ""
+   (map
+    (lambda (rec)
+      (car rec))
+    (sort
+     (combine-data-sequence
+      (split-data->groups data_bits (apply + data_group))
+      (sequence_list->sequence (count_list->sequence_list data_group)))
+     <
+     #:key cdr))))
+

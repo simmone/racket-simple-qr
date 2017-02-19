@@ -800,9 +800,9 @@
                                           (map (lambda (item) (number->string item)) mask_list)))
                              (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
                                                     (map (lambda (item) (number->string item)) data)))
-                             (printf "unmask data:~a\n" data_bits))
+                             (printf "unmask data:~a, [~a]\n" data_bits (string-length data_bits))
                            
-                             (printf "group width:~a\n" (get-group-width version error_level))
+                             (printf "group width:~a\n" (get-group-width version error_level)))
                            ))
                          ))))
   data_str))
