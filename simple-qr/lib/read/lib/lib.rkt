@@ -786,6 +786,7 @@
 
                          (let* ([trace_list (get-data-socket-list width #:skip_points_hash new_exclude_points_map)]
                                 [data_list (get-points init_matrix trace_list)]
+                                [unmask_data_bits #f]
                                 [data_bits #f]
                                 [mode #f])
 
@@ -798,11 +799,35 @@
                              (printf "mask list:~a\n" 
                                    (foldr (lambda (a b) (string-append a b)) "" 
                                           (map (lambda (item) (number->string item)) mask_list)))
-                             (set! data_bits (foldr (lambda (a b) (string-append a b)) "" 
+                             (set! unmask_data_bits (foldr (lambda (a b) (string-append a b)) "" 
                                                     (map (lambda (item) (number->string item)) data)))
-                             (printf "unmask data:~a, [~a]\n" data_bits (string-length data_bits))
-                           
-                             (printf "group width:~a\n" (get-group-width version error_level)))
-                           ))
-                         ))))
+                             (printf "unmask data:~a, [~a]\n" unmask_data_bits (string-length unmask_data_bits))
+
+                             (printf "group width:~a\n" (get-group-width version error_level)))                             
+                             (set! data_bits (rearrange-data unmask_data_bits (defines->count-list (get-group-width version error_level))))
+
+                             (printf "data:~a\n" data_bits)
+                             
+                             (let ([mode (get-indicator-mode (substring data_bits 0 4))]
+                                   [data_count (string->number (substring data_bits 4 12) 2)])
+                               (printf "mode:~a, data_count:~a\n" mode data_count)
+                               
+                               (set! data_str
+                                     (bytes->string/utf-8 
+                                      (list->bytes
+                                       (map
+                                        (lambda (rec)
+                                          (string->number rec 2))
+                                        (let loop ([loop_count data_count]
+                                                   [loop_str (substring data_bits 12)]
+                                                   [result_list '()])
+                                          (if (> loop_count 0)
+                                              (loop
+                                               (sub1 loop_count)
+                                               (substring loop_str 8)
+                                               (cons (substring loop_str 0 8) result_list))
+                                              (reverse result_list)))))))
+                               (printf "data:~a\n" data_str)
+                               )
+                         ))))))
   data_str))
