@@ -8,17 +8,17 @@
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
           [*TRACE_LEVEL* parameter?]
           [*TRACE_INFO* exact-nonnegative-integer]
-          [*TRACE_DETAIL* exact-nonnegative-integer?]
-          [trace (-> exact-nonnegative-integer? string? void?)]
+          [*TRACE_DEBUG* exact-nonnegative-integer?]
+          [trace (-> exact-nonnegative-integer? procedure? void?)]
           ))
 
 (define *TRACE_LEVEL* (make-parameter 0))
 (define *TRACE_INFO* 1)
-(define *TRACE_DETAIL* 2)
+(define *TRACE_DEBUG* 2)
 
-(define (trace trace_level data)
+(define (trace trace_level action)
   (when (>= (*trace_level*) trace_level)
-        (printf "t[~a]=~a\n" trace_level data)))
+        (action)))
 
 (define (get-points matrix trace_list)
   (let loop ([loop_list trace_list]
