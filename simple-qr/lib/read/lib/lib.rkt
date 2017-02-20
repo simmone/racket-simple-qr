@@ -9,8 +9,6 @@
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> (or/c #f exact-nonnegative-integer?) list? (or/c boolean? list?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
-          [*trace_level* parameter?]
-          [trace (-> string? exact-nonnegative-integer? void?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
           [point-distance (-> pair? pair? number?)]
@@ -37,12 +35,6 @@
 (require "../../share/mask-data.rkt")
 (require "../../share/func.rkt")
 (require "../../share/data-group.rkt")
-
-(define *trace_level* (make-parameter 0))
-
-(define (trace data trace_level)
-  (when (>= (*trace_level*) trace_level)
-        (printf "t[~a]=~a\n" trace_level data)))
 
 (define (print-matrix matrix)
   (for-each
@@ -187,7 +179,7 @@
 
                   (if (regexp-match #rx"010111010" squashed_str)
                       (begin
-                        (trace (format "~a" squashed_str) 1)
+                        (trace *TRACE_DETAIL* (format "~a" squashed_str))
                         (cons
                          guess_module_width
                          (map
@@ -208,8 +200,8 @@
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
           (when guess_result 
-                (trace (format "row:~a" row_index) 1)
-                (trace (format "guess_result:~a" guess_result) 1))
+                (trace *TRACE_DETAIL* (format "row:~a" row_index))
+                (trace *TRACE_DETAIL* (format "guess_result:~a" guess_result)))
 
           (if guess_result
               (loop 
@@ -459,10 +451,10 @@
                      (cons point_x point_y)))
                  group_list))
 
-          (trace (format "step4 guess_results:~a" guess_results) 1)
-          (trace (format "step4 group_map:~a" group_map) 1)
-          (trace (format "step4 group_map first 3 group:~a" group_list) 1)
-          (trace (format "step4 all_center_points:~a" all_center_points) 1)
+          (trace *TRACE_DETAIL* (format "step4 guess_results:~a" guess_results))
+          (trace *TRACE_DETAIL* (format "step4 group_map:~a" group_map))
+          (trace *TRACE_DETAIL* (format "step4 group_map first 3 group:~a" group_list))
+          (trace *TRACE_DETAIL* (format "step4 all_center_points:~a" all_center_points))
     
           (let outer-loop ([points all_center_points])
             (when (not (null? points))
@@ -475,7 +467,7 @@
                           (inner-loop (cdr inner_points))))
                   (outer-loop (cdr points))))
 
-          (trace (format "step4 points_distance_map:~a" points_distance_map) 1)
+          (trace *TRACE_DETAIL* (format "step4 points_distance_map:~a" points_distance_map))
 
           (if (check-center-points-valid points_distance_map)
               (cons module_width (get-center-points points_distance_map))
@@ -489,7 +481,7 @@
         [matrix_count (* radius 2 4)]
         [move_count #f])
     
-    (trace (format "calculate rotate ratio:~a,~a,~a" point_a point_b radius) 1)
+    (trace *TRACE_DETAIL* (format "calculate rotate ratio:~a,~a,~a" point_a point_b radius))
     
     (cond
      [(and
@@ -684,17 +676,17 @@
     (set! step1_points_list (pic->points pic_path))
     (set! original_width (length step1_points_list))
     (set! original_height (length (car step1_points_list)))
-    (trace (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height) 1)
+    (trace *TRACE_INFO* (format "step1:convert pic file to pixel points[~aX~a]" original_width original_height))
     
     (set! step2_threshold (find-threshold step1_points_list))
-    (trace (format "step2:find threshold is ~a" step2_threshold) 1)
+    (trace *TRACE_INFO* (format "step2:find threshold is ~a" step2_threshold))
 
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
-    (trace (format "step3:use threshold convert pixel to points 0 or 1") 1)
+    (trace *TRACE_INFO* (format "step3:use threshold convert pixel to points 0 or 1"))
     (points->pic step3_bw_points "step3_bw.png" (make-hash))
 
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
-    (trace (format "step4 pattern center points:~a" step4_pattern_center_points) 1)
+    (trace *TRACE_INFO* (format "step4 pattern center points:~a" step4_pattern_center_points))
     (when step4_pattern_center_points
           (let ([pixel_map (make-hash)]
                 [module_width (car step4_pattern_center_points)]
@@ -709,7 +701,7 @@
                                       (first center_points) 
                                       (second center_points) 
                                       (point-distance (first center_points) (second center_points))))
-            (trace (format "step5 rotate ratio:~a" step5_rotate_ratio) 1)
+            (trace *TRACE_INFO* (format "step5 rotate ratio:~a" step5_rotate_ratio))
             
             (if (= step5_rotate_ratio 0)
                 (set! step6_rotated_points step3_bw_points)
@@ -757,8 +749,8 @@
                                                                                  (transform-points-list (first (get-format-information)) '(1 . 1))))))))
                    (set! error_level (substring format_information 0 1))
                    (set! mask_pattern (substring format_information 2 3))
-                   (printf "width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
-                           width version format_information error_level mask_pattern)
+                   (trace *TRACE_INFO* (format "width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
+                           width version format_information error_level mask_pattern))
                    (set! mask-proc (get-mask-proc (string->number mask_pattern)))
 
                    (if (or (not (exact-nonnegative-integer? version)) (> version 40))
@@ -790,27 +782,27 @@
                                 [data_bits #f]
                                 [mode #f])
 
-                           (printf "mask data:~a\n" 
-                                   (foldr (lambda (a b) (string-append a b)) "" 
-                                          (map (lambda (item) (number->string item)) data_list)))
+                           (trace *TRACE_DETAIL* (format "mask data:~a\n" 
+                                                         (foldr (lambda (a b) (string-append a b)) "" 
+                                          (map (lambda (item) (number->string item)) data_list))))
                            (let* ([unmask_data (get-unmask-points init_matrix trace_list mask-proc)]
                                   [data (car unmask_data)]
                                   [mask_list (cdr unmask_data)])
-                             (printf "mask list:~a\n" 
-                                   (foldr (lambda (a b) (string-append a b)) "" 
-                                          (map (lambda (item) (number->string item)) mask_list)))
+                             (trace *TRACE_DETAIL* (format "mask list:~a\n" 
+                                                           (foldr (lambda (a b) (string-append a b)) "" 
+                                                                  (map (lambda (item) (number->string item)) mask_list))))
                              (set! unmask_data_bits (foldr (lambda (a b) (string-append a b)) "" 
                                                     (map (lambda (item) (number->string item)) data)))
-                             (printf "unmask data:~a, [~a]\n" unmask_data_bits (string-length unmask_data_bits))
+                             (trace *TRACE_DETAIL* (format "unmask data:~a, [~a]\n" unmask_data_bits (string-length unmask_data_bits)))
 
-                             (printf "group width:~a\n" (get-group-width version error_level)))                             
+                             (trace *TRACE_DETAIL* (format "group width:~a\n" (get-group-width version error_level)))
                              (set! data_bits (rearrange-data unmask_data_bits (defines->count-list (get-group-width version error_level))))
 
-                             (printf "data:~a\n" data_bits)
+                             (trace *TRACE_INFO* (format "data:~a\n" data_bits))
                              
                              (let ([mode (get-indicator-mode (substring data_bits 0 4))]
                                    [data_count (string->number (substring data_bits 4 12) 2)])
-                               (printf "mode:~a, data_count:~a\n" mode data_count)
+                               (trace *TRACE_INFO* (format "mode:~a, data_count:~a\n" mode data_count))
                                
                                (set! data_str
                                      (bytes->string/utf-8 
@@ -827,7 +819,6 @@
                                                (substring loop_str 8)
                                                (cons (substring loop_str 0 8) result_list))
                                               (reverse result_list)))))))
-                               (printf "data:~a\n" data_str)
-                               )
+                               (trace *TRACE_INFO* (format "data:~a\n" data_str)))
                          ))))))
   data_str))

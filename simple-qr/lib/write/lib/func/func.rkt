@@ -20,16 +20,8 @@
           [interleave-list (-> list? list?)]
           [decimal-list-to-string (-> list? string?)]
           [cut-string (-> string? list)]
-          [*trace_level* parameter?]
-          [trace (-> string? exact-nonnegative-integer? void?)]
           [add-point (-> pair? string? string? hash? hash? void?)]
           ))
-
-(define *trace_level* (make-parameter 0))
-
-(define (trace data trace_level)
-  (when (>= (*trace_level*) trace_level)
-        (printf "t[~a]=~a\n" trace_level data)))
 
 (define (version->modules version)
   (if (and (>= version 1) (<= version 40))

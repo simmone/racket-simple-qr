@@ -362,7 +362,7 @@
     "test-qr-read"
  
     (parameterize
-     ([*trace_level* 1])
+     ([*TRACE_LEVEL* *TRACE_INFO*])
 ;     (void)
 ;     (check-equal? (qr-read "normal.png") "https://github.com/simmoneslkdfjslkdfjlaksdjfl")
      (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")

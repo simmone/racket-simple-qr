@@ -6,7 +6,19 @@
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
+          [*TRACE_LEVEL* parameter?]
+          [*TRACE_INFO* exact-nonnegative-integer]
+          [*TRACE_DETAIL* exact-nonnegative-integer?]
+          [trace (-> exact-nonnegative-integer? string? void?)]
           ))
+
+(define *TRACE_LEVEL* (make-parameter 0))
+(define *TRACE_INFO* 1)
+(define *TRACE_DETAIL* 2)
+
+(define (trace trace_level data)
+  (when (>= (*trace_level*) trace_level)
+        (printf "t[~a]=~a\n" trace_level data)))
 
 (define (get-points matrix trace_list)
   (let loop ([loop_list trace_list]
