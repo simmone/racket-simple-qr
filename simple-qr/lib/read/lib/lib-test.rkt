@@ -3,6 +3,7 @@
 (require rackunit/text-ui)
 (require rackunit "lib.rkt")
 (require rackunit "../matrix-rotate/lib.rkt")
+(require "../../share/func.rkt")
 
 (require racket/runtime-path)
 (define-runtime-path normal_file "normal.png")
@@ -18,11 +19,11 @@
     "tests"
 
     (let ([points_list (pic->points normal_file)])
-      (check-equal? (length points_list) 165)
-      (check-equal? (length (car points_list)) 165)
+      (check-equal? (length points_list) 205)
+      (check-equal? (length (car points_list)) 205)
 
       (check-equal? (list-ref (list-ref points_list 0) 0) 765)
-      (check-equal? (list-ref (list-ref points_list 0) 164) 765)
+      (check-equal? (list-ref (list-ref points_list 0) 204) 765)
 
       (check-equal? (list-ref (list-ref points_list 30) 0) 765)
       (check-equal? (list-ref (list-ref points_list 30) 5) 765)
@@ -362,7 +363,7 @@
     "test-qr-read"
  
     (parameterize
-     ([*TRACE_LEVEL* *TRACE_INFO*])
+     ([*TRACE_LEVEL* 0])
 ;     (void)
 ;     (check-equal? (qr-read "normal.png") "https://github.com/simmoneslkdfjslkdfjlaksdjfl")
      (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")

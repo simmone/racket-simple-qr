@@ -272,22 +272,14 @@
             (squash-points row module_width))
           matrix)])
     
-;    (print-matrix matrix)
-
-;    (print-matrix squash_matrix_x)
-
     (let ([rotate_matrix (matrix-col->row (align-matrix squash_matrix_x 0))]
           [squash_matrix_y #f])
-
-;      (print-matrix rotate_matrix)
 
       (set! squash_matrix_y
             (map
              (lambda (row)
                (squash-points row module_width))
              rotate_matrix))
-
-;      (print-matrix squash_matrix_y)
 
       (matrix-row->col (align-matrix squash_matrix_y 0)))))
 
@@ -451,7 +443,7 @@
                      (cons point_x point_y)))
                  group_list))
 
-          (trace *TRACE_DEBUG* (lambda () (printf "step4 guess_results:~a\n" guess_results))
+          (trace *TRACE_DEBUG* (lambda () (printf "step4 guess_results:~a\n" guess_results)))
           (trace *TRACE_DEBUG* (lambda () (printf "step4 group_map:~a\n" group_map)))
           (trace *TRACE_DEBUG* (lambda () (printf "step4 group_map first 3 group:~a\n" group_list)))
           (trace *TRACE_DEBUG* (lambda () (printf "step4 all_center_points:~a\n" all_center_points)))
@@ -481,7 +473,7 @@
         [matrix_count (* radius 2 4)]
         [move_count #f])
     
-    (trace *TRACE_INFO* (lambda () (printf "calculate rotate ratio:~a,~a,~a\n" point_a point_b radius)))
+    (trace *TRACE_DEBUG* (lambda () (printf "step51:calculate rotate ratio:~a,~a,~a\n" point_a point_b radius)))
     
     (cond
      [(and
@@ -756,7 +748,7 @@
                    (set! mask_pattern (substring format_information 2 3))
                    (trace *TRACE_INFO* 
                           (lambda () 
-                            (printf "width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
+                            (printf "step9:width:~a, version:~a, format_information;~a, error_level:~a, mask_pattern:~a\n" 
                                     width version format_information error_level mask_pattern)))
                    (set! mask-proc (get-mask-proc (string->number mask_pattern)))
 
@@ -811,7 +803,7 @@
                              
                              (let ([mode (get-indicator-mode (substring data_bits 0 4))]
                                    [data_count (string->number (substring data_bits 4 12) 2)])
-                               (trace *TRACE_INFO* (lambda () (printf "mode:~a, data_count:~a\n" mode data_count)))
+                               (trace *TRACE_INFO* (lambda () (printf "head :mode:~a, data_count:~a\n" mode data_count)))
                                
                                (set! data_str
                                      (bytes->string/utf-8 
@@ -828,6 +820,6 @@
                                                (substring loop_str 8)
                                                (cons (substring loop_str 0 8) result_list))
                                               (reverse result_list)))))))
-                               (trace *TRACE_INFO* (lambda () (printf "data:~a\n" data_str))))
+                               (trace *TRACE_INFO* (lambda () (printf "data:~a\n" data_str)))))
                          ))))))
   data_str))

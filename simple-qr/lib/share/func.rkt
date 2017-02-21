@@ -7,7 +7,7 @@
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
           [*TRACE_LEVEL* parameter?]
-          [*TRACE_INFO* exact-nonnegative-integer]
+          [*TRACE_INFO* exact-nonnegative-integer?]
           [*TRACE_DEBUG* exact-nonnegative-integer?]
           [trace (-> exact-nonnegative-integer? procedure? void?)]
           ))
@@ -17,7 +17,7 @@
 (define *TRACE_DEBUG* 2)
 
 (define (trace trace_level action)
-  (when (>= (*trace_level*) trace_level)
+  (when (>= (*TRACE_LEVEL*) trace_level)
         (action)))
 
 (define (get-points matrix trace_list)
