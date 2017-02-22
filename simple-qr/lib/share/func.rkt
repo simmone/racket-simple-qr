@@ -9,14 +9,14 @@
           [*TRACE_LEVEL* parameter?]
           [*TRACE_INFO* exact-nonnegative-integer?]
           [*TRACE_DEBUG* exact-nonnegative-integer?]
-          [trace (-> exact-nonnegative-integer? procedure? void?)]
+          [appTrace (-> exact-nonnegative-integer? procedure? any)]
           ))
 
 (define *TRACE_LEVEL* (make-parameter 0))
 (define *TRACE_INFO* 1)
 (define *TRACE_DEBUG* 2)
 
-(define (trace trace_level action)
+(define (appTrace trace_level action)
   (when (>= (*TRACE_LEVEL*) trace_level)
         (action)))
 

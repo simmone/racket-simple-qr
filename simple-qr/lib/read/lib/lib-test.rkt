@@ -364,12 +364,16 @@
  
     (parameterize
 ;     ([*TRACE_LEVEL* *TRACE_INFO*])
-;     ([*TRACE_LEVEL* *TRACE_TRACE*])
+;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
      ([*TRACE_LEVEL* 0])
 ;     (void)
-;     (check-equal? (qr-read "normal.png") "https://github.com/simmoneslkdfjslkdfjlaksdjfl")
      (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")
     )
+
+    (parameterize
+     ([*TRACE_LEVEL* 0])
+     (check-equal? (qr-read "normal.png") "https://github.com/simmone")
+     )
     )
 
    ))
