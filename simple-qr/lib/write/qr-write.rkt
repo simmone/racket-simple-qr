@@ -17,6 +17,7 @@
 (require "lib/lib.rkt")
 (require "lib/func/func.rkt")
 (require "../share/fill-data.rkt")
+(require "../share/func.rkt")
 
 (require racket/draw)
 
@@ -24,7 +25,7 @@
   (let* ([version (get-version data mode error_level)]
          [modules (version->modules version)])
 
-    (trace (format "start version:~a mode:~a error_level:~a data_length:~a modules:~a\n" version mode error_level (string-length data) modules) 1)
+    (appTrace *TRACE_INFO* (lambda () (printf "start version:~a mode:~a error_level:~a data_length:~a modules:~a\n" version mode error_level (string-length data) modules)))
 
     (let* ([points_map (make-hash)]
            [type_map (make-hash)]
@@ -38,20 +39,20 @@
       (draw-reserved-version-information version modules points_map type_map)
       (draw-dark-module version points_map type_map)
       
-      (trace (format "finder[~a]separator[~a]timing[~a]alignment[~a]format[~a]version[~a]\n"
+      (appTrace *TRACE_INFO* (lambda () (printf "finder[~a]separator[~a]timing[~a]alignment[~a]format[~a]version[~a]\n"
                      (length (filter (lambda (rec) (string=? (cdr rec) "finder")) (hash->list type_map)))
                      (length (filter (lambda (rec) (string=? (cdr rec) "separator")) (hash->list type_map)))
                      (length (filter (lambda (rec) (string=? (cdr rec) "timing")) (hash->list type_map)))
                      (length (filter (lambda (rec) (string=? (cdr rec) "alignment")) (hash->list type_map)))
                      (length (filter (lambda (rec) (string=? (cdr rec) "format")) (hash->list type_map)))
                      (length (filter (lambda (rec) (string=? (cdr rec) "version")) (hash->list type_map))))
-             1)
+            ))
       
-      (trace (format "remain_points:~a\n" (- sum_count (hash-count points_map))) 1)
+      (appTrace *TRACE_INFO* (lambda () (printf "remain_points:~a\n" (- sum_count (hash-count points_map)))))
 
       (let ([data_list (string->list (matrix-data data #:version version #:mode mode #:error_level error_level))]
             [trace_list (get-data-socket-list modules #:skip_points_hash points_map)])
-        (trace (format "data_length:~a trace_length:~a\n" (length data_list) (length trace_list)) 1)
+        (appTrace *TRACE_INFO* (lambda () (printf "data_length:~a trace_length:~a\n" (length data_list) (length trace_list))))
         (draw-data data_list trace_list points_map type_map))
 
       (let ([mask_number (mask-data modules points_map type_map)])

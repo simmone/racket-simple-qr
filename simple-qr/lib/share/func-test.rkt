@@ -47,16 +47,7 @@
       
       (check-equal? (get-points matrix '((6 . 7) (5 . 6) (4 . 5))) '(0 1 1))
       ))
-   
-   (test-case
-    "test-get-onezero-bits"
-    
-    (check-equal? (get-onezero-bits 1) "1")
-    (check-equal? (get-onezero-bits 2) "10")
-    (check-equal? (get-onezero-bits 3) "101")
-    (check-equal? (get-onezero-bits 9) "101010101")
-    (check-equal? (get-onezero-bits 10) "1010101010")
-   )
+
    ))
 
 (run-tests test-func)

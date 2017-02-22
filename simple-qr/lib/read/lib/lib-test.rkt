@@ -7,7 +7,7 @@
 
 (require racket/runtime-path)
 (define-runtime-path normal_file "normal.png")
-(define-runtime-path real_file "real.png")
+(define-runtime-path real_file "real.jpg")
 
 (define test-lib
   (test-suite 
@@ -367,12 +367,12 @@
 ;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
      ([*TRACE_LEVEL* 0])
 ;     (void)
-     (check-equal? (qr-read "real.jpg") "http://www.bjhzbw.com")
+     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
     )
 
     (parameterize
      ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read "normal.png") "https://github.com/simmone")
+     (check-equal? (qr-read normal_file) "https://github.com/simmone")
      )
     )
 
