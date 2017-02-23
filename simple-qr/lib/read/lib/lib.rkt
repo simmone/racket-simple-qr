@@ -260,13 +260,34 @@
 (define (trim-tail matrix)
   (let loop ([loop_list matrix]
              [result_list '()]
+             [finder_list '()]
              [pattern_count 0])
     (if (not (null? loop_list))
-        (if (= pattern_count 6)
-            (reverse (cons (caddr loop_list) (cons (cadr loop_list) (cons (car loop_list) result_list))))
-            (if (equal? (take (car loop_list) 7) '(1 0 1 1 1 0 1))
-                (loop (cdr loop_list) (cons (car loop_list) result_list) (add1 pattern_count))
-                (loop (cdr loop_list) (cons (car loop_list) result_list) pattern_count)))
+        (if (= pattern_count 2)
+            (reverse (cdr result_list))
+            (if (equal? finder_list 
+                        '(
+                          (1 1 1 1 1 1 1)
+                          (1 0 0 0 0 0 1)
+                          (1 0 1 1 1 0 1)
+                          (1 0 1 1 1 0 1)
+                          (1 0 1 1 1 0 1)
+                          (1 0 0 0 0 0 1)
+                          (1 1 1 1 1 1 1)
+                          ))
+                (loop (cdr loop_list) (cons (car loop_list) result_list) '() (add1 pattern_count))
+                (if (= (length finder_list) 7)
+                    (loop 
+                     (cdr loop_list) 
+                     (cons (car loop_list) result_list)
+                     (cons (take (car loop_list) 7) (take finder_list 6))
+                     pattern_count)
+                    (loop 
+                     (cdr loop_list)
+                     (cons (car loop_list) result_list)
+                     (cons (take (car loop_list) 7) finder_list)
+                     pattern_count
+                     ))))
         (reverse result_list))))
 
 (define (squash-matrix matrix module_width)

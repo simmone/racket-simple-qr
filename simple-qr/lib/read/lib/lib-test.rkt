@@ -8,6 +8,7 @@
 (require racket/runtime-path)
 (define-runtime-path normal_file "normal.png")
 (define-runtime-path real_file "real.jpg")
+(define-runtime-path wiki1_file "wiki1.png")
 
 (define test-lib
   (test-suite 
@@ -374,6 +375,12 @@
      ([*TRACE_LEVEL* 0])
      (check-equal? (qr-read normal_file) "https://github.com/simmone")
      )
+
+    (parameterize
+     ([*TRACE_LEVEL* 0])
+     (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
+    )
+    
     )
 
    ))
