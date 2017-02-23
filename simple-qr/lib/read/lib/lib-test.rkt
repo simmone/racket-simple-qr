@@ -9,6 +9,7 @@
 (define-runtime-path normal_file "normal.png")
 (define-runtime-path real_file "real.jpg")
 (define-runtime-path wiki1_file "wiki1.png")
+(define-runtime-path wiki2_file "wiki2.png")
 
 (define test-lib
   (test-suite 
@@ -379,6 +380,12 @@
     (parameterize
      ([*TRACE_LEVEL* 0])
      (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
+    )
+
+    (parameterize
+     ([*TRACE_LEVEL* *TRACE_DEBUG*])
+     (check-equal? (qr-read wiki2_file)
+                   "360848320672724996367623994228900041735739942854066845825761815943200000000000000000000053897628805389762880538976288053897628805389762880437000")
     )
     
     )

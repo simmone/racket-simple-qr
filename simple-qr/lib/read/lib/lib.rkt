@@ -178,12 +178,15 @@
                       (set! guess_module_width (guess-first-dark-width points)))
 
                 (let* ([squashed_line (squash-points points_row guess_module_width)]
+                       [original_str 
+                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) points_row))]
                        [squashed_str 
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
 
                   (if (regexp-match #rx"010111010" squashed_str)
                       (begin
-                        (appTrace *TRACE_DEBUG* (lambda () (printf "found squashed line:~a\n" squashed_str)))
+                        (appTrace *TRACE_DEBUG* (lambda () (printf "as guess width:~a original line:~a\nsquashed line:~a\n" 
+                                                                   guess_module_width original_str squashed_str)))
                         (cons
                          guess_module_width
                          (map
@@ -204,8 +207,7 @@
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
           (when guess_result 
-                (appTrace *TRACE_DEBUG* (lambda () (printf "row:~a\n" row_index)))
-                (appTrace *TRACE_DEBUG* (lambda () (printf "guess_result:~a\n" guess_result))))
+                (appTrace *TRACE_DEBUG* (lambda () (printf "row:~a guess_result:~a\n" row_index guess_result))))
 
           (if guess_result
               (loop 
@@ -736,6 +738,10 @@
                        (first center_points) 
                        (point-distance (first center_points) (second center_points))
                        module_width)))
+
+            (appTrace *TRACE_INFO* (lambda () (printf "step6 rotate and cut complete.\n")))
+            
+            (appTrace *TRACE_DEBUG* (lambda () (printf "step6_rotated_points:\n") (print-matrix step6_rotated_points)))
             
             (set! step7_trimed_points (trim-matrix step6_rotated_points))
             (appTrace *TRACE_DEBUG* (lambda () (points->pic step7_trimed_points "step7_trimed.png" (make-hash))))
