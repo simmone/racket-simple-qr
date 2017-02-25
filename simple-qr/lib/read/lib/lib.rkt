@@ -709,7 +709,7 @@
     (set! step3_bw_points (points->bw step1_points_list step2_threshold))
     (appTrace *TRACE_INFO* (lambda () (printf "step3:use threshold convert pixel to points 0 or 1\n")))
     (appTrace *TRACE_DEBUG* (lambda () (points->pic step3_bw_points "step3_bw.png" (make-hash))))
-
+    
     (set! step4_pattern_center_points (find-pattern-center-points step3_bw_points))
     (appTrace *TRACE_INFO* (lambda () (printf "step4 pattern center points:~a\n" step4_pattern_center_points)))
 
@@ -740,8 +740,6 @@
                        module_width)))
 
             (appTrace *TRACE_INFO* (lambda () (printf "step6 rotate and cut complete.\n")))
-            
-            (appTrace *TRACE_DEBUG* (lambda () (printf "step6_rotated_points:\n") (print-matrix step6_rotated_points)))
             
             (set! step7_trimed_points (trim-matrix step6_rotated_points))
             (appTrace *TRACE_DEBUG* (lambda () (points->pic step7_trimed_points "step7_trimed.png" (make-hash))))
