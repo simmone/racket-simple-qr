@@ -1,11 +1,8 @@
 #lang racket
 
 (provide (contract-out
-          [pic->points (-> path-string? list?)]
-          [points->pic (-> (listof list?) path-string? hash? any)]
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
-          [print-points (-> list? void?)]
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> (or/c #f exact-nonnegative-integer?) list? (or/c boolean? list?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
@@ -36,39 +33,6 @@
 (require "../../share/func.rkt")
 (require "../../share/data-group.rkt")
 
-(define (print-matrix matrix)
-  (for-each
-   (lambda (row)
-     (for-each
-      (lambda (col)
-        (printf "~a" (~a #:width 1 #:align 'right #:pad-string "0" col)))
-      row)
-     (printf "\n"))
-   matrix)
-  (printf "\n"))
-
-(define (bitmap->points img)
-  (let* ([width (send img get-width)]
-         [height (send img get-height)]
-         [bits_count (* width height 4)])
-
-    (let ([bits_bytes (make-bytes bits_count)])
-      (send img get-argb-pixels 0 0 width height bits_bytes)
-      
-      (let loop ([loop_list (bytes->list bits_bytes)]
-                 [rows '()]
-                 [cols '()])
-        (if (= (length rows) height)
-            (reverse rows)
-            (if (= (length cols) width)
-                (loop loop_list (cons (reverse cols) rows) '())
-                (loop (cdr (cdr (cdr (cdr loop_list)))) 
-                      rows
-                      (cons (+ (list-ref loop_list 1) (list-ref loop_list 2) (list-ref loop_list 3)) cols))))))))
-
-(define (pic->points pic_path)
-  (bitmap->points (make-object bitmap% pic_path)))
-
 (define (find-threshold points_list)
   (let ([max_value 0]
         [min_value 765])
@@ -96,45 +60,6 @@
       row))
    points_list))
 
-(define (print-points points_list)
-  (let row-loop ([loop_row_list points_list])
-    (when (not (null? loop_row_list))
-        (let col-loop ([loop_col_list (car loop_row_list)])
-          (if (not (null? loop_col_list))
-              (begin
-                (printf "~a" (car loop_col_list))
-                (col-loop (cdr loop_col_list)))
-              (printf "\n")))
-        (row-loop (cdr loop_row_list)))))
-
-(define (points->pixels points_list pixel_map)
-  (let loop ([rows points_list]
-             [row_index 0]
-             [bytes_list '()])
-    (if (not (null? rows))
-        (loop
-         (cdr rows)
-         (add1 row_index)
-         (cons
-          (let col-loop ([cols (car rows)]
-                         [col_index 0]
-                         [col_bytes_list '()])
-            (if (not (null? cols))
-                (if (hash-has-key? pixel_map (cons row_index col_index))
-                    (col-loop (cdr cols) (add1 col_index) `(,@(hash-ref pixel_map (cons row_index col_index)) ,@col_bytes_list))
-                    (if (= (car cols) 0)
-                        (col-loop (cdr cols) (add1 col_index) (cons 255 (cons 255 (cons 255 (cons 255 col_bytes_list)))))
-                        (col-loop (cdr cols) (add1 col_index) (cons 0 (cons 0 (cons 0 (cons 255 col_bytes_list)))))))
-                (reverse col_bytes_list)))
-          bytes_list))
-        (list->bytes (foldr (lambda (a b) (append a b)) '() (reverse bytes_list))))))
-
-(define (points->pic points_list pic_path pixel_map)
-  (let* ([width (length (car points_list))]
-         [height (length points_list)]
-         [points_pic (make-object bitmap% width height)])
-    (send points_pic set-argb-pixels 0 0 width height (points->pixels points_list pixel_map))
-    (send points_pic save-file pic_path 'png)))
 
 (define (guess-first-dark-width points)
   (let loop ([points_loop points]

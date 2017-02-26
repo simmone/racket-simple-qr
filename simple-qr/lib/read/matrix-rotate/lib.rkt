@@ -5,11 +5,12 @@
           [matrix->circles (-> (listof list?) list?)]
           [circles->matrix (-> list? (listof list?))]
           [shift-list (-> list? exact-integer? list?)]
-          [print-matrix (-> (listof list?) void?)]
           [matrix-rotate (->* ((listof list?) number?) (#:fill any/c) (listof list?))]
           [matrix-row->col (-> (listof list?) (listof list?))]
           [matrix-col->row (-> (listof list?) (listof list?))]
           ))
+
+(require "../../share/func.rkt")
 
 (define (matrix->square matrix #:fill [fill #f])
   (let* ([max_width (max (length matrix) (length (car matrix)))]
@@ -166,16 +167,6 @@
                    (lambda (a b)
                      (< (car a) (car b)))))])
             (if (< shift_width 0) (reverse target_list) target_list))))))
-
-(define (print-matrix matrix)
-  (for-each
-   (lambda (row)
-     (for-each
-      (lambda (col)
-        (printf "~a" (~a #:width 2 #:align 'right #:pad-string "0" col)))
-      row)
-     (printf "\n"))
-   matrix))
 
 (define (matrix-rotate matrix rotate_ratio #:fill [fill #f])
   (let* ([square_matrix (matrix->square matrix #:fill fill)]

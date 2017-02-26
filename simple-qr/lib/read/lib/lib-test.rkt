@@ -19,7 +19,7 @@
 
    (test-case
     "tests"
-
+    
     (let ([points_list (pic->points normal_file)])
       (check-equal? (length points_list) 205)
       (check-equal? (length (car points_list)) 205)
@@ -67,7 +67,6 @@
            [bw_points (points->bw points_list 50)]
            [rotated_points (matrix-rotate bw_points 164)])
       (void)
-;      (points->pic rotated_points "result.png")
       )
     )
 
@@ -363,6 +362,8 @@
    
    (test-case
     "test-qr-read"
+    
+    (printf "t1")
  
     (parameterize
 ;     ([*TRACE_LEVEL* *TRACE_INFO*])
