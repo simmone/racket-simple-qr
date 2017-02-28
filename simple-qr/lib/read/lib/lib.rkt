@@ -6,6 +6,7 @@
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> (or/c #f exact-nonnegative-integer?) list? (or/c boolean? list?))]
           [squash-points (-> list? exact-nonnegative-integer? list?)]
+          [guess_result->pixel_map (-> list? hash?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
           [point-distance (-> pair? pair? number?)]
@@ -146,6 +147,25 @@
                result_list
                guess_module_width)))
         (cons guess_module_width (reverse result_list)))))
+
+(define (guess_result->pixel_map guess_result)
+  (let ([pixel_map (make-hash)]
+        [width (* (car guess_result) 7)])
+    (let loop ([loop_list (cdr guess_result)])
+      (when (not (null? loop_list))
+            (let* ([finded_pattern (flatten (car loop_list))]
+                   [row (first finded_pattern)])
+              (let inner-loop ([col_loop_list (cdr finded_pattern)])
+                (when (not (null? col_loop_list))
+                      (hash-set! pixel_map (cons row (car col_loop_list)) '(24 255 0 255))
+                      (let col-loop ([count 1])
+                        (when (< count width)
+                              (hash-set! pixel_map (cons row (+ (car col_loop_list) count)) '(0 0 255 255))
+                              (col-loop (add1 count))))
+                      (inner-loop (cdr col_loop_list))))
+
+              (loop (cdr loop_list)))))
+    pixel_map))
 
 (define (align-matrix matrix fill)
   (let ([max_length 
@@ -380,6 +400,10 @@
          [points_distance_map (make-hash)]
          [center_points #f]
          )
+
+    (appTrace *TRACE_DEBUG* (lambda () 
+                              (printf "step4 generate ref center points scan ref image\n")
+                              (points->pic matrix "step4_center_points_scan.png" (guess_result->pixel_map guess_results))))
     
     (if (< (hash-count group_map) 3)
         #f

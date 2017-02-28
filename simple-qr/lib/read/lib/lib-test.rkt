@@ -359,12 +359,31 @@
                     '((0 0 1 0)
                       (0 0 0 0)
                       (1 1 1 1)))))
+
+   (test-case
+    "test-guess_result->pixel_map"
+
+    (let ([pixel_map (guess_result->pixel_map '(2 (38 14) (39 14) (40 14) (41 14 238)))])
+      (check-equal? (hash-ref pixel_map '(38 . 14)) '(24 255 0 255))
+      (check-equal? (hash-ref pixel_map '(38 . 15)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 16)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 17)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 18)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 19)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 20)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 21)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 22)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 23)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 24)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 25)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 26)) '(0 0 255 255))
+      (check-equal? (hash-ref pixel_map '(38 . 27)) '(0 0 255 255))
+      (check-false (hash-has-key? pixel_map '(38 . 28)))
+      (check-equal? (hash-ref pixel_map '(41 . 238)) '(24 255 0 255))))
    
    (test-case
     "test-qr-read"
     
-    (printf "t1")
- 
     (parameterize
 ;     ([*TRACE_LEVEL* *TRACE_INFO*])
 ;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
@@ -379,12 +398,12 @@
      )
 
     (parameterize
-     ([*TRACE_LEVEL* 0])
+     ([*TRACE_LEVEL* *TRACE_DEBUG*])
      (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
     )
 
     (parameterize
-     ([*TRACE_LEVEL* *TRACE_DEBUG*])
+     ([*TRACE_LEVEL* 0])
      (check-equal? (qr-read va1_file) "http://el.bbqk.com/taklu/0.html")
      )
     
