@@ -5,7 +5,7 @@
           [points->bw (-> list? exact-nonnegative-integer? list?)]
           [guess-first-dark-width (-> list? exact-nonnegative-integer?)]
           [guess-module-width (-> (or/c #f exact-nonnegative-integer?) list? (or/c boolean? list?))]
-          [squash-points (-> list? exact-nonnegative-integer? list?)]
+          [squash-points (-> list? exact-nonnegative-integer? pair?)]
           [guess_result->pixel_map (-> list? hash?)]
           [qr-read (-> path-string? (or/c string? boolean?))]
           [squash-matrix (-> (listof list?) exact-nonnegative-integer? (listof list?))]
@@ -73,6 +73,9 @@
             (loop (cdr points_loop) (add1 dark_length)))
         dark_length)))
 
+;; return pair
+;; car is squashed list
+;; cdr is correpondent orignal place index
 (define (squash-points points width)
   (let ([min_width (ceiling (* width 0.5))])
     (let loop ([loop_points points]
