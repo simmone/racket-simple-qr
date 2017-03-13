@@ -160,15 +160,67 @@
       (check-equal? (squash-points test_points 5) 
                     '(
                       (0 0 1  1  1  1  1  1  1  0  1  1  1  1  1  0  1  0  0  1  0   0   1   0   1   1   1   1   1   1   1   0   0   0) . 
-                      (0 5 11 16 21 26 31 36 41 46 51 56 61 66 71 76 81 86 91 96 101 106 111 116 121 126 131 136 141 146 151 155 160 165))
+                      (0 5 11 16 21 26 31 36 41 46 51 56 61 66 71 76 81 86 91 96 101 106 111 116 121 126 131 136 141 146 151 155 160 165))))
 
     (let ([test_points
-           '(0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)])
-      (check-equal? (squash-points test_points 5) '(0 0 1 1 1 0 1 1 0 0 1 0 0 0 0 0 0 0 1 1 0 0 1 0 1 0 1 0 0 1 0 0 0)))
+           '(0 0 0 0 0
+             0 0 0 0 0 
+             0 0 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             0 0 0 0 0 
+             0 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             1 1 1 1 1 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             1 1 1 1 1 
+             0 0 0 0 0 
+             0 
+             1 1 1 1 
+             0 0 0 0 0 
+             0 
+             1 1 1 1 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 
+             1 1 1 1 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0 0 0 0 
+             0 0)])
+      (check-equal? 
+       (squash-points test_points 5) 
+       '(
+         (0 0 1  1  1  0  1  1  0  0  1  0  0  0  0  0  0  0  1  1  0   0   1   0   1   0   1   0   0   1   0   0   0) . 
+         (0 5 12 17 22 27 33 38 43 48 53 58 63 68 73 78 83 88 93 98 103 108 113 118 124 128 134 138 143 149 153 158 163))))
 
     (let ([test_points
-           '(0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0)])
-      (check-equal? (squash-points test_points 5) '(1 1 1 1 1 1 1 0)))
+           '(0 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 1 1 1 
+             1 1 
+             0 0 0 0 0)])
+      (check-equal? (squash-points test_points 5) '((1 1 1  1  1  1  1  0) . 
+                                                    (1 6 11 16 21 26 31 38))))
 
     (let ([test_points
            '(1 1 1 1 1 
@@ -180,7 +232,8 @@
              1 1 1 1 1 
              1 1 1 
              0 0 0 0 0)])
-      (check-equal? (squash-points test_points 5) '(1 1 1 1 1 1 1 1 0)))
+      (check-equal? (squash-points test_points 5) '((1 1 1  1  1  1  1  1  0) . 
+                                                    (0 5 10 15 20 25 30 35 38))))
     )
 
    (test-case
@@ -429,33 +482,33 @@
       (check-false (hash-has-key? pixel_map '(38 . 28)))
       (check-equal? (hash-ref pixel_map '(41 . 238)) '(24 255 0 255))))
    
-   (test-case
-    "test-qr-read"
-    
-    (parameterize
-;     ([*TRACE_LEVEL* *TRACE_INFO*])
+;   (test-case
+;    "test-qr-read"
+;    
+;    (parameterize
+;;     ([*TRACE_LEVEL* *TRACE_INFO*])
+;;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
+;     ([*TRACE_LEVEL* 0])
+;;     (void)
+;     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
+;    )
+;
+;    (parameterize
+;     ([*TRACE_LEVEL* 0])
+;     (check-equal? (qr-read normal_file) "https://github.com/simmone")
+;     )
+;
+;    (parameterize
 ;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
-     ([*TRACE_LEVEL* 0])
-;     (void)
-     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
-    )
-
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read normal_file) "https://github.com/simmone")
-     )
-
-    (parameterize
-     ([*TRACE_LEVEL* *TRACE_DEBUG*])
-     (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
-    )
-
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read va1_file) "http://el.bbqk.com/taklu/0.html")
-     )
-    
-    )
+;     (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
+;    )
+;
+;    (parameterize
+;     ([*TRACE_LEVEL* 0])
+;     (check-equal? (qr-read va1_file) "http://el.bbqk.com/taklu/0.html")
+;     )
+;    
+;    )
 
    ))
 

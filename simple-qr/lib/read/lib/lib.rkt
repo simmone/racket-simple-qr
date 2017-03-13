@@ -79,23 +79,25 @@
 (define (squash-points points width)
   (let ([min_width (ceiling (* width 0.5))])
     (let loop ([loop_points points]
+               [last_index 0]
                [last_value -1]
                [same_count 0]
-               [result_list '()])
+               [result_list '()]
+               [index_list '()])
 
       (if (not (null? loop_points))
           (if (= same_count width)
-              (loop (cdr loop_points) (car loop_points) 1 (cons last_value result_list))
+              (loop (cdr loop_points) (+ width last_index) (car loop_points) 1 (cons last_value result_list) (cons last_index index_list))
               (if (= (car loop_points) last_value)
-                  (loop (cdr loop_points) last_value (add1 same_count) result_list)
+                  (loop (cdr loop_points) last_index last_value (add1 same_count) result_list index_list)
                   (if (= last_value -1)
-                      (loop (cdr loop_points) (car loop_points) (add1 same_count) result_list)
+                      (loop (cdr loop_points) last_index (car loop_points) (add1 same_count) result_list index_list)
                       (if (>= same_count min_width)
-                          (loop (cdr loop_points) (car loop_points) 1 (cons last_value result_list))
-                          (loop (cdr loop_points) (car loop_points) 1 result_list)))))
+                          (loop (cdr loop_points) (+ last_index same_count) (car loop_points) 1 (cons last_value result_list) (cons last_index index_list))
+                          (loop (cdr loop_points) (+ last_index same_count) (car loop_points) 1 result_list index_list)))))
           (if (and (> same_count 0) (>= same_count min_width))
-              (reverse (cons last_value result_list))
-              (reverse result_list))))))
+              (cons (reverse (cons last_value result_list)) (reverse (cons last_index index_list)))
+              (cons (reverse result_list) (reverse index_list)))))))
 
 (define (guess-module-width guess_module_width points_row)
   (let ([max_module_width (floor (/ (length points_row) 14))])
