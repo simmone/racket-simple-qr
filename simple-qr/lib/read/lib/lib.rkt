@@ -112,7 +112,7 @@
                        [original_str 
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) points_row))]
                        [squashed_str 
-                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_line))])
+                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) (car squashed_line)))])
 
                   (if (regexp-match #rx"010111010" squashed_str)
                       (begin
@@ -246,7 +246,7 @@
   (let ([squash_matrix_x
          (map
           (lambda (row)
-            (squash-points row module_width))
+            (car (squash-points row module_width)))
           matrix)])
     
     (let ([rotate_matrix (matrix-col->row (align-matrix squash_matrix_x 0))]
@@ -255,7 +255,7 @@
       (set! squash_matrix_y
             (map
              (lambda (row)
-               (squash-points row module_width))
+               (car (squash-points row module_width)))
              rotate_matrix))
 
       (matrix-row->col (align-matrix squash_matrix_y 0)))))
