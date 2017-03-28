@@ -494,14 +494,14 @@
       (check-false (hash-has-key? pixel_map '(38 . 28)))
       (check-equal? (hash-ref pixel_map '(41 . 238)) '(24 255 0 255))))
    
-;   (test-case
-;    "test-qr-read"
-;    
-;    (parameterize
-;     ([*TRACE_LEVEL* 0])
-;     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
-;    )
-;
+   (test-case
+    "test-qr-read"
+    
+    (parameterize
+     ([*TRACE_LEVEL* *TRACE_DEBUG*])
+     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
+    )
+
 ;    (parameterize
 ;     ([*TRACE_LEVEL* 0])
 ;     (check-equal? (qr-read normal_file) "https://github.com/simmone")
@@ -517,7 +517,7 @@
 ;     (check-equal? (qr-read va1_file) "http://el.bbqk.com/taklu/0.html")
 ;     )
 ;    
-;    )
+    )
 
    ))
 

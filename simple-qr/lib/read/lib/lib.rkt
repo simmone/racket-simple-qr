@@ -109,10 +109,12 @@
                       (set! guess_module_width (guess-first-dark-width points)))
 
                 (let* ([squashed_line (squash-points points_row guess_module_width)]
+                       [squashed_cols (car squashed_line)]
+                       [squashed_positions (cdr squashed_line)]
                        [original_str 
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) points_row))]
                        [squashed_str 
-                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) (car squashed_line)))])
+                        (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_cols))])
 
                   (if (regexp-match #rx"010111010" squashed_str)
                       (begin
@@ -122,7 +124,8 @@
                          guess_module_width
                          (map
                           (lambda (item)
-                            (* guess_module_width (add1 (car item))))
+                            (list-ref squashed_positions (add1 (car item))))
+;                            (* guess_module_width (add1 (car item))))
                           (regexp-match-positions* #rx"010111010" squashed_str))))
                       (if (> (length points) guess_module_width)
                           (loop (list-tail points guess_module_width))
@@ -187,12 +190,14 @@
              [result_list '()])
     (if (not (null? loop_list))
         (if start
-            (if (andmap
-                 (lambda (item)
-                   (= item 0))
-                 (car loop_list))
-                (loop (cdr loop_list) #t result_list)
-                (loop (cdr loop_list) #f (cons (car loop_list) result_list)))
+            (cond
+             [(andmap
+               (lambda (item)
+                 (= item 0))
+               (car loop_list))
+              (loop (cdr loop_list) #t result_list)]
+             [else
+              (loop (cdr loop_list) #f (cons (car loop_list) result_list))])
             (loop (cdr loop_list) #f (cons (car loop_list) result_list)))
         (reverse result_list))))
 
@@ -681,20 +686,18 @@
                                       (second center_points) 
                                       (point-distance (first center_points) (second center_points))))
             (appTrace *TRACE_INFO* (lambda () (printf "step5 rotate ratio:~a\n" step5_rotate_ratio)))
-            
-            (if (= step5_rotate_ratio 0)
-                (set! step6_rotated_points step3_bw_points)
-                (set! step6_rotated_points
-                      (rotate-and-cut-bmp
-                       step3_bw_points
-                       step5_rotate_ratio 
-                       (first center_points) 
-                       (point-distance (first center_points) (second center_points))
-                       module_width)))
+
+            (set! step6_rotated_points
+                  (rotate-and-cut-bmp
+                   step3_bw_points
+                   step5_rotate_ratio 
+                   (first center_points) 
+                   (point-distance (first center_points) (second center_points))
+                   module_width))
 
             (appTrace *TRACE_INFO* (lambda () (printf "step6 rotate and cut complete.\n")))
             
-            (set! step7_trimed_points (trim-matrix step6_rotated_points))
+            (set! step7_trimed_points (trim-matrix (step6_rotated_points)))
             (appTrace *TRACE_DEBUG* (lambda () (points->pic step7_trimed_points "step7_trimed.png" (make-hash))))
             
             (set! step8_squashed_points (squash-matrix step7_trimed_points module_width))
