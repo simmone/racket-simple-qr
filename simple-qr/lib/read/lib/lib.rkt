@@ -168,7 +168,6 @@
                               (hash-set! pixel_map (cons row (+ (car col_loop_list) count)) '(0 0 255 255))
                               (col-loop (add1 count))))
                       (inner-loop (cdr col_loop_list))))
-
               (loop (cdr loop_list)))))
     pixel_map))
 

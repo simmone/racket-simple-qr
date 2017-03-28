@@ -264,6 +264,18 @@
 
     (let ([test_points '(0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 0 0 0 1 1 0 0 1 1 1 1 1 1 0 0 1 1 0 0)])
       (check-equal? (guess-module-width #f test_points) (list 2 2 20)))
+
+    (let ([test_points '(0 0 0 0 0 0 
+                         0 0 0 0 
+                         1 1 1 1 1 1 
+                         0 0 0 0 0 0 
+                         1 1 1 1 1 1 
+                         1 1 1 1 1 1 
+                         1 1 1 1 1 1 
+                         0 0 0 0 0 
+                         1 1 1 1 1 1
+                         0 0 0 0 0 0)])
+      (check-equal? (guess-module-width #f test_points) (list 6 10)))
    )
 
    (test-case
@@ -486,10 +498,7 @@
 ;    "test-qr-read"
 ;    
 ;    (parameterize
-;;     ([*TRACE_LEVEL* *TRACE_INFO*])
-;;     ([*TRACE_LEVEL* *TRACE_DEBUG*])
 ;     ([*TRACE_LEVEL* 0])
-;;     (void)
 ;     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
 ;    )
 ;
