@@ -184,34 +184,42 @@
            row))
      matrix)))
 
-(define (trim-blank-lines matrix)
+(define (trim-noise-lines matrix)
   (let loop ([loop_list matrix]
              [start #t]
              [result_list '()])
+
+    (appTrace *TRACE_DEBUG* (lambda () (printf "t1\n")))
+
     (if (not (null? loop_list))
         (if start
-            (cond
-             [(andmap
-               (lambda (item)
-                 (= item 0))
-               (car loop_list))
-              (loop (cdr loop_list) #t result_list)]
-             [else
-              (loop (cdr loop_list) #f (cons (car loop_list) result_list))])
+            (let* ([count_zero 
+                    (let inner-loop ([loop_items (car loop_list)]
+                               [result 0])
+                      (if (not (null? loop_items))
+                          (if (= (car loop_items) 0)
+                              (inner-loop (cdr loop_items) (add1 result))
+                              (inner-loop (cdr loop_items) result))
+                          result))]
+                   [bili (/ count_zero (length (car loop_list)))])
+              (cond
+               [(> bili 0.9)
+                (loop (cdr loop_list) #t result_list)]
+               [else
+                (loop (cdr loop_list) #f (cons (car loop_list) result_list))]))
             (loop (cdr loop_list) #f (cons (car loop_list) result_list)))
         (reverse result_list))))
 
 (define (trim-matrix matrix)
   ;; trim four direction
   (matrix-row->col
-   (trim-blank-lines
+   (trim-noise-lines
     (matrix-row->col
-     (trim-blank-lines
+     (trim-noise-lines
       (matrix-row->col
-       (trim-blank-lines
+       (trim-noise-lines
         (matrix-row->col 
-         (trim-blank-lines 
-          matrix)))))))))
+         (trim-noise-lines matrix)))))))))
 
 (define (trim-tail matrix)
   (let loop ([loop_list matrix]
@@ -695,9 +703,10 @@
                    (point-distance (first center_points) (second center_points))
                    module_width))
 
+            (appTrace *TRACE_DEBUG* (lambda () (points->pic step6_rotated_points "step6_rotated.png" (make-hash))))
             (appTrace *TRACE_INFO* (lambda () (printf "step6 rotate and cut complete.\n")))
             
-            (set! step7_trimed_points (trim-matrix (step6_rotated_points)))
+            (set! step7_trimed_points (trim-matrix step6_rotated_points))
             (appTrace *TRACE_DEBUG* (lambda () (points->pic step7_trimed_points "step7_trimed.png" (make-hash))))
             
             (set! step8_squashed_points (squash-matrix step7_trimed_points module_width))
