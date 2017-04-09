@@ -125,7 +125,6 @@
                          (map
                           (lambda (item)
                             (list-ref squashed_positions (add1 (car item))))
-;                            (* guess_module_width (add1 (car item))))
                           (regexp-match-positions* #rx"010111010" squashed_str))))
                       (if (> (length points) guess_module_width)
                           (loop (list-tail points guess_module_width))
@@ -188,8 +187,6 @@
   (let loop ([loop_list matrix]
              [start #t]
              [result_list '()])
-
-    (appTrace *TRACE_DEBUG* (lambda () (printf "t1\n")))
 
     (if (not (null? loop_list))
         (if start
