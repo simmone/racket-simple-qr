@@ -2,9 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "data-encoding.rkt")
-
-(require "../func/func.rkt")
+(require rackunit "../../write/lib/data-encoding/data-encoding.rkt")
 
 (define test-data-encoding
   (test-suite

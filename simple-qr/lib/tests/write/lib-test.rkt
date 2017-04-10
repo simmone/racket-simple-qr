@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "lib.rkt")
+(require rackunit "../../write/lib/lib.rkt")
 
 (define test-lib
   (test-suite 
