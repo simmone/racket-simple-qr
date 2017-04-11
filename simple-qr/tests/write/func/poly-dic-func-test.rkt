@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "poly-dic-func.rkt")
+(require rackunit "../../../write/lib/func/poly/poly-dic-func.rkt")
 
 (define test-poly-dic-func
   (test-suite 

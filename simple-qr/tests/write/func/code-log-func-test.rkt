@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "code-log-func.rkt")
+(require rackunit "../../../write/lib/func/code-log/code-log-func.rkt")
 
 (define test-code-log-func
   (test-suite 

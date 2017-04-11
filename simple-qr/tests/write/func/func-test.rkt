@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "func.rkt")
+(require rackunit "../../../write/lib/func/func.rkt")
 
 (define test-func
   (test-suite 

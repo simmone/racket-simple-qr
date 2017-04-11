@@ -2,9 +2,8 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "mask-data.rkt")
+(require rackunit "../../write/lib/mask-data/mask-data.rkt")
 
-(require "../func/func.rkt")
 (require racket/draw)
 
 (define test-mask-data

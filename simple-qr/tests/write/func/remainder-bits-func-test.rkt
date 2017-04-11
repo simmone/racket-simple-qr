@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "remainder-bits-func.rkt")
+(require rackunit "../../../write/lib/func/remainder-bits/remainder-bits-func.rkt")
 
 (define test-remainder-bits-func
   (test-suite 

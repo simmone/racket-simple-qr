@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "capacity-dic.rkt")
+(require rackunit "../../../write/lib/func/capacity/capacity-dic.rkt")
 
 (define test-capacity
   (test-suite 
