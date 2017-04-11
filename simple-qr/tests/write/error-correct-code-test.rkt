@@ -2,9 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "error-correct-code.rkt")
-
-(require "../func/func.rkt")
+(require rackunit "../../write/lib/error-correct-code/error-correct-code.rkt")
 
 (define test-error-correct-code
   (test-suite

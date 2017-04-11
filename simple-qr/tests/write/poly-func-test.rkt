@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "poly-func.rkt")
+(require rackunit "../../write/lib/error-correct-code/poly-func.rkt")
 
 (define test-poly-func
   (test-suite
