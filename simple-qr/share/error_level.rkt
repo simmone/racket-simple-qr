@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [get-on (-> list?)]
           [get-error-code-hash (-> hash?)]
           [get-code-error-hash (-> hash?)]
           [get-error-level (-> list? (or/c pair? #f))]

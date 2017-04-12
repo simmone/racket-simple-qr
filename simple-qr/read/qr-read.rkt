@@ -4,6 +4,14 @@
           [qr-read (-> path-string? string?)]
           ))
 
+(require "lib/lib.rkt")
+(require "../share/func.rkt")
+(require "../share/format-information.rkt")
+(require "../share/mask-data.rkt")
+(require "../share/fill-data.rkt")
+(require "../share/data-group.rkt")
+(require "../share/data-encoding.rkt")
+
 (define (qr-read pic_path)
   (let ([data_str ""])
     (with-handlers

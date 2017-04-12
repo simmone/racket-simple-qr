@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "lib.rkt")
+(require rackunit "../../read/matrix-rotate/lib.rkt")
 
 (define test-lib
   (test-suite 

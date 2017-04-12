@@ -15,6 +15,16 @@
           [calculate-rotate-ratio (-> pair? pair? exact-nonnegative-integer? number?)]
           [align-matrix (-> (listof list?) any/c (listof list?))]
           [trim-matrix (-> (listof list?) (listof list?))]
+          [trim-tail (-> (listof list?) (listof list?))]
+          [rotate-and-cut-bmp (-> (listof list?) number? pair? number? number? void?)]
+          [transform-points-list (-> (listof list?) pair? (listof list?))]
+          [exclude-finder-pattern (-> exact-nonnegative-integer? hash? list?)]
+          [exclude-separator (-> exact-nonnegative-integer? hash? list?)]
+          [exclude-timing-pattern (-> exact-nonnegative-integer? hash? hash? list?)]
+          [exclude-alignment-pattern (-> exact-nonnegative-integer? hash? hash? list?)]
+          [exclude-format-information (-> exact-nonnegative-integer? hash? list?)]
+          [exclude-version (-> exact-nonnegative-integer? hash? hash? list?)]
+          [exclude-dark-module (-> exact-nonnegative-integer? hash? list?)]
           ))
 
 (require racket/draw)
