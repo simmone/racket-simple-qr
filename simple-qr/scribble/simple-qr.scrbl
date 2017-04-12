@@ -53,17 +53,19 @@ raco pkg install simple-qr
           (qr-read "large.png"))
 }
 
-@image{example/small.png}
+@image{../example/small.png}
 
-@image{example/normal.png}
+@image{../example/normal.png}
 
-@image{example/large.png}
+@image{../example/large.png}
 
 https://github.com/simmone
+
 https://github.com/simmone
+
 https://github.com/simmone
             
-@section{FAQ}pppp
+@section{FAQ}
 
 @subsection{What mode and error_level I can use?}
 
