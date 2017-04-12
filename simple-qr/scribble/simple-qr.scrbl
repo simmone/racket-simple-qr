@@ -2,11 +2,11 @@
 
 @(require (for-label racket))
 
-@title{Simple-Qr: QR-Code generator}
+@title{Simple-Qr: QR-Code writer and reader}
 
 @author+email["Chen Xiao" "chenxiao770117@gmail.com"]
 
-simple-qr package is a simple tool to access QR-Code.
+simple-qr package is a simple tool to write or read QR-Code.
 
 @table-of-contents[]
 
