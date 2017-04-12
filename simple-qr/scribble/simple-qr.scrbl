@@ -2,11 +2,11 @@
 
 @(require (for-label racket))
 
-@title{Simple-Qr: Qr Code generator}
+@title{Simple-Qr: QR-Code generator}
 
 @author+email["Chen Xiao" "chenxiao770117@gmail.com"]
 
-simple-qr package is a simple tool to generate your own qr code.
+simple-qr package is a simple tool to access QR-Code.
 
 @table-of-contents[]
 
@@ -19,7 +19,7 @@ raco pkg install simple-qr
 @defmodule[simple-qr]
 @(require (for-label simple-qr))
 
-@defproc[(qr-code
+@defproc[(qr-write
               [data (string?)]
               [output_file_path (path-string?)]
               [#:mode mode string?]
@@ -29,30 +29,28 @@ raco pkg install simple-qr
   output qr code image to file.
 }
 
-@verbatim{
-  #lang racket
-
-  (require simple-qr)
-  
-  (qr-code "Hello World!" "hello.png")
+@defproc[(qr-read
+                [image_file_path (path-string?)])
+              string?]{ 
+  read qr code image's content, if failed, return "".
 }
 
-@image{scribble/hello.png}
-
-You can use the optional parameter #:module_width to control the size of image.
-
-module_width means a block(black or white)'s width. 5 is the default.
-
 @verbatim{
   #lang racket
 
   (require simple-qr)
 
+  ;; block's default width is 5
   (qr-code "https://github.com/simmone" "normal.png")
 
   (qr-code "https://github.com/simmone" "small.png" #:module_width 2)
 
   (qr-code "https://github.com/simmone" "large.png" #:module_width 10)
+
+  (printf "~a\n~a\n~a\n"
+          (qr-read "normal.png")
+          (qr-read "small.png")
+          (qr-read "large.png"))
 }
 
 @image{example/small.png}
@@ -60,8 +58,12 @@ module_width means a block(black or white)'s width. 5 is the default.
 @image{example/normal.png}
 
 @image{example/large.png}
+
+https://github.com/simmone
+https://github.com/simmone
+https://github.com/simmone
             
-@section{FAQ}
+@section{FAQ}pppp
 
 @subsection{What mode and error_level I can use?}
 
@@ -72,3 +74,7 @@ All the iso8859-1(latin-1) code include in this mode.
 If you want to use Alphanumeric Mode or Numeric Mode, you can use #:mode "A" or #:mode "N" keyword.
 
 If you want to use other error-correct level, use #:error_level to specify a new one("L" "M" "Q" "H").
+
+@subsection{qr-read can deal on all kinds of the code images?}
+
+No, sorry, I tried, till now, qr-read only read some very "good" QR-Code, and must use Byte Mode and no error correction.

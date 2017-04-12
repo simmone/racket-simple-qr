@@ -224,18 +224,6 @@
          (20 . 1)                                              (20 . 7)          (20 . 9)           (20 . 11) (20 . 12)           (20 . 14)                               (20 . 18)           (20 . 20) (20 . 21)
          (21 . 1) (21 . 2) (21 . 3) (21 . 4) (21 . 5) (21 . 6) (21 . 7)                                                 (21 . 13) (21 . 14) (21 . 15) (21 . 16)                                         (21 . 21)))
 
-;      (let* ([modules 21]
-;             [module_width 30]
-;             [canvas_width (* modules module_width)]
-;             [target (make-bitmap canvas_width canvas_width)]
-;             [dc (new bitmap-dc% [bitmap target])])
-;        (draw-debug-points dc module_width points_map)
-;
-;        (send target save-file "test.png" 'png)
-;      
-;        (system "open test.png")
-;        )
-      
       (check-equal? (mask-on-condition1 21 points_map) 180)
 
       (check-equal? (mask-on-condition2 points_map) 90)

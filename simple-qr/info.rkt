@@ -5,3 +5,7 @@
 (define compile-omit-paths '("tests"))
 (define test-omit-paths '("tests"))
 
+(define compile-omit-paths '("standards"))
+(define test-omit-paths '("standards"))
+
+
