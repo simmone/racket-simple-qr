@@ -2,7 +2,7 @@
 
 @(require (for-label racket))
 
-@title{Simple-Qr: QR-Code writer and reader}
+@title{Simple-Qr: QR-Code Writer and Reader}
 
 @author+email["Chen Xiao" "chenxiao770117@gmail.com"]
 
