@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "fill-data.rkt")
+(require rackunit "../../share/fill-data.rkt")
 
 (define test-fill-data
   (test-suite 

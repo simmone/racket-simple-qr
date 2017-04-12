@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "alignment-pattern.rkt")
+(require rackunit "../../share/alignment-pattern.rkt")
 
 (define test-alignment-pattern
   (test-suite 

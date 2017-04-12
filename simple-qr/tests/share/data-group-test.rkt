@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "data-group.rkt")
+(require rackunit "../../share/data-group.rkt")
 
 (define test-data-group
   (test-suite 

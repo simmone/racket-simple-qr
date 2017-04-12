@@ -17,7 +17,9 @@
     (with-handlers
      ([exn:fail?
        (lambda (e)
-         (void))])
+;         (printf "~a\n" e)
+         (void)
+         )])
      (let* ([step1_points_list #f]
             [original_height #f]
             [original_width #f]

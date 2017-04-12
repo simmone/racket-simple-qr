@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "timing-pattern.rkt")
+(require rackunit "../../share/timing-pattern.rkt")
 
 (define test-timing-pattern
   (test-suite 

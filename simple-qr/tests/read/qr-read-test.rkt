@@ -18,7 +18,7 @@
     "test-qr-read"
     
     (parameterize
-     ([*TRACE_LEVEL* *TRACE_DEBUG*])
+     ([*TRACE_LEVEL* 0])
      (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
     )
 
