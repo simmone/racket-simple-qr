@@ -53,11 +53,11 @@ raco pkg install simple-qr
           (qr-read "large.png"))
 }
 
-@image{../example/small.png}
+@image{example/small.png}
 
-@image{../example/normal.png}
+@image{example/normal.png}
 
-@image{../example/large.png}
+@image{example/large.png}
 
 https://github.com/simmone
 
