@@ -1,8 +1,6 @@
 #lang racket
 
-;(require simple-qr)
-
-(require "../main.rkt")
+(require simple-qr)
 
 ;; block's default width is 5
 (qr-write "https://github.com/simmone" "normal.png")

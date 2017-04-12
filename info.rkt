@@ -7,5 +7,4 @@
 (define deps '("base"
                "rackunit-lib"
                "draw-lib"
-               "matrix-rotate"
                ))
