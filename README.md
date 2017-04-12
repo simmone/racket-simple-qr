@@ -29,7 +29,9 @@ A Qr Code Reader and Writer for Racket
 ![ScreenShot](simple-qr/example/large.png)
 
 https://github.com/simmone
+
 https://github.com/simmone
+
 https://github.com/simmone
 
 
