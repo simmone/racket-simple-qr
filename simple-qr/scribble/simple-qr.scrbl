@@ -41,11 +41,11 @@ raco pkg install simple-qr
   (require simple-qr)
 
   ;; block's default width is 5
-  (qr-code "https://github.com/simmone" "normal.png")
+  (qr-write "https://github.com/simmone" "normal.png")
 
-  (qr-code "https://github.com/simmone" "small.png" #:module_width 2)
+  (qr-write "https://github.com/simmone" "small.png" #:module_width 2)
 
-  (qr-code "https://github.com/simmone" "large.png" #:module_width 10)
+  (qr-write "https://github.com/simmone" "large.png" #:module_width 10)
 
   (printf "~a\n~a\n~a\n"
           (qr-read "normal.png")
