@@ -59,7 +59,7 @@
                      )
                     (col-loop (cdr loop_col_list))))
             (row-loop (cdr loop_row_list)))
-          (floor (/ (- max_value min_value) 2))))))
+          (floor (/ (+ max_value min_value) 2))))))
 
 (define (points->bw points_list threshold)
   (map
@@ -69,7 +69,6 @@
         (if (> col threshold) 0 1))
       row))
    points_list))
-
 
 (define (guess-first-dark-width points)
   (let loop ([points_loop points]
