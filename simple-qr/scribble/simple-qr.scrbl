@@ -77,4 +77,4 @@ If you want to see the each step of read or write a qr code, can set #:express? 
 
 Warning: express will generate a set of scribble files, it's very slow, debug usage only.
 
-Then use @verbatim{scribble --htmls ******.write|read.express/report.scrbl} to generate a detail report.
+Then use @verbatim{cd .read.express or .write.express or your specific express path; scribble --htmls report.scrbl} to generate a detail report.

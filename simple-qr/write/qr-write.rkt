@@ -35,7 +35,8 @@
                   #:error_level [error_level "H"]
                   #:module_width [module_width 5]
                   #:express? [express? #f]
-                  #:express_path [express_path (string->path (string-append (path->string file_name) ".write.express"))])
+                  #:express_path [express_path ".write.express"])
+
   (when express?
         (delete-directory/files #:must-exist? #f express_path)
         (make-directory* express_path))
@@ -79,11 +80,13 @@
       (express express?
                (lambda () (write-report-reserved-format-information points_map modules express_path)))
 
-      (when (>= version 7)
-            (let ([version_str (hash-ref (get-version-hash) version)])
-              (draw-version-information version_str modules points_map type_map)
-              (express express?
-                       (lambda () (write-report-version-information version_str points_map modules express_path)))))
+      (if (>= version 7)
+          (let ([version_str (hash-ref (get-version-hash) version)])
+            (draw-version-information version_str modules points_map type_map)
+            (express express?
+                     (lambda () (write-report-version-information version_str points_map modules express_path))))
+          (express express?
+                   (lambda () (write-report-version-information "" points_map modules express_path))))
 
       (draw-dark-module version points_map type_map)
       (express express?

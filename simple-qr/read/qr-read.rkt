@@ -17,7 +17,7 @@
 
 (define (qr-read pic_path
                  #:express? [express? #f]
-                 #:express_path [express_path (string->path (string-append (path->string pic_path) ".read.express"))])
+                 #:express_path [express_path ".read.express"])
 
   (with-handlers 
    ([(lambda (v) #t) (lambda (v) "")])

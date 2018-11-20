@@ -20,7 +20,7 @@
         (printf "@title{Version Information}\n\n")
         (printf "draw version information.\n")
         (printf "@section{Version String}\n")
-        (printf "@verbatim{~a}\n" version_str)
+        (printf "@verbatim{[~a]}\n" version_str)
         (printf "@section{Version Information Bits}\n")
         (printf (display-qr-bits modules points_map))
         (printf "@section{Version Information Image}\n")

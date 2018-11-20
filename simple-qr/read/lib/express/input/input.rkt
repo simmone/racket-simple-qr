@@ -7,7 +7,7 @@
 (define (write-report-input express_path)
   (let* ([scrbl_dir (build-path express_path "input")]
          [scrbl_file (build-path scrbl_dir "input.scrbl")]
-         [img_file (build-path express_path "input.img")])
+         [img_file "input.img"])
 
     (make-directory* scrbl_dir)
     
