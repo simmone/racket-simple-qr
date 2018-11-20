@@ -191,17 +191,17 @@
                    [result_list '()])
       (if (< index matrix_width)
           (loop-row (add1 index)
-                (cons
-                 (let loop-col ([rows matrix]
-                                [row '()])
-                   (if (not (null? rows))
-                       (loop-col
-                        (cdr rows)
-                        (cons
-                         (list-ref (car rows) index)
-                         row))
-                       row))
-                 result_list))
+                    (cons
+                     (let loop-col ([rows matrix]
+                                    [row '()])
+                       (if (not (null? rows))
+                           (loop-col
+                            (cdr rows)
+                            (cons
+                             (list-ref (car rows) index)
+                             row))
+                           row))
+                     result_list))
           (reverse result_list)))))
 
 (define (matrix-col->row matrix)
@@ -211,16 +211,15 @@
                    [result_list '()])
       (if (>= index 0)
           (loop-row (sub1 index)
-                (cons
-                 (let loop-col ([rows matrix]
-                                [row '()])
-                   (if (not (null? rows))
-                       (loop-col
-                        (cdr rows)
-                        (cons
-                         (list-ref (car rows) index)
-                         row))
-                       (reverse row)))
-                 result_list))
+                    (cons
+                     (let loop-col ([rows matrix]
+                                    [row '()])
+                       (if (not (null? rows))
+                           (loop-col
+                            (cdr rows)
+                            (cons
+                             (list-ref (car rows) index)
+                             row))
+                           (reverse row)))
+                     result_list))
           (reverse result_list)))))
-

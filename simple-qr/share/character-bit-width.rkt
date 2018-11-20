@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-          [get-character-bit-width (-> exact-nonnegative-integer? string? exact-nonnegative-integer?)]
+          [get-character-bit-width (-> natural? string? natural?)]
           ))
 
 (define (get-character-bit-width version mode)

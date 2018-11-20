@@ -14,7 +14,7 @@ simple-qr package is a simple tool to write or read QR-Code.
 
 raco pkg install simple-qr
 
-@section{Usage}  
+@section{Usage}
 
 @defmodule[simple-qr]
 @(require (for-label simple-qr))
@@ -22,16 +22,22 @@ raco pkg install simple-qr
 @defproc[(qr-write
               [data (string?)]
               [output_file_path (path-string?)]
-              [#:mode mode string?]
-              [#:error_level error_level string?]
-              [#:module_width module_width exact_nonngegative-integer?])
+              [#:mode mode string? "B"]
+              [#:error_level error_level string? "H"]
+              [#:module_width module_width natural? 5]
+              [#:express? express? boolean? #f]
+              [#:express_path express_path path-string? "imgfile + '.write.express'"]
+              )
             void?]{
   output qr code image to file.
 }
 
 @defproc[(qr-read
-                [image_file_path (path-string?)])
-              string?]{ 
+                [image_file_path (path-string?)]
+                [#:express? express? boolean? #f]
+                [#:express_path express_path path-string? "imgfile + '.read.express'"]
+                )
+              string?]{
   read qr code image's content, if failed, return "".
 }
 
@@ -64,19 +70,11 @@ https://github.com/simmone
 https://github.com/simmone
 
 https://github.com/simmone
-            
-@section{FAQ}
 
-@subsection{What mode and error_level I can use?}
+@section{Express}
 
-qr-code select Byte Mode as it's default mode, The highest error-correct level "H".
+If you want to see the each step of read or write a qr code, can set #:express? to true.
 
-All the iso8859-1(latin-1) code include in this mode.
+Warning: express will generate a set of scribble files, it's very slow, debug usage only.
 
-If you want to use Alphanumeric Mode or Numeric Mode, you can use #:mode "A" or #:mode "N" keyword.
-
-If you want to use other error-correct level, use #:error_level to specify a new one("L" "M" "Q" "H").
-
-@subsection{qr-read can deal on all kinds of the code images?}
-
-No, sorry, I tried, till now, qr-read only read some very "good" QR-Code, and must use Byte Mode and no error correction.
+Then use @verbatim{scribble --htmls ******.write|read.express/report.scrbl} to generate a detail report.

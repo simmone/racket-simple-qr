@@ -12,19 +12,19 @@
     "test-defines->count_list"
 
     (check-equal? 
-     (defines->count-list #((1 . 19) (0 . 0)))
+     (defines->count-list '((1 . 19) (0 . 0)))
      '(19))
 
     (check-equal? 
-     (defines->count-list #((2 . 13) (0 . 0)))
+     (defines->count-list '((2 . 13) (0 . 0)))
      '(13 13))
 
     (check-equal? 
-     (defines->count-list #((4 . 9) (0 . 0)))
+     (defines->count-list '((4 . 9) (0 . 0)))
      '(9 9 9 9))
 
     (check-equal? 
-     (defines->count-list #((2 . 15) (2 . 16)))
+     (defines->count-list '((2 . 15) (2 . 16)))
      '(15 15 16 16))
     )
 
@@ -182,31 +182,6 @@
         ("01010110" . 5)
         ("01010110" . 8))))
    
-   (test-case
-    "test-rearrange-data"
-    
-    (check-equal?
-     (rearrange-data
-      (string-append
-       "01000001"
-       "00100110"
-       "01010110"
-       "10100110"
-       "10000111"
-       "10000111"
-       "01000111"
-       "10100110")
-      '(4 4))
-      (string-append
-       "01000001"
-       "01010110"
-       "10000111"
-       "01000111"
-       "00100110"
-       "10100110"
-       "10000111"
-       "10100110")))
-
     ))
 
   (run-tests test-data-group)

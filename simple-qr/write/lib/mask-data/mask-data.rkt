@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [mask-data (-> exact-nonnegative-integer? hash? hash? exact-nonnegative-integer?)]
           [mask-func (-> list? exact-nonnegative-integer? list?)]
           [split-matrix (-> exact-nonnegative-integer? list?)]
           [mask-condition1 (-> list? exact-nonnegative-integer?)]
@@ -14,57 +13,6 @@
 
 (require "../func/func.rkt")
 (require "../../../share/mask-data.rkt")
-
-(define (mask-data modules points_map type_map)
-  (let ([data_list #f]
-        [result_mask_number #f]
-        )
-
-    (set! data_list 
-          (let loop ([loop_list (hash->list points_map)]
-                     [result_list '()])
-            (if (not (null? loop_list))
-                (if (string=? (hash-ref type_map (caar loop_list)) "data")
-                    (loop (cdr loop_list) (cons (car loop_list) result_list))
-                    (loop (cdr loop_list) result_list))
-                result_list)))
-
-    (let* ([mask_list
-            (map
-             (lambda (mask_number)
-               (let ([new_points_map (hash-copy points_map)])
-                 (for-each
-                  (lambda (item)
-                    (hash-set! new_points_map (car item) (cdr item)))
-                  (mask-func data_list mask_number))
-                 new_points_map))
-             '(0 1 2 3 4 5 6 7))]
-           [penalty_list
-            (map
-             (lambda (new_points_map)
-               (+
-                (mask-on-condition1 modules new_points_map)
-                (mask-on-condition2 new_points_map)
-                (mask-on-condition3 modules new_points_map)
-                (mask-on-condition4 new_points_map)))
-             mask_list)]
-           [penalty_map (make-hash)]
-           [result_points_map #f])
-
-      (let loop ([loop_list penalty_list]
-                 [index 0])
-        (when (not (null? loop_list))
-              (hash-set! penalty_map (car loop_list) index)
-              (loop (cdr loop_list) (add1 index))))
-
-      (set! result_mask_number (hash-ref penalty_map (apply min penalty_list)))
-      (set! result_points_map (list-ref mask_list result_mask_number))
-      
-      (hash-for-each
-       result_points_map
-       (lambda (point val)
-         (add-point point val "data" points_map type_map))))
-  result_mask_number))
 
 (define (mask-func data_list mask_number)
   (let ([mask-lb (get-mask-proc mask_number)])

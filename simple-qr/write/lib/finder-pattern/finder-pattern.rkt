@@ -1,6 +1,7 @@
 #lang racket
 
 (require "../func/func.rkt")
+(require "../../../share/func.rkt")
 (require "../../../share/finder-pattern.rkt")
 
 (provide (contract-out

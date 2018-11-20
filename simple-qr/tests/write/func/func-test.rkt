@@ -19,37 +19,6 @@
     (check-equal? (version->modules 40) 177)
     )
 
-   (test-case 
-    "test-locate-brick"
-    
-    (let ([place_pair (locate-brick 1 (cons 1 1))])
-      (check-equal? place_pair '(0 . 0)))
-
-    (let ([place_pair (locate-brick 2 (cons 1 1))])
-      (check-equal? place_pair '(0 . 0)))
-
-    (let ([place_pair (locate-brick 2 (cons 2 2))])
-      (check-equal? place_pair '(2 . 2)))
-
-    (let ([place_pair (locate-brick 2 (cons 5 5))])
-      (check-equal? place_pair '(8 . 8)))
-
-    (let ([place_pair (locate-brick 3 (cons 5 5))])
-      (check-equal? place_pair '(12 . 12)))
-
-    (let ([place_pair (locate-brick 3 (cons 5 7))])
-      (check-equal? place_pair '(18 . 12)))
-    )
-
-   (test-case
-    "test-locate-finder-pattern"
-
-    (let ([start_points (locate-finder-pattern 21)])
-      (check-equal? (first start_points) '(1 . 1))
-      (check-equal? (second start_points) '(15 . 1))
-      (check-equal? (third start_points) '(1 . 15)))
-    )
-
    (test-case
     "test-transform-points"
 
@@ -128,31 +97,31 @@
     (let ([result_list
            (split-decimal-list-on-contract 
             '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)
-            #((1 . 16) (0 . 0)))])
+            '((1 . 16) (0 . 0)))])
       (check-equal? result_list '(((32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)) ())))
 
     (let ([result_list
            (split-decimal-list-on-contract 
             '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)
-            #((2 . 8) (0 . 0)))])
+            '((2 . 8) (0 . 0)))])
       (check-equal? result_list '(((32 91 11 120 209 114 220 77) (67 64 236 17 236 17 236 17)) ())))
 
     (let ([result_list
            (split-decimal-list-on-contract 
             '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)
-            #((1 . 8) (1 . 8)))])
+            '((1 . 8) (1 . 8)))])
       (check-equal? result_list '(((32 91 11 120 209 114 220 77)) ((67 64 236 17 236 17 236 17)))))
 
     (let ([result_list
            (split-decimal-list-on-contract 
             '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)
-            #((1 . 6) (2 . 5)))])
+            '((1 . 6) (2 . 5)))])
       (check-equal? result_list '(((32 91 11 120 209 114)) ((220 77 67 64 236) (17 236 17 236 17)))))
 
     (let ([result_list
            (split-decimal-list-on-contract 
             '(32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17)
-            #((2 . 5) (1 . 6)))])
+            '((2 . 5) (1 . 6)))])
       (check-equal? result_list '(((32 91 11 120 209) (114 220 77 67 64)) ((236 17 236 17 236 17)))))
 
     )
@@ -187,6 +156,12 @@
     (check-equal? (cut-string "12345678123456789") '("12345678" "12345678" "9"))
     )
 
+   (test-case
+    "test-to-message-poly"
+
+    (check-equal? (to-message-poly '(0 32 91 11 120 209 114 220 77 67 64 236 17 236 17 236 17))
+                  "0x16+32x15+91x14+11x13+120x12+209x11+114x10+220x9+77x8+67x7+64x6+236x5+17x4+236x3+17x2+236x1+17x0")
+    )
    ))
 
 (run-tests test-func)

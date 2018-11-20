@@ -1,5 +1,7 @@
 #lang racket
 
+(require "../../share/func.rkt")
+
 (provide (contract-out
           [find-threshold (-> list? exact-nonnegative-integer?)]
           [points->bw (-> list? exact-nonnegative-integer? list?)]
@@ -125,15 +127,12 @@
                         (foldr (lambda (a b) (string-append a b)) "" (map (lambda (b) (number->string b)) squashed_cols))])
 
                   (if (regexp-match #rx"010111010" squashed_str)
-                      (begin
-                        (appTrace *TRACE_DEBUG* (lambda () (printf "as guess width:~a original line:~a\nsquashed line:~a\n" 
-                                                                   guess_module_width original_str squashed_str)))
-                        (cons
-                         guess_module_width
-                         (map
-                          (lambda (item)
-                            (list-ref squashed_positions (add1 (car item))))
-                          (regexp-match-positions* #rx"010111010" squashed_str))))
+                      (cons
+                       guess_module_width
+                       (map
+                        (lambda (item)
+                          (list-ref squashed_positions (add1 (car item))))
+                        (regexp-match-positions* #rx"010111010" squashed_str)))
                       (if (> (length points) guess_module_width)
                           (loop (list-tail points guess_module_width))
                           #f))))
@@ -147,9 +146,6 @@
              [guess_module_width #f])
     (if (not (null? rows))
         (let ([guess_result (guess-module-width guess_module_width (car rows))])
-          (when guess_result 
-                (appTrace *TRACE_DEBUG* (lambda () (printf "row:~a guess_result:~a\n" row_index guess_result))))
-
           (if guess_result
               (loop 
                (cdr rows) 
@@ -195,12 +191,12 @@
   (let loop ([loop_list matrix]
              [start #t]
              [result_list '()])
-
+    
     (if (not (null? loop_list))
         (if start
             (let* ([count_zero 
                     (let inner-loop ([loop_items (car loop_list)]
-                               [result 0])
+                                     [result 0])
                       (if (not (null? loop_items))
                           (if (= (car loop_items) 0)
                               (inner-loop (cdr loop_items) (add1 result))
@@ -423,10 +419,6 @@
          [center_points #f]
          )
 
-    (appTrace *TRACE_DEBUG* (lambda () 
-                              (printf "step4 generate ref center points scan ref image\n")
-                              (points->pic matrix "step4_center_points_scan.png" (guess_result->pixel_map guess_results))))
-    
     (if (< (hash-count group_map) 3)
         #f
         (begin
@@ -441,11 +433,6 @@
                      (cons point_x point_y)))
                  group_list))
 
-          (appTrace *TRACE_DEBUG* (lambda () (printf "step4 guess_results:~a\n" guess_results)))
-          (appTrace *TRACE_DEBUG* (lambda () (printf "step4 group_map:~a\n" group_map)))
-          (appTrace *TRACE_DEBUG* (lambda () (printf "step4 group_map first 3 group:~a\n" group_list)))
-          (appTrace *TRACE_DEBUG* (lambda () (printf "step4 all_center_points:~a\n" all_center_points)))
-    
           (let outer-loop ([points all_center_points])
             (when (not (null? points))
                   (let inner-loop ([inner_points all_center_points])
@@ -456,8 +443,6 @@
                                            (point-distance (car points) (car inner_points))))
                           (inner-loop (cdr inner_points))))
                   (outer-loop (cdr points))))
-
-          (appTrace *TRACE_DEBUG* (lambda () (printf "step4 points_distance_map:~a\n" points_distance_map)))
 
           (if (check-center-points-valid points_distance_map)
               (cons module_width (get-center-points points_distance_map))
@@ -470,8 +455,6 @@
         [point_b_y (cdr point_b)]
         [matrix_count (* radius 2 4)]
         [move_count #f])
-    
-    (appTrace *TRACE_DEBUG* (lambda () (printf "step51:calculate rotate ratio:~a,~a,~a\n" point_a point_b radius)))
     
     (cond
      [(and
@@ -536,101 +519,98 @@
      (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
    points_list))
 
-(define (exclude-finder-pattern width exclude_points_map)
-  (for-each
-   (lambda (start_point)
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (transform-points-list (first (get-finder-pattern)) start_point))
+(define (exclude-finder-pattern modules exclude_points_map)
+  (let ([finder_pattern (get-finder-pattern)])
+    (for-each
+     (lambda (start_point)
+       (for-each
+        (lambda (point_pair)
+          (hash-set! exclude_points_map point_pair "Orchid"))
+        (transform-points-list (first finder_pattern) start_point))
 
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (transform-points-list (second (get-finder-pattern)) start_point))
+       (for-each
+        (lambda (point_pair)
+          (hash-set! exclude_points_map point_pair "Orchid"))
+        (transform-points-list (second finder_pattern) start_point))
 
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (transform-points-list (third (get-finder-pattern)) start_point)))
-   (list
-    (cons 0 0)
-    (cons 0 (- width 7))
-    (cons (- width 7) 0))))
+       (for-each
+        (lambda (point_pair)
+          (hash-set! exclude_points_map point_pair "Orchid"))
+        (transform-points-list (third finder_pattern) start_point)))
+     (locate-finder-pattern modules))))
 
-(define (exclude-separator width exclude_points_map)
-  (for-each
-   (lambda (start_point)
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-     (transform-points-list (first (get-separator)) '(0 . 0)))
+(define (exclude-separator modules exclude_points_map)
+  (let ([separator_list (get-separator)]
+        [finder_pattern_points (locate-finder-pattern modules)])
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Olive"))
+     (transform-points-list (first separator_list) (first finder_pattern_points)))
 
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (transform-points-list (second (get-separator)) (cons (- width 8) 0)))
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Olive"))
+     (transform-points-list (second separator_list) (move-point-col (second finder_pattern_points) -1)))
 
-     (for-each
-      (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (transform-points-list (third (get-separator)) (cons 0 (- width 8)))))
-   (list
-    (cons 0 0)
-    (cons 0 (- width 7))
-    (cons (- width 7) 0))))
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Olive"))
+     (transform-points-list (third separator_list) (move-point-row (third finder_pattern_points) -1)))))
 
-(define (exclude-timing-pattern width exclude_points_map timing_points_map)
+(define (exclude-timing-pattern modules exclude_points_map timing_points_map)
   (for-each
    (lambda (timing_points)
      (for-each
       (lambda (point_pair)
-        (hash-set! timing_points_map (cons (sub1 (car point_pair)) (sub1 (cdr point_pair))) "timing")
-        (hash-set! exclude_points_map (cons (sub1 (car point_pair)) (sub1 (cdr point_pair))) '(0 0 255 255)))
+        (hash-set! timing_points_map point_pair "timing")
+        (hash-set! exclude_points_map point_pair "Lime"))
       timing_points))
-   (get-timing-pattern-points width)))
-
-(define (exclude-format-information width exclude_points_map)
-  (for-each
-   (lambda (point_pair)
-     (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-   (transform-points-list (first (get-format-information)) '(0 . 0)))
-
-  (for-each
-   (lambda (point_pair)
-     (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-   (transform-points-list (second (get-format-information)) (cons 0 (- width 8))))
-
-  (for-each
-   (lambda (point_pair)
-     (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-   (transform-points-list (third (get-format-information)) (cons (- width 8) 0))))
+   (get-timing-pattern-points modules)))
 
 (define (exclude-alignment-pattern version exclude_points_map timing_points_map)
   (for-each
    (lambda (center_point)
      (for-each
       (lambda (point_pair)
-        (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-      (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
-             (fill-alignment-pattern-points (cons (sub1 (car center_point)) (sub1 (cdr center_point)))))))
+        (hash-set! exclude_points_map point_pair "RoyalBlue"))
+      (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '()
+             (fill-alignment-pattern-points center_point))))
    (get-alignment-pattern-center-points version exclude_points_map timing_points_map)))
 
-(define (exclude-version version width exclude_points_map)
-  (when (>= version 7)
-        (for-each
-         (lambda (point_pair)
-           (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-         (transform-points-list (first (get-version-points)) (cons 0 (- width 11))))
+(define (exclude-format-information modules exclude_points_map)
+  (let ([format_information_points (get-format-information)]
+        [finder_pattern_points (locate-finder-pattern modules)])
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Purple"))
+     (transform-points-list (first format_information_points) (first finder_pattern_points)))
+
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Purple"))
+     (transform-points-list (second format_information_points) (move-point-col (second finder_pattern_points) -1)))
+
+    (for-each
+     (lambda (point_pair)
+       (hash-set! exclude_points_map point_pair "Purple"))
+     (transform-points-list (third format_information_points) (move-point-row (third finder_pattern_points) -1)))))
+
+(define (exclude-version version modules exclude_points_map)
+  (let ([version_points (get-version-points)])
+    (when (>= version 7)
+          (for-each
+           (lambda (point_pair)
+             (hash-set! exclude_points_map point_pair "Yellow"))
+           (transform-points-list (first version_points) (cons 1 (- modules 10))))
 
           (for-each
            (lambda (point_pair)
-             (hash-set! exclude_points_map point_pair '(0 0 255 255)))
-           (transform-points-list (second (get-version-points)) (cons (- width 11) 0)))))
+             (hash-set! exclude_points_map point_pair "Yellow"))
+           (transform-points-list (second version_points) (cons (- modules 10) 1))))))
 
 (define (exclude-dark-module version exclude_points_map)
   (let ([dark_point (get-dark-point version)])
-    (hash-set! exclude_points_map (cons (sub1 (car dark_point)) (sub1 (cdr dark_point))) '(0 0 255 255))))
+    (hash-set! exclude_points_map dark_point "Cyan")))
 
 (define (get-data-head bits)
   (let ([mode #f]

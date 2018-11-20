@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "../../../write/lib/func/character-count/character-bit-width.rkt")
+(require rackunit "../../share/character-bit-width.rkt")
 
 (define test-character-bit-width
   (test-suite 

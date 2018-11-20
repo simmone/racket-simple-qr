@@ -3,27 +3,150 @@
 (require racket/draw)
 
 (provide (contract-out
+          [express (-> boolean? procedure? void?)]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
-          [*TRACE_LEVEL* parameter?]
-          [*TRACE_INFO* exact-nonnegative-integer?]
-          [*TRACE_DEBUG* exact-nonnegative-integer?]
-          [appTrace (-> exact-nonnegative-integer? procedure? any)]
-          [print-matrix (-> (listof list?) void?)]
           [bitmap->points (-> (is-a?/c bitmap%) (listof list?))]
           [pic->points (-> path-string? (listof list?))]
-          [points->pic (-> (listof list?) path-string? hash? any)]
           [points->pixels (-> (listof list?) hash? bytes?)]
+          [points->points_map (-> (listof list?) hash?)]
+          [points->base1_points (-> list? list?)]
+          [move-point-col (-> pair? exact-integer? pair?)]
+          [move-point-row (-> pair? exact-integer? pair?)]
+          [display-list (->* (list?) (natural? natural?) string?)]
+          [display-double-list (->* (list? list?) (natural? natural?) string?)]
+          [format-string (-> string? natural? string?)]
+          [display-qr-bits (-> natural? hash? string?)]
+          [split-string (-> string? natural? list?)]
+          [locate-finder-pattern (-> natural? list?)]
+          [locate-brick (-> natural? pair? pair?)]
+          [draw-module (-> (is-a?/c bitmap-dc%) (or/c (is-a?/c color%) string?) pair? natural? void?)]
+          [draw-background (-> (is-a?/c bitmap-dc%) natural? natural? void?)]
+          [draw-points (-> (is-a?/c bitmap-dc%) natural? hash? hash? void?)]
+          [draw (-> natural? natural? hash? hash? path-string? void?)]
           ))
 
-(define *TRACE_LEVEL* (make-parameter 0))
-(define *TRACE_INFO* 1)
-(define *TRACE_DEBUG* 2)
+(define (move-point-col point cols)
+  (cons
+   (car point)
+   (+ (cdr point) cols)))
 
-(define (appTrace trace_level action)
-  (when (>= (*TRACE_LEVEL*) trace_level)
-        (action)))
+(define (move-point-row point rows)
+  (cons
+   (+ (car point) rows)
+   (cdr point)))
+
+(define (locate-finder-pattern modules)
+  (list
+   '(1 . 1)
+   (cons 1 (add1 (- modules 7)))
+   (cons (add1 (- modules 7)) 1)))
+
+(define (express express? proc)
+  (when express?
+        (proc)))
+
+(define (display-list input_list [col_width 12] [line_count 10])
+  (with-output-to-string
+    (lambda ()
+      (printf "@verbatim{\n")
+      (let loop ([loop_list input_list]
+                 [print_count 0]
+                 [item_number 1]
+                 [line_start? #t]
+                 [origin? #t])
+        (when (not (null? loop_list))
+              (when line_start?
+                    (printf (~a #:min-width 6 #:align 'left #:right-pad-string " " (number->string item_number))))
+
+              (if (or (= print_count (sub1 line_count)) (= (length loop_list) 1))
+                  (begin
+                    (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                    (printf "\n")
+                    (loop (cdr loop_list) 0 (add1 item_number) #t #f))
+                  (begin
+                    (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                    (loop (cdr loop_list) (add1 print_count) (add1 item_number) #f #t)))))
+      (printf "}"))))
+
+(define (display-double-list input_list result_list [col_width 12] [line_count 10])
+  (if (and
+       (not (null? input_list))
+       (= (length input_list) (length result_list)))
+      (with-output-to-string
+        (lambda ()
+          (printf "@verbatim{\n")
+          (let loop ([loop_list result_list]
+                     [origin_list input_list]
+                     [print_count 0]
+                     [item_number 1]
+                     [line_start? #t]
+                     [origin? #t])
+            (when (not (null? loop_list))
+                  (if origin?
+                      (begin
+                        (when line_start?
+                              (printf (~a #:min-width 6 #:align 'left #:right-pad-string " ")))
+                        
+                        (if (or (= print_count (sub1 line_count)) (= (length origin_list) 1))
+                            (begin
+                              (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "[~a]" (car origin_list))))
+                              (printf "\n")
+                              (loop loop_list (cdr origin_list) 0 item_number #t #f))
+                            (begin
+                              (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "[~a]" (car origin_list))))
+                              (loop loop_list (cdr origin_list) (add1 print_count) item_number #f #t))))
+                      (begin
+                        (when line_start?
+                              (printf (~a #:min-width 6 #:align 'left #:right-pad-string " " (number->string item_number))))
+                        
+                        (if (or (= print_count (sub1 line_count)) (= (length loop_list) 1))
+                            (begin
+                              (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                              (printf "\n")
+                              (loop (cdr loop_list) origin_list 0 (add1 item_number) #t #t))
+                            (begin
+                              (printf (~a #:min-width col_width #:align 'left #:right-pad-string " " (format "~a" (car loop_list))))
+                              (loop (cdr loop_list) origin_list (add1 print_count) (add1 item_number) #f #f)))))))
+          (printf "}")))
+      ""))
+
+(define (display-qr-bits modules points_map)
+  (with-output-to-string
+    (lambda ()
+      (printf "@verbatim{\n")
+      
+      (printf "   ")
+
+      (let loop ([col 1])
+        (when (<= col modules)
+              (printf (~a #:min-width 3 #:align 'right #:left-pad-string " " col))
+              (loop (add1 col))))
+      
+      (let loop ([row 1]
+                 [col 1])
+
+        (when (and (<= row modules) (<= col modules))
+              (when (= col 1)
+                    (printf "\n")
+                    (printf (~a #:min-width 3 #:align 'right #:left-pad-string " " row)))
+
+              (printf (~a #:min-width 3 #:align 'right #:left-pad-string " " 
+                          (hash-ref points_map (cons row col) "*")))
+
+              (if (= col modules)
+                  (loop (add1 row) 1)
+                  (loop row (add1 col)))))
+
+      (printf "\n   ")
+
+      (let loop ([col 1])
+        (when (<= col modules)
+              (printf (~a #:min-width 3 #:align 'right #:left-pad-string " " col))
+              (loop (add1 col))))
+
+      (printf "}"))))
 
 (define (points->pixels points_list pixel_map)
   (let loop ([rows points_list]
@@ -47,23 +170,24 @@
           bytes_list))
         (list->bytes (foldr (lambda (a b) (append a b)) '() (reverse bytes_list))))))
 
-(define (points->pic points_list pic_path pixel_map)
-  (let* ([width (length (car points_list))]
-         [height (length points_list)]
-         [points_pic (make-object bitmap% width height)])
-    (send points_pic set-argb-pixels 0 0 width height (points->pixels points_list pixel_map))
-    (send points_pic save-file pic_path 'png)))
+(define (points->points_map points_list)
+  (let ([points_map (make-hash)])
+    (let row-loop ([row_list points_list]
+                   [row_count 1])
+      (when (not (null? row_list))
+            (let col-loop ([col_list (car row_list)]
+                           [col_count 1])
+              (when (not (null? col_list))
+                    (hash-set! points_map (cons row_count col_count) (car col_list))
+                    (col-loop (cdr col_list) (add1 col_count))))
+            (row-loop (cdr row_list) (add1 row_count))))
+    points_map))
 
-(define (print-matrix matrix)
-  (for-each
-   (lambda (row)
-     (for-each
-      (lambda (col)
-597428620        (printf "~a" (~a #:width 1 #:align 'right #:pad-string "0" col)))
-      row)
-     (printf "\n"))
-   matrix)
-  (printf "\n"))
+(define(points->base1_points points)
+  (map
+   (lambda (point)
+     (cons (add1 (car point)) (add1 (cdr point))))
+   points))
 
 (define (bitmap->points img)
   (let* ([width (send img get-width)]
@@ -137,3 +261,65 @@
                  (set! points `(,@points ,(cons cor (cdr start_point))))))
            vars)
           points))))
+
+(define (split-string bit_str width)
+  (let loop ([loop_str bit_str]
+             [result_list '()])
+    (if (not (string=? loop_str ""))
+        (if (>= (string-length loop_str) 8)
+            (loop (substring loop_str width) (cons (substring loop_str 0 width) result_list))
+            (loop "" (cons loop_str result_list)))
+        (reverse result_list))))
+
+(define (format-string data line_count)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_str data]
+                 [result_str ""])
+        (if (> (string-length loop_str) line_count)
+            (loop (substring loop_str line_count) (printf "~a\n" (substring loop_str 0 line_count)))
+            (printf "~a\n" loop_str))))))
+
+(define (locate-brick module_width place_pair)
+  (cons (* (sub1 (cdr place_pair)) module_width)
+        (* (sub1 (car place_pair)) module_width)))
+
+(define (draw-module dc color place_pair module_width)
+  (when (not (string=? color "transparent"))
+        (send dc set-pen color 1 'solid)
+        (send dc set-brush color 'solid)
+
+        (send dc draw-rectangle (cdr place_pair) (car place_pair) module_width module_width)))
+
+(define (draw-points dc module_width points_map color_map)
+  (hash-for-each
+   points_map
+   (lambda (point_pair val)
+     (let ([new_point_pair (cons (+ (cdr point_pair) 4) (+ (car point_pair) 4))])
+       (draw-module dc 
+                    (hash-ref color_map point_pair (if (string=? (~a val) "1") "black" "white")) 
+                    (locate-brick module_width new_point_pair) 
+                    module_width)))))
+
+(define (draw-background dc modules module_width)
+  (let loop-row ([row 1])
+    (when (<= row modules)
+          (let loop-col ([col 1])
+            (when (<= col modules)
+                  (draw-module dc "white" (locate-brick module_width (cons row col)) module_width)
+                  (loop-col (add1 col))))
+          (loop-row (add1 row)))))
+
+(define (draw modules module_width points_map color_map file_name)
+  (let* ([canvas_width (* (+ modules 8) module_width)]
+         [target (make-bitmap canvas_width canvas_width)]
+         [dc (new bitmap-dc% [bitmap target])])
+
+    (draw-background dc (+ modules 8) module_width)
+
+    (draw-points dc module_width points_map color_map)
+
+    (send target save-file file_name 'png)
+    
+    (void)))
+

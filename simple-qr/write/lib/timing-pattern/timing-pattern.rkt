@@ -12,7 +12,8 @@
 
 (define (draw-timing-pattern modules points_map type_map)
   (let ([timing_pattern_points (get-timing-pattern-points modules)])
-    (let loop ([points (car timing_pattern_points)])
+
+    (let loop ([points (first timing_pattern_points)])
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (cdr point) 2) 1)
@@ -20,7 +21,7 @@
                   (add-point point "0" "timing" points_map type_map)))
             (loop (cdr points))))
 
-    (let loop ([points (cadr timing_pattern_points)])
+    (let loop ([points (second timing_pattern_points)])
       (when (not (null? points))
             (let ([point (car points)])
               (if (= (remainder (car point) 2) 1)

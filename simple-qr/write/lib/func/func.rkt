@@ -4,106 +4,23 @@
 
 (provide (contract-out
           [version->modules (-> exact-nonnegative-integer? exact-nonnegative-integer?)]
-          [locate-brick (-> exact-nonnegative-integer? pair? pair?)]
-          [locate-finder-pattern (-> exact-nonnegative-integer? list?)]
-          [draw-module (-> (is-a?/c bitmap-dc%) (or/c (is-a?/c color%) string?) pair? exact-nonnegative-integer? void?)]
-          [draw-background (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? exact-nonnegative-integer? void?)]
-          [draw-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
-          [draw-debug-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
-          [draw-block-points (-> (is-a?/c bitmap-dc%) exact-nonnegative-integer? hash? void?)]
           [transform-points-list (-> list? pair? list?)]
           [add-terminator (-> string? exact-nonnegative-integer? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
-          [split-decimal-list-on-contract (-> list? vector? list?)]
+          [split-decimal-list-on-contract (-> list? list? list?)]
           [interleave-list (-> list? list?)]
           [decimal-list-to-string (-> list? string?)]
           [cut-string (-> string? list)]
           [add-point (-> pair? string? string? hash? hash? void?)]
+          [to-message-poly (-> list? string?)]
           ))
 
 (define (version->modules version)
   (if (and (>= version 1) (<= version 40))
       (+ 21 (* 4 (sub1 version)))
       (error "invalid version!")))
-
-(define (draw-module dc color place_pair module_width)
-  (when (not (string=? color "transparent"))
-        (send dc set-pen color 1 'solid)
-        (send dc set-brush color 'solid)
-
-        (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width)))
-
-(define (draw-points dc module_width points_map)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
-       (if (string=? val "1")
-           (draw-module dc "black" (locate-brick module_width new_point_pair) module_width)
-           (draw-module dc "white" (locate-brick module_width new_point_pair) module_width))))))
-
-(define (draw-debug-points dc module_width points_map)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
-       (if (string=? (car val) "1")
-           (draw-debug-module dc "black" (locate-brick module_width new_point_pair) module_width)
-           (draw-debug-module dc "white" (locate-brick module_width new_point_pair) module_width))))))
-
-(define (draw-block-points dc module_width points_map)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (let ([new_point_pair (cons (+ (car point_pair) 4) (+ (cdr point_pair) 4))])
-       (cond
-        [(string=? (cdr val) "finder")
-         (draw-module dc "red" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "separator")
-         (draw-module dc "green" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "timing")
-         (draw-module dc "brown" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "alignment")
-         (draw-module dc "blue" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "format")
-         (draw-module dc "teal" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "version")
-         (draw-module dc "magenta" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "dark")
-         (draw-module dc "pink" (locate-brick module_width new_point_pair) module_width)]
-        [(string=? (cdr val) "data")
-         (draw-module dc "black" (locate-brick module_width new_point_pair) module_width)])))))
-
-;; draw the background, help to count module
-(define (draw-background dc modules module_width)
-  (let loop-row ([row 1])
-    (when (<= row modules)
-          (let loop-col ([col 1])
-            (when (<= col modules)
-                  (draw-module dc "white" (locate-brick module_width (cons row col)) module_width)
-                  (loop-col (add1 col))))
-          (loop-row (add1 row)))))
-
-(define (draw-debug-module dc color place_pair module_width)
-  (if (string=? color "black")
-      (send dc set-pen "white" 1 'dot)
-      (send dc set-pen "black" 1 'dot))
-      
-  (send dc set-brush color 'solid)
-
-  (send dc draw-rectangle (car place_pair) (cdr place_pair) module_width module_width))
-
-(define (locate-brick module_width place_pair)
-  (cons (* (sub1 (cdr place_pair)) module_width)
-        (* (sub1 (car place_pair)) module_width)))
-
-(define (locate-finder-pattern modules)
-  (list
-   '(1 . 1)
-   (cons (add1 (- modules 7)) 1)
-   (cons 1 (add1 (- modules 7)))))
 
 (define (transform-points-list points_list start_point_pair)
   (map
@@ -147,11 +64,11 @@
          (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
          result_list))))
 
-(define (split-decimal-list-on-contract num_list contract_vec)
-  (let ([group1_block_count (car (vector-ref contract_vec 0))]
-        [group1_count_per_block (cdr (vector-ref contract_vec 0))]
-        [group2_block_count (car (vector-ref contract_vec 1))]
-        [group2_count_per_block (cdr (vector-ref contract_vec 1))]
+(define (split-decimal-list-on-contract num_list contract)
+  (let ([group1_block_count (car (first contract))]
+        [group1_count_per_block (cdr (first contract))]
+        [group2_block_count (car (second contract))]
+        [group2_count_per_block (cdr (second contract))]
         [remain_list #f])
 
     (list
@@ -213,6 +130,17 @@
       [else
        result_list]))))
 
+(define (to-message-poly number_list)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_list number_list])
+        (when (not (null? loop_list))
+              (printf "~ax~a" (car loop_list) (sub1 (length loop_list)))
+              (when (> (length loop_list) 1)
+                    (printf "+"))
+              (loop (cdr loop_list)))))))
+
 (define (add-point point value type points_map type_map)
   (hash-set! points_map point value)
   (hash-set! type_map point type))
+

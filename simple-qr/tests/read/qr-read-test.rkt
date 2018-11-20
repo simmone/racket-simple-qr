@@ -16,27 +16,14 @@
    
    (test-case
     "test-qr-read"
-    
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
-    )
 
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read normal_file) "https://github.com/simmone")
-     )
+    (check-equal? (qr-read real_file) "http://www.bjhzbw.com")
 
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
-    )
+    (check-equal? (qr-read normal_file) "https://github.com/simmone")
 
-    (parameterize
-     ([*TRACE_LEVEL* 0])
-     (check-equal? (qr-read wiki2_file) "")
-    )
-    
+    (check-equal? (qr-read wiki1_file) "http://en.m.wikipedia.org")
+
+    (check-equal? (qr-read wiki2_file) "")
     )
 
    ))

@@ -8,14 +8,15 @@
           ))
 
 (define (locate-timing-pattern-joints modules)
-  (let ([joint (+ 9 (- modules 16 1))])
-    (list (list (cons 9  7) (cons joint 7))
-          (list (cons 7  9) (cons 7 joint)))))
+  (let ([joint (- modules 8)])
+    (list 
+     (list (cons 7  9) (cons 7 joint))
+     (list (cons 9  7) (cons joint 7)))))
 
 (define (get-timing-pattern-points modules)
   (let* ([joints (locate-timing-pattern-joints modules)]
-         [vertical_joints (car joints)]
-         [horizontal_joints (cadr joints)]
+         [horizontal_joints (car joints)]
+         [vertical_joints (cadr joints)]
          [horizontal_start_point (first horizontal_joints)]
          [horizontal_end_point (second horizontal_joints)]
          [vertical_start_point (first vertical_joints)]

@@ -12,20 +12,20 @@
     "test-locate-timing-pattern-joints"
     
     (let ([joints (locate-timing-pattern-joints 21)])
-      (check-equal? (first joints) '((9 . 7) (13 . 7)))
-      (check-equal? (second joints) '((7 . 9) (7 . 13))))
+      (check-equal? (second joints) '((9 . 7) (13 . 7)))
+      (check-equal? (first joints) '((7 . 9) (7 . 13))))
 
     (let ([joints (locate-timing-pattern-joints 22)])
-      (check-equal? (first joints) '((9 . 7) (14 . 7)))
-      (check-equal? (second joints) '((7 . 9) (7 . 14))))
+      (check-equal? (second joints) '((9 . 7) (14 . 7)))
+      (check-equal? (first joints) '((7 . 9) (7 . 14))))
 
     (let ([joints (locate-timing-pattern-joints 23)])
-      (check-equal? (first joints) '((9 . 7) (15 . 7)))
-      (check-equal? (second joints) '((7 . 9) (7 . 15))))
+      (check-equal? (second joints) '((9 . 7) (15 . 7)))
+      (check-equal? (first joints) '((7 . 9) (7 . 15))))
 
     (let ([joints (locate-timing-pattern-joints 37)])
-      (check-equal? (first joints) '((9 . 7) (29 . 7)))
-      (check-equal? (second joints) '((7 . 9) (7 . 29))))
+      (check-equal? (second joints) '((9 . 7) (29 . 7)))
+      (check-equal? (first joints) '((7 . 9) (7 . 29))))
     )
    
    ))

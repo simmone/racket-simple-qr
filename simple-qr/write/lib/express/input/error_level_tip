@@ -1,0 +1,7 @@
+QR Code employs error correction to generate a series of error correction codewords which are added to the data
+codeword sequence in order to enable the symbol to withstand damage without loss of data. There are four user-
+selectable levels of error correction, offering the capability of recovery from the following amounts of damage.
+
+simple-qr use the highest recovery error level: L as default.
+
+Error Correction Level: Recovery Capacity %: L: 7%, M: 15%, Q: 25%, H: 30%
