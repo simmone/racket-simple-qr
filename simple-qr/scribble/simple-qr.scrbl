@@ -75,6 +75,10 @@ https://github.com/simmone
 
 If you want to see the each step of read or write a qr code, can set #:express? to true.
 
+Default will create folder .read.express for qr-read or .write.express for qr-write.
+
+You can use #:express_path to specify another folder name.
+
 Warning: express will generate a set of scribble files, it's very slow, debug usage only.
 
-Then use @verbatim{cd .read.express or .write.express or your specific express path; scribble --htmls report.scrbl} to generate a detail report.
+Then into the express folder, @verbatim{scribble --htmls report.scrbl} to generate a detail report.
