@@ -1,6 +1,6 @@
- #lang racket
+#lang racket
 
-(require "header/header.rkt")
+(require "header.rkt")
 (require "overview/overview.rkt")
 (require "input/input.rkt")
 (require "start/start.rkt")

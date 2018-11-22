@@ -1,4 +1,4 @@
- #lang racket
+#lang racket
 
 (provide (contract-out
           [write-report-header (-> path-string? void?)]

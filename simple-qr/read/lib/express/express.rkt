@@ -1,6 +1,6 @@
 #lang racket
 
-(require "header/header.rkt")
+(require "header.rkt")
 (require "input/input.rkt")
 (require "origin-bits/origin-bits.rkt")
 (require "bw-bits/bw-bits.rkt")

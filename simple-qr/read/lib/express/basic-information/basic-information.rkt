@@ -1,4 +1,4 @@
- #lang racket
+#lang racket
 
 (provide (contract-out
           [write-report-basic-information (-> natural? string? string? string? string? path-string? void?)]
