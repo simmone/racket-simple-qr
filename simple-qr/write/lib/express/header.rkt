@@ -5,7 +5,7 @@
           ))
 
 (require racket/runtime-path)
-(define-runtime-path header_template "header.scrbl")
+(define-runtime-path header_template "header.template")
 
 (define (write-report-header express_path)
   (copy-file 
