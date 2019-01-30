@@ -9,4 +9,5 @@
                "draw-lib"
                "racket-doc"
                "scribble-lib"
+               "reed-solomon"
                ))

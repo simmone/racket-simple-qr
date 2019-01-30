@@ -11,15 +11,13 @@
 (require "lib/timing-pattern/timing-pattern.rkt")
 (require "lib/alignment-pattern/alignment-pattern.rkt")
 (require "lib/dark-module/dark-module.rkt")
-(require "lib/error-correct-code/error-correct-code.rkt")
 (require "lib/data-encoding/data-encoding.rkt")
 (require "lib/fill-data/fill-data.rkt")
 (require "lib/mask-data/mask-data.rkt")
 (require "lib/express/express.rkt")
 (require "lib/func/func.rkt")
 (require "lib/func/remainder-bits/remainder-bits-func.rkt")
-(require "lib/func/code-info/code-info-func.rkt")
-(require "lib/func/poly/poly-dic-func.rkt")
+(require "../share/code-info/code-info-func.rkt")
 (require "../share/fill-data.rkt")
 (require "../share/error-level.rkt")
 (require "../share/data-encoding.rkt")
@@ -29,6 +27,7 @@
 (require "../share/func.rkt")
 
 (require racket/draw)
+(require reed-solomon)
 
 (define (qr-write data file_name
                   #:mode [mode "B"]
@@ -195,25 +194,23 @@
         ;; calculate error code
         (set! s14_ec_count (get-ec-count version error_level))
         
-        (set! s15_origin_poly_generator (get-poly s14_ec_count))
-        
         (set! s16_error_code_group
               (list
                (map
                 (lambda (block_list)
                   (list block_list
-                        (error-code s14_ec_count s15_origin_poly_generator block_list)))
+                        (rs-encode block_list s14_ec_count)))
                 (car s13_origin_data_group))
 
                (map
                 (lambda (block_list)
                   (list block_list
-                        (error-code s14_ec_count s15_origin_poly_generator block_list)))
+                        (rs-encode block_list s14_ec_count)))
                 (cadr s13_origin_data_group))))
 
         (express express?
                  (lambda ()
-                   (write-report-error-code s14_ec_count s15_origin_poly_generator s16_error_code_group express_path)))
+                   (write-report-error-code s14_ec_count s16_error_code_group express_path)))
 
         ;; interleave data group
         (set! s17_interleave_data_group (interleave-data-group s16_error_code_group))

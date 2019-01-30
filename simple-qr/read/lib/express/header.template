@@ -40,7 +40,9 @@ report the process of reading a qr code.
 
 @include-section["unmask-data/unmask-data.scrbl"]
 
-@include-section["ungroup-data/ungroup-data.scrbl"]
+@include-section["interleave-data/interleave-data.scrbl"]
+
+@include-section["data-recovery/data-recovery.scrbl"]
 
 @include-section["decoded-data/decoded-data.scrbl"]
 

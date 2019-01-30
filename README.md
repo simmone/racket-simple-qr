@@ -34,6 +34,12 @@ https://github.com/simmone
 
 https://github.com/simmone
 
+![ScreenShot](simple-qr/example/damaged.png)
+
+  (printf "~a\n" (qr-read "damaged.png"))
+
+https://github.com/simmone
+
 # Express
     If you want to see the each step of read or write a qr code, can set #:express? to true.
     

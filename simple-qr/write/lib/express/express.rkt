@@ -47,7 +47,7 @@
           [write-report-repeat-pad (-> natural? string? string? path-string? void?)]
           [write-report-decimal-list (-> string? list? path-string? void?)]
           [write-report-group-decimal-list (-> list? list? path-string? void?)]
-          [write-report-error-code (-> natural? string? list? path-string? void?)]
+          [write-report-error-code (-> natural? list? path-string? void?)]
           [write-report-interleave-data-group (-> list? string? path-string? void?)]
           [write-report-append-remainder (-> natural? string? path-string? void?)]
           [write-report-data-trace (-> list? list? hash? natural? path-string? void?)]

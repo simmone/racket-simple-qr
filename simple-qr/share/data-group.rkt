@@ -5,7 +5,8 @@
      [defines->count-list (-> list? list?)]
      [count_list->sequence_list (-> list? list?)]
      [sequence_list->sequence (-> (listof list?) list?)]
-     [split-data->groups (-> string? exact-nonnegative-integer? list?)]
+     [split-data->groups (-> string? natural? list?)]
+     [bit8->list (-> string? exact-nonnegative-integer? list?)]
      [combine-data-sequence (-> (listof string?) (listof exact-nonnegative-integer?) (listof pair?))]
      ))
 
@@ -227,6 +228,17 @@
                   (reverse inner_result_list)))
             result_list))
           (flatten (reverse result_list))))))
+
+(define (bit8->list data_str group_count)
+  (let loop ([loop_count group_count]
+             [loop_str data_str]
+             [result_list '()])
+    (if (> loop_count 0)
+        (loop 
+         (sub1 loop_count)
+         (substring loop_str 8)
+         (cons (substring loop_str 0 8) result_list))
+        (reverse result_list))))
 
 (define (split-data->groups data_str group_count)
   (let loop ([loop_count group_count]

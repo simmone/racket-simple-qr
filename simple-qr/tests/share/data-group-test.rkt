@@ -133,10 +133,10 @@
     )
 
    (test-case
-    "test-split-data->groups"
+    "test-bit8->list"
     
     (check-equal?
-     (split-data->groups
+     (bit8->list
       (string-append
        "01000001"
        "00100110"

@@ -57,6 +57,8 @@ raco pkg install simple-qr
           (qr-read "normal.png")
           (qr-read "small.png")
           (qr-read "large.png"))
+
+  (printf "~a\n" (qr-read "damaged.png"))
 }
 
 @image{example/small.png}
@@ -68,6 +70,10 @@ raco pkg install simple-qr
 https://github.com/simmone
 
 https://github.com/simmone
+
+https://github.com/simmone
+
+@image{example/damaged.png}
 
 https://github.com/simmone
 

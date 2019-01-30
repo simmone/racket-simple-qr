@@ -18,7 +18,6 @@
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/remainder-bits/remainder-bits-func.rkt")
-(require "../error-correct-code/error-correct-code.rkt")
 (require "../../../share/data-encoding.rkt")
 (require "../../../share/func.rkt")
 (require "../../../share/data-group.rkt")

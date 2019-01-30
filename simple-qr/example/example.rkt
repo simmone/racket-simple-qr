@@ -14,5 +14,8 @@
         (qr-read "small.png")
         (qr-read "large.png"))
 
+(printf "~a\n" (qr-read "damaged.png"))
+
+
 
 
