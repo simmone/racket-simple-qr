@@ -25,7 +25,7 @@
   (with-handlers 
    ([exn:fail?
      (lambda (v)
-       (printf "~a\n" v)
+;       (printf "~a\n" v)
        "")])
    (when express?
          (delete-directory/files #:must-exist? #f express_path)
