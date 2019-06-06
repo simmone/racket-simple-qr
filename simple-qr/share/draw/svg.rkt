@@ -1,6 +1,6 @@
 #lang racket
 
-(require "../../../../racket-simple-svg/simple-svg/main.rkt")
+(require simple-svg)
 
 (require "lib.rkt")
 
