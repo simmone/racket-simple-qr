@@ -1,7 +1,16 @@
 #lang racket
 
 (provide (contract-out
-          [qr-write (->* (string? path-string?) (#:mode string? #:error_level string? #:module_width exact-nonnegative-integer? #:express? boolean? #:express_path path-string?) any)]
+          [qr-write (->* (string? path-string?) 
+                         (
+                          #:mode string?
+                          #:error_level string?
+                          #:module_width exact-nonnegative-integer?
+                          #:express? boolean?
+                          #:express_path path-string?
+                          #:output_type (or/c 'png 'svg)
+                          )
+                         any)]
           ))
 
 (require "lib/finder-pattern/finder-pattern.rkt")
@@ -25,8 +34,8 @@
 (require "../share/version-information.rkt")
 (require "../share/character-bit-width.rkt")
 (require "../share/func.rkt")
+(require "../share/draw/draw.rkt")
 
-(require racket/draw)
 (require reed-solomon)
 
 (define (qr-write data file_name
@@ -34,7 +43,9 @@
                   #:error_level [error_level "H"]
                   #:module_width [module_width 5]
                   #:express? [express? #f]
-                  #:express_path [express_path ".write.express"])
+                  #:express_path [express_path ".write.express"]
+                  #:output_type [output_type 'png]
+                  )
 
   (when express?
         (delete-directory/files #:must-exist? #f express_path)
@@ -74,7 +85,7 @@
       (express express?
                (lambda () (write-report-alignment-pattern points_map modules express_path)))
 
-                                        ; 111100011011100 used to verify data fill
+      ; 111100011011100 used to verify data fill
       (draw-format-information "111100011011100" modules points_map type_map)
       (express express?
                (lambda () (write-report-reserved-format-information points_map modules express_path)))
@@ -302,4 +313,6 @@
                    (lambda () (write-report-final points_map modules express_path)))
           )
 
-        (draw modules module_width points_map (make-hash) file_name)))))
+        (parameterize
+         ([*output_type* output_type])
+         (draw modules module_width points_map (make-hash) file_name))))))

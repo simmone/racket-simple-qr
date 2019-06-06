@@ -1,5 +1,6 @@
 #lang racket
 
+(require "../../../../share/draw/draw.rkt")
 (require "../../../../share/func.rkt")
 
 (provide (contract-out

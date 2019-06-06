@@ -19,6 +19,8 @@ raco pkg install simple-qr
 @defmodule[simple-qr]
 @(require (for-label simple-qr))
 
+@subsection{Function}
+
 @defproc[(qr-write
               [data (string?)]
               [output_file_path (path-string?)]
@@ -27,6 +29,7 @@ raco pkg install simple-qr
               [#:module_width module_width natural? 5]
               [#:express? express? boolean? #f]
               [#:express_path express_path path-string? "imgfile + '.write.express'"]
+              [#:output_type output_type (or/c 'png 'svg)]
               )
             void?]{
   output qr code image to file.
@@ -40,6 +43,8 @@ raco pkg install simple-qr
               string?]{
   read qr code image's content, if failed, return "".
 }
+
+@subsection{Example}
 
 @verbatim{
   #lang racket
@@ -59,7 +64,11 @@ raco pkg install simple-qr
           (qr-read "large.png"))
 
   (printf "~a\n" (qr-read "damaged.png"))
+
+  (qr-write "https://github.com/simmone" "normal.svg" #:output_type 'svg)
 }
+
+@subsection{Png}
 
 @image{example/small.png}
 
@@ -67,11 +76,11 @@ raco pkg install simple-qr
 
 @image{example/large.png}
 
-https://github.com/simmone
+@subsection{SVG}
 
-https://github.com/simmone
+@image{example/normal.svg}
 
-https://github.com/simmone
+@subsection{Read and Correct}
 
 @image{example/damaged.png}
 

@@ -1,6 +1,7 @@
 #lang racket
 
 (require "../../../../share/func.rkt")
+(require "../../../../share/draw/draw.rkt")
 
 (provide (contract-out
           [write-report-exclude-finder-pattern (-> natural? hash? hash? path-string? void?)]
