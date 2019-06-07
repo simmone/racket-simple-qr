@@ -36,10 +36,10 @@
                            [rect (svg-def-rect module_width module_width)]
                            [rect_sstyle (sstyle-new)])
                        
-                       (set-sstyle-fill! back_sstyle "white")
+                       (sstyle-set! back_sstyle 'fill "white")
                        (svg-use-shape back_rect back_sstyle)
                        
-                       (set-sstyle-fill! rect_sstyle "black")
+                       (sstyle-set! rect_sstyle 'fill "black")
 
                        (draw-points rect rect_sstyle points_map color_map module_width)
                        
