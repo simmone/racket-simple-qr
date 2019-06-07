@@ -10,4 +10,5 @@
                "racket-doc"
                "scribble-lib"
                "reed-solomon"
+               "simple-svg"
                ))
