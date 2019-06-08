@@ -1,6 +1,7 @@
 #lang scribble/manual
 
 @(require (for-label racket))
+@(require (for-label simple-qr))
 
 @title{Simple-Qr: QR-Code Writer and Reader}
 
@@ -17,7 +18,6 @@ raco pkg install simple-qr
 @section{Usage}
 
 @defmodule[simple-qr]
-@(require (for-label simple-qr))
 
 @subsection{Function}
 
@@ -46,7 +46,7 @@ raco pkg install simple-qr
 
 @subsection{Example}
 
-@verbatim{
+@codeblock{
   #lang racket
 
   (require simple-qr)
