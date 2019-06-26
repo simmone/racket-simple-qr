@@ -80,51 +80,51 @@ A Qr Code Writer and Reader for Racket
 ```racket
 (qr-write "https://github.com/simmone" "normal.png")
 ```
-![ScreenShot](example/normal.png)
+![ScreenShot](simple-qr/example/normal.png)
 
 ```racket
 (qr-write "https://github.com/simmone" "normal_color.png" #:color '("#ffbb33" . "#0d47a1"))
 ```
-![ScreenShot](example/normal_color.png))
+![ScreenShot](simple-qr/example/normal_color.png))
 
 ```racket
 (qr-write "https://github.com/simmone" "normal_trans.png" #:color '("#9933CC" . "transparent"))
 ```
-![ScreenShot](example/normal_trans.png)
+![ScreenShot](simple-qr/example/normal_trans.png)
 
 ```racket
 (qr-write "https://github.com/simmone" "small.png" #:module_width 2)
 ```
-![ScreenShot](example/small.png)
+![ScreenShot](simple-qr/example/small.png)
 
 ```racket
 (qr-write "https://github.com/simmone" "large.png" #:module_width 10)
 ```
-![ScreenShot](example/large.png)
+![ScreenShot](simple-qr/example/large.png)
 
 # SVG
 
 ```racket
 (qr-write "https://github.com/simmone" "normal.svg"  #:output_type 'svg)
 ```
-![ScreenShot](example/normal.svg)
+![ScreenShot](simple-qr/example/normal.svg)
 
 ```racket
 (qr-write "https://github.com/simmone" "normal_color.svg" #:color '("#ffbb33" . "#0d47a1") #:output_type 'svg)
 ```
-![ScreenShot](example/normal_color.svg)
+![ScreenShot](simple-qr/example/normal_color.svg)
 
 ```racket
 (qr-write "https://github.com/simmone" "normal_trans.svg" #:color '("#9933CC" . "transparent") #:output_type 'svg)
 ```
-![ScreenShot](example/normal_trans.svg)
+![ScreenShot](simple-qr/example/normal_trans.svg)
 
 @subsection{Read and Correct}
 
 ```racket
 (printf "~a\n" (qr-read "damaged.png"))
 ```
-![ScreenShot](example/damaged.pn)
+![ScreenShot](simple-qr/example/damaged.png)
 https://github.com/simmone
 
 # Express
