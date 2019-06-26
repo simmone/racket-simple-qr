@@ -119,7 +119,7 @@ A Qr Code Writer and Reader for Racket
 ```
 ![ScreenShot](simple-qr/example/normal_trans.svg)
 
-@subsection{Read and Correct}
+# Read and Correct
 
 ```racket
 (printf "~a\n" (qr-read "damaged.png"))
