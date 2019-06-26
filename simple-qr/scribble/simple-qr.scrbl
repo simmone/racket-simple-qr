@@ -1,6 +1,6 @@
 #lang scribble/manual
 
-@(require (for-label racket))
+@(require (for-label racket/draw))
 @(require (for-label simple-qr))
 
 @title{Simple-Qr: QR-Code Writer and Reader}
@@ -27,12 +27,20 @@ raco pkg install simple-qr
               [#:mode mode string? "B"]
               [#:error_level error_level string? "H"]
               [#:module_width module_width natural? 5]
+              [#:color color (cons/c string? string?) '("black" . "white")]
               [#:express? express? boolean? #f]
               [#:express_path express_path path-string? "imgfile + '.write.express'"]
               [#:output_type output_type (or/c 'png 'svg)]
               )
             void?]{
   output qr code image to file.
+  
+  color's form is '(front_color . background_color).
+  
+  use color "transparent" to set transparent(background).
+
+  if output_type is png, can use @racket[color-database<%>], 
+  but hex color is all available in all formats, recommended.
 }
 
 @defproc[(qr-read
@@ -47,41 +55,85 @@ raco pkg install simple-qr
 @subsection{Example}
 
 @codeblock{
-  #lang racket
+#lang racket
 
-  (require simple-qr)
+(require simple-qr)
 
-  ;; block's default width is 5
-  (qr-write "https://github.com/simmone" "normal.png")
+;; block's default width is 5
 
-  (qr-write "https://github.com/simmone" "small.png" #:module_width 2)
+(qr-write "https://github.com/simmone" "normal.png")
 
-  (qr-write "https://github.com/simmone" "large.png" #:module_width 10)
+(qr-write "https://github.com/simmone" "normal_color.png" #:color '("#ffbb33" . "#0d47a1"))
 
-  (printf "~a\n~a\n~a\n"
-          (qr-read "normal.png")
-          (qr-read "small.png")
-          (qr-read "large.png"))
+(qr-write "https://github.com/simmone" "normal_trans.png" #:color '("#9933CC" . "transparent"))
+ 
+(qr-write "https://github.com/simmone" "small.png" #:module_width 2)
 
-  (printf "~a\n" (qr-read "damaged.png"))
+(qr-write "https://github.com/simmone" "large.png" #:module_width 10)
 
-  (qr-write "https://github.com/simmone" "normal.svg" #:output_type 'svg)
+(printf "~a\n~a\n~a\n"
+        (qr-read "normal.png")
+        (qr-read "small.png")
+        (qr-read "large.png"))
+
+(printf "~a\n" (qr-read "damaged.png"))
+
+(qr-write "https://github.com/simmone" "normal.svg" #:output_type 'svg)
+
+(qr-write "https://github.com/simmone" "normal_color.svg" #:color '("#ffbb33" . "#0d47a1") #:output_type 'svg)
+
+(qr-write "https://github.com/simmone" "normal_trans.svg" #:color '("#9933CC" . "transparent") #:output_type 'svg)
 }
 
 @subsection{Png}
 
-@image{example/small.png}
-
+@codeblock{
+(qr-write "https://github.com/simmone" "normal.png")
+}
 @image{example/normal.png}
 
+@codeblock{
+(qr-write "https://github.com/simmone" "normal_color.png" #:color '("#ffbb33" . "#0d47a1"))
+}
+@image{example/normal_color.png}
+
+@codeblock{
+(qr-write "https://github.com/simmone" "normal_trans.png" #:color '("#9933CC" . "transparent"))
+}
+@image{example/normal_trans.png}
+
+@codeblock{
+(qr-write "https://github.com/simmone" "small.png" #:module_width 2)
+}
+@image{example/small.png}
+
+@codeblock{
+(qr-write "https://github.com/simmone" "large.png" #:module_width 10)
+}
 @image{example/large.png}
 
 @subsection{SVG}
 
+@codeblock{
+(qr-write "https://github.com/simmone" "normal.svg"  #:output_type 'svg)
+}
 @image{example/normal.svg}
+
+@codeblock{
+(qr-write "https://github.com/simmone" "normal_color.svg" #:color '("#ffbb33" . "#0d47a1") #:output_type 'svg)
+}
+@image{example/normal_color.svg}
+
+@codeblock{
+(qr-write "https://github.com/simmone" "normal_trans.svg" #:color '("#9933CC" . "transparent") #:output_type 'svg)
+}
+@image{example/normal_trans.svg}
 
 @subsection{Read and Correct}
 
+@codeblock{
+(printf "~a\n" (qr-read "damaged.png"))
+}
 @image{example/damaged.png}
 
 https://github.com/simmone

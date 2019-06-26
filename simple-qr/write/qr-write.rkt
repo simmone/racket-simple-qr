@@ -6,6 +6,7 @@
                           #:mode string?
                           #:error_level string?
                           #:module_width exact-nonnegative-integer?
+                          #:color (cons/c string? string?)
                           #:express? boolean?
                           #:express_path path-string?
                           #:output_type (or/c 'png 'svg)
@@ -42,6 +43,7 @@
                   #:mode [mode "B"]
                   #:error_level [error_level "H"]
                   #:module_width [module_width 5]
+                  #:color [color '("black" . "white")]
                   #:express? [express? #f]
                   #:express_path [express_path ".write.express"]
                   #:output_type [output_type 'png]
@@ -315,4 +317,4 @@
 
         (parameterize
          ([*output_type* output_type])
-         (draw modules module_width points_map (make-hash) file_name))))))
+         (draw modules module_width points_map (make-hash) color file_name))))))

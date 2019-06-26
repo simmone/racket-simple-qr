@@ -5,24 +5,22 @@
 (require "lib.rkt")
 
 (provide (contract-out
-          [draw-svg (-> natural? natural? hash? hash? path-string? void?)]
+          [draw-svg (-> natural? natural? hash? hash? (cons/c string? string?) path-string? void?)]
           ))
 
-(define (draw-module rect rect_style color place_pair)
-  (when (string=? color "black")
-    (svg-use-shape rect rect_style #:at? place_pair)))
-
 (define (draw-points rect rect_sstyle points_map color_map module_width)
-  (hash-for-each
-   points_map
-   (lambda (point_pair val)
-     (let ([new_point_pair (cons (+ (cdr point_pair) 4) (+ (car point_pair) 4))])
-       (draw-module 
-        rect rect_sstyle
-        (hash-ref color_map point_pair (if (string=? (~a val) "1") "black" "white"))
-        (locate-brick module_width new_point_pair))))))
+  (let loop ([points_list
+              (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
+    (when (not (null? points_list))
+          (when (string=? (cdar points_list) "1")
+                (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
+                  (svg-use-shape
+                   rect
+                   rect_sstyle
+                   #:at? (locate-brick module_width new_point_pair))))
+          (loop (cdr points_list)))))
 
-(define (draw-svg modules module_width points_map color_map file_name)
+(define (draw-svg modules module_width points_map color_map color file_name)
   (let* ([canvas_width (* (+ modules 8) module_width)])
     (with-output-to-file
         file_name #:exists 'replace
@@ -34,13 +32,12 @@
                      (let ([back_rect (svg-def-rect canvas_width canvas_width)]
                            [back_sstyle (sstyle-new)]
                            [rect (svg-def-rect module_width module_width)]
-                           [rect_sstyle (sstyle-new)])
+                           [front_sstyle (sstyle-new)])
                        
-                       (sstyle-set! back_sstyle 'fill "white")
+                       (sstyle-set! back_sstyle 'fill (cdr color))
                        (svg-use-shape back_rect back_sstyle)
                        
-                       (sstyle-set! rect_sstyle 'fill "black")
-
-                       (draw-points rect rect_sstyle points_map color_map module_width)
+                       (sstyle-set! front_sstyle 'fill (car color))
+                       (draw-points rect front_sstyle points_map color_map module_width)
                        
                        (svg-show-default)))))))))

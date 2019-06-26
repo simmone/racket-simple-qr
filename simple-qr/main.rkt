@@ -9,6 +9,7 @@
                           #:mode string?
                           #:error_level string?
                           #:module_width exact-nonnegative-integer?
+                          #:color (cons/c string? string?)
                           #:express? boolean?
                           #:express_path path-string?
                           #:output_type (or/c 'png 'svg)

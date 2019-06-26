@@ -6,38 +6,125 @@ A Qr Code Writer and Reader for Racket
 # Install
     raco pkg install simple-qr
 
-# Basic Usage
+# Usage
+
 ```racket
-
-  (require simple-qr)
-
-  (qr-write "https://github.com/simmone" "normal.png")
-
-  (qr-write "https://github.com/simmone" "small.png" #:module_width 2)
-
-  (qr-write "https://github.com/simmone" "large.png" #:module_width 10)
-
-  (printf "~a\n~a\n~a\n"
-          (qr-read "normal.png")
-          (qr-read "small.png")
-          (qr-read "large.png"))
+(qr-write
+        [data (string?)]
+        [output_file_path (path-string?)]
+        [#:mode mode string? "B"]
+        [#:error_level error_level string? "H"]
+        [#:module_width module_width natural? 5]
+        [#:color color (cons/c string? string?) '("black" . "white")]
+        [#:express? express? boolean? #f]
+        [#:express_path express_path path-string? "imgfile + '.write.express'"]
+        [#:output_type output_type (or/c 'png 'svg)]
+        )
+      void?
 ```
-![ScreenShot](simple-qr/example/small.png)
+  output qr code image to file.
+  
+  color's form is '(front_color . background_color).
+  
+  use color "transparent" to set transparent(background).
 
-![ScreenShot](simple-qr/example/normal.png)
+  if output_type is png, can use @racket[color-database<%>], 
+  but hex color is all available in all formats, recommended.
 
-![ScreenShot](simple-qr/example/large.png)
+```racket
+(qr-read
+          [image_file_path (path-string?)]
+          [#:express? express? boolean? #f]
+          [#:express_path express_path path-string? "imgfile + '.read.express'"]
+          )
+        string?
+```
+  read qr code image's content, if failed, return "".
 
-https://github.com/simmone
+# Example
 
-https://github.com/simmone
+```racket
+#lang racket
 
-https://github.com/simmone
+(require simple-qr)
 
-![ScreenShot](simple-qr/example/damaged.png)
+;; block's default width is 5
 
-  (printf "~a\n" (qr-read "damaged.png"))
+(qr-write "https://github.com/simmone" "normal.png")
 
+(qr-write "https://github.com/simmone" "normal_color.png" #:color '("#ffbb33" . "#0d47a1"))
+
+(qr-write "https://github.com/simmone" "normal_trans.png" #:color '("#9933CC" . "transparent"))
+ 
+(qr-write "https://github.com/simmone" "small.png" #:module_width 2)
+
+(qr-write "https://github.com/simmone" "large.png" #:module_width 10)
+
+(printf "~a\n~a\n~a\n"
+        (qr-read "normal.png")
+        (qr-read "small.png")
+        (qr-read "large.png"))
+
+(printf "~a\n" (qr-read "damaged.png"))
+
+(qr-write "https://github.com/simmone" "normal.svg" #:output_type 'svg)
+
+(qr-write "https://github.com/simmone" "normal_color.svg" #:color '("#ffbb33" . "#0d47a1") #:output_type 'svg)
+
+(qr-write "https://github.com/simmone" "normal_trans.svg" #:color '("#9933CC" . "transparent") #:output_type 'svg)
+
+```
+
+# Png
+
+```racket
+(qr-write "https://github.com/simmone" "normal.png")
+```
+![ScreenShot](example/normal.png)
+
+```racket
+(qr-write "https://github.com/simmone" "normal_color.png" #:color '("#ffbb33" . "#0d47a1"))
+```
+![ScreenShot](example/normal_color.png))
+
+```racket
+(qr-write "https://github.com/simmone" "normal_trans.png" #:color '("#9933CC" . "transparent"))
+```
+![ScreenShot](example/normal_trans.png)
+
+```racket
+(qr-write "https://github.com/simmone" "small.png" #:module_width 2)
+```
+![ScreenShot](example/small.png)
+
+```racket
+(qr-write "https://github.com/simmone" "large.png" #:module_width 10)
+```
+![ScreenShot](example/large.png)
+
+# SVG
+
+```racket
+(qr-write "https://github.com/simmone" "normal.svg"  #:output_type 'svg)
+```
+![ScreenShot](example/normal.svg)
+
+```racket
+(qr-write "https://github.com/simmone" "normal_color.svg" #:color '("#ffbb33" . "#0d47a1") #:output_type 'svg)
+```
+![ScreenShot](example/normal_color.svg)
+
+```racket
+(qr-write "https://github.com/simmone" "normal_trans.svg" #:color '("#9933CC" . "transparent") #:output_type 'svg)
+```
+![ScreenShot](example/normal_trans.svg)
+
+@subsection{Read and Correct}
+
+```racket
+(printf "~a\n" (qr-read "damaged.png"))
+```
+![ScreenShot](example/damaged.pn)
 https://github.com/simmone
 
 # Express

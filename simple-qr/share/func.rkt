@@ -1,6 +1,7 @@
 #lang racket
 
 (require racket/draw)
+(require file/sha1)
 
 (provide (contract-out
           [express (-> boolean? procedure? void?)]
@@ -20,6 +21,7 @@
           [display-qr-bits (-> natural? hash? string?)]
           [split-string (-> string? natural? list?)]
           [locate-finder-pattern (-> natural? list?)]
+          [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           ))
 
 (define (move-point-col point cols)
@@ -274,3 +276,9 @@
         (if (> (string-length loop_str) line_count)
             (loop (substring loop_str line_count) (printf "~a\n" (substring loop_str 0 line_count)))
             (printf "~a\n" loop_str))))))
+
+(define (hex_color->racket_color hex_color)
+  (if (regexp-match #px"^#([0-9a-zA-Z]{6})$" hex_color)
+      (let ([rgb_list (bytes->list (hex-string->bytes (substring hex_color 1)))])
+        (make-object color% (first rgb_list) (second rgb_list) (third rgb_list)))
+      hex_color))

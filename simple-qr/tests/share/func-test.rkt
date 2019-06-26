@@ -57,6 +57,18 @@
       (check-equal? (third start_points) '(15 . 1)))
     )
 
+   (test-case
+    "test-hex_color->racket_color"
+
+    (let ([racket_color (hex_color->racket_color "#9933cc")])
+      (check-equal? (send racket_color red) 153)
+      (check-equal? (send racket_color green) 51)
+      (check-equal? (send racket_color blue) 204))
+
+    (let ([racket_color (hex_color->racket_color "red")])
+      (check-equal? racket_color "red"))
+    )
+
    ))
 
 (run-tests test-func)
