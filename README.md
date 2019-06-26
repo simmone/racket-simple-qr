@@ -125,6 +125,7 @@ A Qr Code Writer and Reader for Racket
 (printf "~a\n" (qr-read "damaged.png"))
 ```
 ![ScreenShot](simple-qr/example/damaged.png)
+
 https://github.com/simmone
 
 # Express
