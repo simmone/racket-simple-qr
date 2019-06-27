@@ -7,6 +7,7 @@
 (define deps '("base"
                "rackunit-lib"
                "draw-lib"
+               "draw-doc"
                "racket-doc"
                "scribble-lib"
                "reed-solomon"
