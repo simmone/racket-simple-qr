@@ -11,6 +11,10 @@
          [scrbl_file (build-path scrbl_dir "decimal-list.scrbl")]
          [img_file (build-path scrbl_dir "decimal-list.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"decimal-list/decimal-list.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file

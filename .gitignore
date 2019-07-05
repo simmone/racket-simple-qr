@@ -2,3 +2,5 @@ box.png
 .DS_Store
 step*.png
 test.svg
+.write.express
+.read.express

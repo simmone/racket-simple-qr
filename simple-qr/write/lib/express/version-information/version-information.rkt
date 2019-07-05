@@ -12,6 +12,10 @@
          [scrbl_file (build-path scrbl_dir "version-information.scrbl")]
          [img_file (build-path scrbl_dir "version-information.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"version-information/version-information.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file
@@ -25,6 +29,6 @@
         (printf "@section{Version Information Bits}\n")
         (printf (display-qr-bits modules points_map))
         (printf "@section{Version Information Image}\n")
-        (draw modules 5 points_map (make-hash) img_file)
+        (draw modules 5 points_map (make-hash) '("black" . "white") img_file)
         (printf "@image{version-information/version-information.img}")
         ))))

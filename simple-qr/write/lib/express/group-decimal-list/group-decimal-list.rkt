@@ -11,6 +11,10 @@
   (let* ([scrbl_dir (build-path express_path "group-decimal-list")]
          [scrbl_file (build-path scrbl_dir "group-decimal-list.scrbl")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"group-decimal-list/group-decimal-list.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file

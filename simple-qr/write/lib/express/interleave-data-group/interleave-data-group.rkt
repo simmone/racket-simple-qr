@@ -1,6 +1,5 @@
 #lang racket
 
-(require "../../../../share/draw/draw.rkt")
 (require "../../../../share/func.rkt")
 
 (provide (contract-out
@@ -10,6 +9,10 @@
 (define (write-report-interleave-data-group interleave_data_group interleave_data_bits express_path)
   (let* ([scrbl_dir (build-path express_path "interleave-data-group")]
          [scrbl_file (build-path scrbl_dir "interleave-data-group.scrbl")])
+
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"interleave-data-group/interleave-data-group.scrbl\"]\n\n")))
 
     (make-directory* scrbl_dir)
 

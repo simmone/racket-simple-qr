@@ -11,6 +11,10 @@
   (let* ([scrbl_dir (build-path express_path "data-trace")]
          [scrbl_file (build-path scrbl_dir "data-trace.scrbl")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"data-trace/data-trace.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file

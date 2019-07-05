@@ -242,7 +242,7 @@
         (set! s21_data_list (string->list s20_padded_remainder_bits))
         (express express?
                  (lambda ()
-                   (write-report-append-remainder s19_remainder_bits_width s20_padded_remainder_bits express_path)))
+                   (write-report-append-remainder (string-length s18_interleave_data_bits) s19_remainder_bits_width s20_padded_remainder_bits express_path)))
 
         ;; draw data on coodinate trace
         (set! s22_trace_list (get-data-socket-list modules #:skip_points_hash points_map))
@@ -261,7 +261,7 @@
                [penalty_list #f]
                [min_penalty #f]
                [mask_index #f])
-
+          
           (set! data_list
                 (let loop ([loop_trace_list s22_trace_list]
                            [loop_data_list (map (lambda (ch) (string ch)) s21_data_list)]

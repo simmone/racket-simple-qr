@@ -1,6 +1,5 @@
 #lang racket
 
-(require "../../../../share/draw/draw.rkt")
 (require "../../../../share/func.rkt")
 
 (provide (contract-out
@@ -11,6 +10,10 @@
   (let* ([scrbl_dir (build-path express_path "data-bits")]
          [scrbl_file (build-path scrbl_dir "data-bits.scrbl")]
          [img_file (build-path scrbl_dir "data-bits.img")])
+
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"data-bits/data-bits.scrbl\"]\n\n")))
 
     (make-directory* scrbl_dir)
 

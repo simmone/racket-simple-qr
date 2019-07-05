@@ -12,6 +12,10 @@
          [scrbl_file (build-path scrbl_dir "repeat-pad.scrbl")]
          [img_file (build-path scrbl_dir "repeat-pad.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"repeat-pad/repeat-pad.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file

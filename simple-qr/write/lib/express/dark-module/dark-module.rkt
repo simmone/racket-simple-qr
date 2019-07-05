@@ -12,6 +12,10 @@
          [scrbl_file (build-path scrbl_dir "dark-module.scrbl")]
          [img_file (build-path scrbl_dir "dark-module.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"dark-module/dark-module.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file
@@ -23,6 +27,6 @@
         (printf "@section{Dark Module Bits}\n")
         (printf (display-qr-bits modules points_map))
         (printf "@section{Dark Module Image}\n")
-        (draw modules 5 points_map (make-hash) img_file)
+        (draw modules 5 points_map (make-hash) '("black" . "white") img_file)
         (printf "@image{dark-module/dark-module.img}")
         ))))

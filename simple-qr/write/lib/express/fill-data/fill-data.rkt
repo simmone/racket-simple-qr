@@ -12,6 +12,10 @@
          [scrbl_file (build-path scrbl_dir "fill-data.scrbl")]
          [img_file (build-path scrbl_dir "fill-data.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"fill-data/fill-data.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file
@@ -23,6 +27,6 @@
         (printf "@section{Fill Data Bits}\n")
         (printf (display-qr-bits modules points_map))
         (printf "@section{Fill Data Image}\n")
-        (draw modules 5 points_map (make-hash) img_file)
+        (draw modules 5 points_map (make-hash) '("black" . "white") img_file)
         (printf "@image{fill-data/fill-data.img}")
         ))))

@@ -13,6 +13,10 @@
          [scrbl_file (build-path scrbl_dir "timing-pattern.scrbl")]
          [img_file (build-path scrbl_dir "timing-pattern.img")])
 
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"timing-pattern/timing-pattern.scrbl\"]\n\n")))
+
     (make-directory* scrbl_dir)
 
     (with-output-to-file
@@ -24,6 +28,6 @@
         (printf "@section{Timing Pattern Bits}\n")
         (printf (display-qr-bits modules points_map))
         (printf "@section{Timing Pattern Image}\n")
-        (draw modules 5 points_map (make-hash) img_file)
+        (draw modules 5 points_map (make-hash) '("black" . "white") img_file)
         (printf "@image{timing-pattern/timing-pattern.img}")
         ))))

@@ -49,7 +49,7 @@
           [write-report-group-decimal-list (-> list? list? path-string? void?)]
           [write-report-error-code (-> natural? list? path-string? void?)]
           [write-report-interleave-data-group (-> list? string? path-string? void?)]
-          [write-report-append-remainder (-> natural? string? path-string? void?)]
+          [write-report-append-remainder (-> natural? natural? string? path-string? void?)]
           [write-report-data-trace (-> list? list? hash? natural? path-string? void?)]
           [write-report-fill-data (-> hash? natural? path-string? void?)]
           [write-report-mask-list (-> list? list? natural? path-string? void?)]

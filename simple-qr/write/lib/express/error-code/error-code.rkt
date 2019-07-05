@@ -1,6 +1,5 @@
 #lang racket
 
-(require "../../../../share/draw/draw.rkt")
 (require "../../../../share/func.rkt")
 
 (provide (contract-out
@@ -10,6 +9,10 @@
 (define (write-report-error-code ec_count error_code_group express_path)
   (let* ([scrbl_dir (build-path express_path "error-code")]
          [scrbl_file (build-path scrbl_dir "error-code.scrbl")])
+
+    (with-output-to-file (build-path express_path "report.scrbl") #:exists 'append
+      (lambda ()
+        (printf "@include-section[\"error-code/error-code.scrbl\"]\n\n")))
 
     (make-directory* scrbl_dir)
 
