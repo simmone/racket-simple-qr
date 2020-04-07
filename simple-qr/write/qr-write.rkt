@@ -7,8 +7,7 @@
                           #:error_level string?
                           #:module_width exact-nonnegative-integer?
                           #:color (cons/c string? string?)
-                          #:express? boolean?
-                          #:express_path path-string?
+                          #:detail? (or/c #f (listof (or/c 'raw 'console path-string?)))
                           #:output_type (or/c 'png 'svg)
                           )
                          any)]
@@ -24,7 +23,6 @@
 (require "lib/data-encoding/data-encoding.rkt")
 (require "lib/fill-data/fill-data.rkt")
 (require "lib/mask-data/mask-data.rkt")
-(require "lib/express/express.rkt")
 (require "lib/func/func.rkt")
 (require "lib/func/remainder-bits/remainder-bits-func.rkt")
 (require "../share/code-info/code-info-func.rkt")
@@ -44,20 +42,26 @@
                   #:error_level [error_level "H"]
                   #:module_width [module_width 5]
                   #:color [color '("black" . "white")]
-                  #:express? [express? #f]
-                  #:express_path [express_path ".write.express"]
+                  #:detail? [detail? #f]
                   #:output_type [output_type 'png]
                   )
 
-  (when express?
-        (delete-directory/files #:must-exist? #f express_path)
-        (make-directory* express_path))
+  (detail 
+   #:formats? detail?
+   #:exception_value? #f
+   #:font_size? 'small
+   (lambda ()
 
-  (let* ([version (get-version data mode error_level)]
-         [modules (version->modules version)])
+     (let* ([version (get-version data mode error_level)]
+            [modules (version->modules version)])
 
-    (express express? (lambda () (write-report-header express_path)))
+       (detail-page
+        (lambda ()
+          (detail-h1 "QR Code Write Report")
 
+          (detail-h2 "Input")
+
+          (detail-line "
     (express express?
              (lambda () (write-report-input data mode error_level version modules module_width express_path)))
 
