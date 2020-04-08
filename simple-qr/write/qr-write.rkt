@@ -61,7 +61,15 @@
 
           (detail-h2 "Input")
 
-          (detail-line "
+          (detail-line "data:")
+          (detail-line data)
+
+          (detail-line (format "data length: " (string-length data)))
+
+          (detail-line (format "mode: " mode))
+
+          (detail-line (format "error level: " error_level))
+
     (express express?
              (lambda () (write-report-input data mode error_level version modules module_width express_path)))
 
