@@ -61,23 +61,11 @@
 
           (detail-h2 "Input")
 
-          (detail-line "data:")
-          (detail-line data)
+          (detail-lines '("data:" data "data length: " (string-length data) (format "mode: " mode) (format "error level: " error_level)
+                          (format "version:" version) (format "modules:~a" modules) (format "module width:~a" module_width)))
 
-          (detail-line (format "data length: " (string-length data)))
-
-          (detail-line (format "mode: " mode))
-
-          (detail-line (format "error level: " error_level))
-
-    (express express?
-             (lambda () (write-report-input data mode error_level version modules module_width express_path)))
-
-    (express express?
-             (lambda () (write-report-overview express_path)))
-
-    (express express?
-             (lambda () (write-report-start modules express_path)))
+          (express express?
+                   (lambda () (write-report-start modules express_path)))
 
     (let* ([points_map (make-hash)]
            [type_map (make-hash)]
