@@ -64,16 +64,15 @@
           (detail-lines '("data:" data "data length: " (string-length data) (format "mode: " mode) (format "error level: " error_level)
                           (format "version:" version) (format "modules:~a" modules) (format "module width:~a" module_width)))
 
-          (express express?
-                   (lambda () (write-report-start modules express_path)))
+          (detail-h2 "Start Blank QR Code")
 
-    (let* ([points_map (make-hash)]
-           [type_map (make-hash)]
-           [sum_count (* modules modules)])
+          (let* ([points_map (make-hash)]
+                 [type_map (make-hash)]
+                 [sum_count (* modules modules)])
 
-      (draw-finder-pattern modules points_map type_map)
-      (express express?
-               (lambda () (write-report-finder-pattern points_map modules express_path)))
+            (draw-finder-pattern modules points_map type_map)
+            (express express?
+                     (lambda () (write-report-finder-pattern points_map modules express_path)))
 
       (draw-separator modules points_map type_map)
       (express express?
