@@ -13,3 +13,5 @@
                "reed-solomon"
                "simple-svg"
                ))
+
+(define test-omit-paths '("info.rkt"))
