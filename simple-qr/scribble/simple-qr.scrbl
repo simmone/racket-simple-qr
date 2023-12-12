@@ -3,7 +3,7 @@
 @(require (for-label racket/draw))
 @(require (for-label simple-qr))
 
-@title{Simple-Qr: QR-Code Writer and Reader}
+@title{simple-qr: QR-Code Writer and Reader}
 
 @author+email["Chen Xiao" "chenxiao770117@gmail.com"]
 
