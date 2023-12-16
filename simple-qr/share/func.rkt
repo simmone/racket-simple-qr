@@ -4,7 +4,6 @@
 (require file/sha1)
 
 (provide (contract-out
-          [express (-> boolean? procedure? void?)]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -39,10 +38,6 @@
    '(1 . 1)
    (cons 1 (add1 (- modules 7)))
    (cons (add1 (- modules 7)) 1)))
-
-(define (express express? proc)
-  (when express?
-        (proc)))
 
 (define (display-list input_list [col_width 12] [line_count 10])
   (with-output-to-string
