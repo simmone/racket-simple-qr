@@ -59,7 +59,7 @@
 
       (draw-alignment-pattern version points_map type_map)
 
-                                        ; 111100011011100 used to verify data fill
+      ;; 111100011011100 used to verify data fill
       (draw-format-information "111100011011100" modules points_map type_map)
 
       (when (>= version 7)
