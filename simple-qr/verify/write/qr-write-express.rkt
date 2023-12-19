@@ -23,5 +23,20 @@
                           #:output_type [output_type 'png]
                           )
   (with-output-to-file index_md_file
+    #:exists 'replace
     (lambda ()
-      (printf "# Express each step of QR code write\n\n"))))
+      (printf "# Express each step of QR code write\n\n")
+
+      (printf "## encoding data:\n")
+      
+      (printf "\n    ~a\n\n" data)
+
+      (printf "## Options:\n")
+      
+      (printf "1. output file name: **~a**\n" file_name)
+      (printf "2. mode: **~a**\n" mode)
+      (printf "3. error level: **~a**\n" error_level)
+      (printf "4. module width: **~a**\n" module_width)
+      (printf "5. color: **~a**\n" color)
+      (printf "6. output image type: **~a**\n" output_type)
+      )))
