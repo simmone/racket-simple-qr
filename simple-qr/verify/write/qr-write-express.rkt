@@ -1,5 +1,7 @@
 #lang racket
 
+(require "version-express.rkt")
+
 (require racket/runtime-path)
 (define-runtime-path index_md_file "../express/content/_index.md")
 
@@ -25,7 +27,7 @@
   (with-output-to-file index_md_file
     #:exists 'replace
     (lambda ()
-      (printf "# Express each step of QR code write\n\n")
+      (printf "# Explain each step of QR code write\n\n")
 
       (printf "## encoding data:\n")
       
@@ -39,4 +41,8 @@
       (printf "4. module width: **~a**\n" module_width)
       (printf "5. color: **~a**\n" color)
       (printf "6. output image type: **~a**\n" output_type)
-      )))
+      ))
+
+  (define version (get-version (string-length data) mode error_level))
+  (get-version-express (string-length data) mode error_level)
+  )

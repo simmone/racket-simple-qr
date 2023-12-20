@@ -1,4 +1,4 @@
-# Express each step of QR code write
+# Explain each step of QR code write
 
 ## encoding data:
 

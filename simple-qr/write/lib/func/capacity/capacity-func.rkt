@@ -1,16 +1,16 @@
 #lang racket
 
 (provide (contract-out
-  [get-version-origin (->
-                exact-nonnegative-integer?
+  [get-version (->
+                natural?
                 string?
                 string?
-                exact-nonnegative-integer?)]
+                natural?)]
   ))
 
 (require "capacity-dic.rkt")
 
-(define (get-version-origin char_count mode error_level)
+(define (get-version char_count mode error_level)
   (let loop ([loop_list (hash-ref *capacity_table* (string-append mode "-" error_level))])
     (if (not (null? loop_list))
         (if (<= char_count (cdar loop_list))

@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out 
-          [get-version (-> string? string? string? exact-nonnegative-integer?)]
           [get-character-count-indicator (-> exact-nonnegative-integer? exact-nonnegative-integer? string? string?)]
           [encode-b (-> string? string?)]
           [encode-n (-> string? string?)]
@@ -12,8 +11,6 @@
 
 (require "alphanumeric.rkt")
 (require "../func/func.rkt")
-(require "../func/capacity/capacity-func.rkt")
-(require "../func/capacity/capacity-dic.rkt")
 
 (require "../func/code-info/code-info-func.rkt")
 (require "../func/code-info/code-info-func.rkt")
@@ -24,9 +21,6 @@
 (require "../../../share/character-bit-width.rkt")
 
 (require racket/format)
-
-(define (get-version content mode error_level)
-  (get-version-origin (string-length content) mode error_level))
 
 (define (get-character-count-indicator character_count version mode)
   (~r character_count #:base 2 #:min-width (get-character-bit-width version mode) #:pad-string "0"))
