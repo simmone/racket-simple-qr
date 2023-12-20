@@ -1,19 +1,3 @@
----
-weight: 1
-title: "Step1: Decide Version"
----
-
-# Decide version(capacity)
-capacity controlled by char count, mode and error level
-
-## Elements
-1. char count: 8
-2. mode: B
-3. error_level: H
-## Version
-version is **2**
-## Version Reference Table
-
 [from www.thonky.com reference](http://www.thonky.com/qr-code-tutorial/character-capacities)
 
 |Version and EC Level|Total Number of Data Codewords for this Version and EC Level|EC Codewords Per Block|Number of Blocks in Group 1|Number of Data Codewords in Each of Group 1's Blocks|Number of Blocks in Group 2|Number of Data Codewords in Each of Group 2's Blocks|Total Data Codewords
@@ -178,4 +162,3 @@ version is **2**
 |40-M|2334|28|18|47|31|48|(47*18) + (48*31) = 2334|
 |40-Q|1666|30|34|24|34|25|(24*34) + (25*34) = 1666|
 |40-H|1276|30|20|15|61|16|(15*20) + (16*61) = 1276|
-
