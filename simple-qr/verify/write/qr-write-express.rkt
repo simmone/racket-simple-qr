@@ -30,6 +30,8 @@
     #:exists 'replace
     (lambda ()
       (printf "# Explain each step of QR code write\n\n")
+      
+      (printf "## qr-write]\n")
 
       (printf "## encoding data:\n")
       
@@ -38,11 +40,11 @@
       (printf "## Options:\n")
       
       (printf "1. output file name: **~a**\n" file_name)
-      (printf "2. mode: **~a**\n" mode)
-      (printf "3. error level: **~a**\n" error_level)
-      (printf "4. module width: **~a**\n" module_width)
-      (printf "5. color: **~a**\n" color)
-      (printf "6. output image type: **~a**\n" output_type)
+      (printf "2. mode: **~a**[default: ~a]\n" mode "B")
+      (printf "3. error level: **~a**[default: ~a]\n" error_level "H")
+      (printf "4. module width: **~a**[default: ~a]\n" module_width 5)
+      (printf "5. color: **~a**[default: ~a]\n" color '("black" . "white"))
+      (printf "6. output image type: **~a**[default: ~a]\n" output_type "'png")
       ))
 
   (define version (get-version (string-length data) mode error_level))

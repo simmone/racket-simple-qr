@@ -12,6 +12,7 @@
                          any)]
           ))
 
+(require "lib/version/version.rkt")
 (require "lib/finder-pattern/finder-pattern.rkt")
 (require "lib/separator/separator.rkt")
 (require "lib/format-information/format-information.rkt")
@@ -24,7 +25,6 @@
 (require "lib/mask-data/mask-data.rkt")
 (require "lib/func/func.rkt")
 (require "lib/func/remainder-bits/remainder-bits-func.rkt")
-(require "lib/func/capacity/capacity-func.rkt")
 (require "../share/code-info/code-info-func.rkt")
 (require "../share/fill-data.rkt")
 (require "../share/error-level.rkt")

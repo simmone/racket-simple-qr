@@ -33,10 +33,5 @@
 
       (printf "## Version\n")
       (printf "version is **~a**\n" version)
-
-      (printf "## Version Reference Table\n\n")
-      (call-with-input-file capacity_table_md_file
-        (lambda (in)
-          (printf "~a\n" (port->string in))))
       ))
   )
