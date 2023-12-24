@@ -1,8 +1,10 @@
 #lang racket
 
-(require "../../write/lib/func/capacity/capacity-func.rkt")
-
+(require "../../write/lib/version/version.rkt")
 (require "get-version-express.rkt")
+
+(require "../../write/lib/func/func.rkt")
+(require "version-to-module-express.rkt")
 
 (require racket/runtime-path)
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -49,4 +51,7 @@
 
   (define version (get-version (string-length data) mode error_level))
   (get-version-express (string-length data) mode error_level version)
+  
+  (define modules (version->modules version))
+  (version-to-modules-express version modules)
   )

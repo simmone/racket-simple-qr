@@ -1,10 +1,7 @@
 #lang racket
 
-(require "../../write/lib/func/capacity/capacity-func.rkt")
-
 (require racket/runtime-path)
-(define-runtime-path index_md_file "../express/content/docs/version/_index.md")
-(define-runtime-path capacity_table_md_file "../express/content/docs/version/capacity_table.md")
+(define-runtime-path index_md_file "../express/content/docs/s1-version/_index.md")
 
 (provide (contract-out
           [get-version-express (->
