@@ -13,6 +13,8 @@
           ))
 
 (require "lib/version/version.rkt")
+(require "lib/func/func.rkt")
+
 (require "lib/finder-pattern/finder-pattern.rkt")
 (require "lib/separator/separator.rkt")
 (require "lib/format-information/format-information.rkt")
@@ -23,7 +25,6 @@
 (require "lib/data-encoding/data-encoding.rkt")
 (require "lib/fill-data/fill-data.rkt")
 (require "lib/mask-data/mask-data.rkt")
-(require "lib/func/func.rkt")
 (require "lib/func/remainder-bits/remainder-bits-func.rkt")
 (require "../share/code-info/code-info-func.rkt")
 (require "../share/fill-data.rkt")
@@ -49,8 +50,7 @@
          [modules (version->modules version)])
 
     (let* ([points_map (make-hash)]
-           [type_map (make-hash)]
-           [sum_count (* modules modules)])
+           [type_map (make-hash)])
 
       (draw-finder-pattern modules points_map type_map)
 

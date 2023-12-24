@@ -17,7 +17,8 @@
       
       (printf "# Decide modules from version\n\n")
       
-      (printf "## modules\n")
-      (printf "modules = (+ 21 (* 4 (sub1 ~a))) = ~a\n" version modules)
+      (printf "## modules\n\n")
+      (printf "modules = (+ 21 (* 4 (sub1 ~a))) = ~a\n\n" version modules)
+      (printf "flowing steps will fill a **~a**X**~a** points map\n\n" modules modules)
       ))
   )
