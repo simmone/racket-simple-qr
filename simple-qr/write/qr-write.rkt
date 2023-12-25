@@ -216,6 +216,4 @@
             (draw-format-information format_str modules points_map type_map)
             )
 
-          (parameterize
-              ([*output_type* output_type])
-            (draw modules module_width points_map (make-hash) color file_name)))))))
+          (draw modules module_width points_map (make-hash) color file_name output_type))))))
