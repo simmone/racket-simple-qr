@@ -1,9 +1,9 @@
 #lang racket
 
 (require racket/runtime-path)
-(define-runtime-path s2_module_directory "../express/content/docs/s2-module")
-(define-runtime-path index_md_file "../express/content/docs/s2-module/_index.md")
-(define-runtime-path init_bitmap_file "../express/content/docs/s2-module/init.svg")
+(define-runtime-path s2_module_directory "../express/content/docs/s2_module")
+(define-runtime-path index_md_file "../express/content/docs/s2_module/_index.md")
+(define-runtime-path init_bitmap_file "../express/content/docs/s2_module/init.svg")
 
 (require "../../share/draw/draw.rkt")
 
@@ -13,7 +13,7 @@
 (define (version-to-modules-express version modules)
   (make-directory* s2_module_directory)
 
-  (draw modules 10 (make-hash) (make-hash) '("gray" . "gray") init_bitmap_file 'svg)
+  (draw modules 10 (make-hash) (make-hash) '("orange" . "orange") init_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

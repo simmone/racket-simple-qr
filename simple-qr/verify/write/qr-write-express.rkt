@@ -6,6 +6,12 @@
 (require "../../write/lib/func/func.rkt")
 (require "version-to-module-express.rkt")
 
+(require "../../write/lib/finder-pattern/finder-pattern.rkt")
+(require "finder-pattern-express.rkt")
+
+(require "../../write/lib/separator/separator.rkt")
+(require "separator-express.rkt")
+
 (require racket/runtime-path)
 (define-runtime-path index_md_file "../express/content/_index.md")
 
@@ -54,4 +60,14 @@
   
   (define modules (version->modules version))
   (version-to-modules-express version modules)
+
+  (let* ([points_map (make-hash)]
+         [type_map (make-hash)])
+
+    (draw-finder-pattern modules points_map type_map)
+    (finder-pattern-express modules points_map)
+
+    (draw-separator modules points_map type_map)
+    (draw-separator-express modules points_map)
+    )
   )
