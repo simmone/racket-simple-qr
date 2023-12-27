@@ -68,6 +68,6 @@
     (finder-pattern-express modules points_map)
 
     (draw-separator modules points_map type_map)
-    (draw-separator-express modules points_map)
+    (separator-express modules points_map)
     )
   )
