@@ -7,7 +7,7 @@
 (require "../func.rkt")
 
 (provide (contract-out
-          [draw-png (-> natural? natural? hash? hash? (cons/c string? string?) path-string? void?)]
+          [draw-png (-> natural? natural? (hash/c natural? natural?) path-string? void?)]
           ))
 
 (define (draw-module dc color place_pair module_width)
@@ -17,7 +17,7 @@
 
         (send dc draw-rectangle (cdr place_pair) (car place_pair) module_width module_width)))
 
-(define (draw-points dc module_width points_map color_map front_color)
+(define (draw-points dc module_width points_map)
   (let loop ([points_list
               (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
     (when (not (null? points_list))
@@ -25,12 +25,12 @@
            (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
              (draw-module 
               dc
-              (hash-ref color_map (caar points_list) front_color)
+              (hash-ref points_map (car points_list) front_color)
               (locate-brick module_width new_point_pair)
               module_width)))
           (loop (cdr points_list)))))
 
-(define (draw-png modules module_width points_map color_map color file_name)
+(define (draw-png modules module_width points_map file_name)
   (let* ([canvas_width (* (+ modules 8) module_width)]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
