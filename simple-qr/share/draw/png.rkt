@@ -7,7 +7,7 @@
 (require "../func.rkt")
 
 (provide (contract-out
-          [draw-png (-> natural? natural? (hash/c natural? natural?) path-string? void?)]
+          [draw-png (-> natural? natural? (hash/c (cons/c natural? natural?) string?) string? string? path-string? void?)]
           ))
 
 (define (draw-module dc color place_pair module_width)
@@ -19,16 +19,16 @@
 
 (define (draw-points dc module_width points_map)
   (let loop ([points_list
-             (sort (hash->keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
+             (sort (hash-keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
     (when (not (null? points_list))
       (draw-module 
        dc
        (hash-ref points_map (car points_list))
-       (locate-brick module_width (car potins_list))
-       module_width)))
-  (loop (cdr points_list)))
+       (locate-brick module_width (car points_list))
+       module_width)
+      (loop (cdr points_list)))))
 
-(define (draw-png modules module_width points_map file_name)
+(define (draw-png modules module_width points_map foreground_color background_color file_name)
   (let* ([canvas_width (* (+ modules 8) module_width)]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
@@ -36,8 +36,8 @@
      (send dc set-smoothing 'aligned)
 
      (when (not (string=? (cdr color) "transparent"))
-           (send dc set-pen (hex_color->racket_color (cdr color)) 1 'solid)
-           (send dc set-brush (hex_color->racket_color (cdr color)) 'solid)
+           (send dc set-pen (hex_color->racket_color background_color) 1 'solid)
+           (send dc set-brush (hex_color->racket_color background_color) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
 
      (draw-points dc module_width points_map)
