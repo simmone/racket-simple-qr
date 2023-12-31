@@ -18,4 +18,3 @@
    [else
     (draw-png modules module_width points_map file_name)]
    ))
-

@@ -19,16 +19,14 @@
 
 (define (draw-points dc module_width points_map)
   (let loop ([points_list
-              (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
+             (sort (hash->keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
     (when (not (null? points_list))
-          (when (string=? (cdar points_list) "1")
-           (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
-             (draw-module 
-              dc
-              (hash-ref points_map (car points_list) front_color)
-              (locate-brick module_width new_point_pair)
-              module_width)))
-          (loop (cdr points_list)))))
+      (draw-module 
+       dc
+       (hash-ref points_map (car points_list))
+       (locate-brick module_width (car potins_list))
+       module_width)))
+  (loop (cdr points_list)))
 
 (define (draw-png modules module_width points_map file_name)
   (let* ([canvas_width (* (+ modules 8) module_width)]
@@ -42,7 +40,7 @@
            (send dc set-brush (hex_color->racket_color (cdr color)) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
 
-     (draw-points dc module_width points_map color_map (car color))
+     (draw-points dc module_width points_map)
     
      (send target save-file file_name 'png)
      
