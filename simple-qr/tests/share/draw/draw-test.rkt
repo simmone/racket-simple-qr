@@ -2,8 +2,10 @@
 
 (require rackunit/text-ui)
 
-(require rackunit "../../../share/draw/lib.rkt")
-(require rackunit "../../../share/draw/draw.rkt")
+(require rackunit)
+(require "../../../share/draw/lib.rkt")
+(require "../../../share/draw/draw.rkt")
+(require "../../../share/finder-pattern.rkt")
 
 (require racket/runtime-path)
 (define-runtime-path png_normal_file "png_normal.png")
@@ -51,9 +53,11 @@
                (hash-set! points_map point "yellow"))
              (third (get-finder-pattern)))
             
-            (draw 7 5 points_map png_normal_file)))
+            (draw 7 5 points_map png_normal_file 'png)))
         (lambda ()
-          (delete-file png_normal_file))))
+          (void)
+          ;;(delete-file png_normal_file)
+          )))
    ))
 
 (run-tests test-func)

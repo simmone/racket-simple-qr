@@ -35,7 +35,7 @@
 
      (send dc set-smoothing 'aligned)
 
-     (when (not (string=? (cdr color) "transparent"))
+     (when (not (string=? background_color "transparent"))
            (send dc set-pen (hex_color->racket_color background_color) 1 'solid)
            (send dc set-brush (hex_color->racket_color background_color) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
