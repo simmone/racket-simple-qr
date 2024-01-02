@@ -9,6 +9,9 @@
 
 (require racket/runtime-path)
 (define-runtime-path canvas_file "canvas.png")
+(define-runtime-path pattern_canvas_file "pattern_canvas.png")
+(define-runtime-path transparent_canvas_file "transparent_canvas.png")
+(define-runtime-path normal_canvas_file "normal_canvas.png")
 
 (define test-func
   (test-suite 
@@ -37,17 +40,68 @@
     )
    
    (test-case
-    "test-canvas-generation"
+    "test-canvas"
     
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 10 5 (make-hash) "black" "white")])
+          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
             (draw canvas canvas_file 'png)))
         (lambda ()
-          (void)
-          ;;(delete-file png_normal_file)
+          ;;(void)
+          (delete-file canvas_file)
           )))
+
+   (test-case
+    "test-pattern-canvas"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([canvas (CANVAS 5 20 (make-hash) "black" "white")])
+            (init-color canvas "pattern")
+            (draw canvas pattern_canvas_file 'png)))
+        (lambda ()
+          (void)
+          ;;(delete-file pattern_canvas_file)
+          )))
+   
+   (test-case
+    "test-transparent-canvas"
+
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([canvas (CANVAS 20 10 (make-hash) "black" "transparent")])
+            (draw canvas transparent_canvas_file 'png)))
+        (lambda ()
+          ;;(void)
+          (delete-file transparent_canvas_file)
+          )))
+
+   (test-case
+    "test-fill-points"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
+            (for-each
+             (lambda (point_pair)
+               (hash-set! (CANVAS-points_map canvas) point_pair "red"))
+             (first (get-finder-pattern)))
+
+            (for-each
+             (lambda (point_pair)
+               (hash-set! (CANVAS-points_map canvas) point_pair "red"))
+             (third (get-finder-pattern)))
+
+            (draw canvas normal_canvas_file 'png)))
+        (lambda ()
+          ;;(void)
+          (delete-file normal_canvas_file)
+          )))
+
    ))
 
 (run-tests test-func)

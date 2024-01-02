@@ -19,6 +19,7 @@
                    (background_color string?)
                    )
                   ]
+          [init-color (-> CANVAS? string? void?)]
           [draw (-> CANVAS? path-string? (or/c 'svg 'png) void?)]
           ))
 
