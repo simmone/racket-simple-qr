@@ -3,11 +3,12 @@
 (require racket/draw)
 
 (require "lib.rkt")
+(require "canvas.rkt")
 
 (require "../func.rkt")
 
 (provide (contract-out
-          [draw-png (-> natural? natural? (hash/c (cons/c natural? natural?) string?) string? string? path-string? void?)]
+          [draw-png (-> CANVAS? path-string? void?)]
           ))
 
 (define (draw-module dc color place_pair module_width)
@@ -28,19 +29,19 @@
        module_width)
       (loop (cdr points_list)))))
 
-(define (draw-png modules module_width points_map foreground_color background_color file_name)
-  (let* ([canvas_width (* (+ modules 8) module_width)]
+(define (draw-png canvas file_name)
+  (let* ([canvas_width (* (CANVAS-modules canvas) (CANVAS-module_width canvas))]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
 
      (send dc set-smoothing 'aligned)
 
-     (when (not (string=? background_color "transparent"))
-           (send dc set-pen (hex_color->racket_color background_color) 1 'solid)
-           (send dc set-brush (hex_color->racket_color background_color) 'solid)
+     (when (not (string=? (CANVAS-background_color canvas) "transparent"))
+           (send dc set-pen (hex_color->racket_color (CANVAS-background_color canvas)) 1 'solid)
+           (send dc set-brush (hex_color->racket_color (CANVAS-background_color canvas)) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
 
-     (draw-points dc module_width points_map)
+     (draw-points dc (CANVAS-module_width canvas) (CANVAS-points_map canvas))
     
      (send target save-file file_name 'png)
      

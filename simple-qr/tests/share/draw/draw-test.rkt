@@ -8,7 +8,7 @@
 (require "../../../share/finder-pattern.rkt")
 
 (require racket/runtime-path)
-(define-runtime-path png_normal_file "png_normal.png")
+(define-runtime-path canvas_file "canvas.png")
 
 (define test-func
   (test-suite 
@@ -37,23 +37,13 @@
     )
    
    (test-case
-    "test-png-generation"
+    "test-canvas-generation"
     
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([points_map (make-hash)])
-            (for-each
-             (lambda (point)
-               (hash-set! points_map point "red"))
-             (first (get-finder-pattern)))
-
-            (for-each
-             (lambda (point)
-               (hash-set! points_map point "yellow"))
-             (third (get-finder-pattern)))
-            
-            (draw 7 5 points_map png_normal_file 'png)))
+          (let ([canvas (CANVAS 10 5 (make-hash) "black" "white")])
+            (draw canvas canvas_file 'png)))
         (lambda ()
           (void)
           ;;(delete-file png_normal_file)
