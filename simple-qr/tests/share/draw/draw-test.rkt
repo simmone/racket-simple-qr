@@ -11,7 +11,9 @@
 (define-runtime-path canvas_file "canvas.png")
 (define-runtime-path pattern_canvas_file "pattern_canvas.png")
 (define-runtime-path transparent_canvas_file "transparent_canvas.png")
-(define-runtime-path normal_canvas_file "normal_canvas.png")
+(define-runtime-path normal_canvas_png_file "normal_canvas.png")
+(define-runtime-path normal_canvas_jpg_file "normal_canvas.jpg")
+(define-runtime-path normal_canvas_bmp_file "normal_canvas.bmp")
 
 (define test-func
   (test-suite 
@@ -62,8 +64,8 @@
             (init-color canvas "pattern")
             (draw canvas pattern_canvas_file 'png)))
         (lambda ()
-          (void)
-          ;;(delete-file pattern_canvas_file)
+          ;;(void)
+          (delete-file pattern_canvas_file)
           )))
    
    (test-case
@@ -86,20 +88,22 @@
         (lambda () (void))
         (lambda ()
           (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
-            (for-each
-             (lambda (point_pair)
-               (hash-set! (CANVAS-points_map canvas) point_pair "red"))
-             (first (get-finder-pattern)))
 
-            (for-each
-             (lambda (point_pair)
-               (hash-set! (CANVAS-points_map canvas) point_pair "red"))
-             (third (get-finder-pattern)))
+            (init-color canvas "pattern")
+            
+            (fill-color canvas (first (get-finder-pattern)) "red")
+            (fill-color canvas (second (get-finder-pattern)) "white")
+            (fill-color canvas (third (get-finder-pattern)) "red")
 
-            (draw canvas normal_canvas_file 'png)))
+            (draw canvas normal_canvas_png_file 'png)
+            ;;(draw canvas normal_canvas_jpg_file 'jpeg)
+            ;;(draw canvas normal_canvas_bmp_file 'bmp)
+            ))
         (lambda ()
           ;;(void)
-          (delete-file normal_canvas_file)
+          (delete-file normal_canvas_png_file)
+          ;;(delete-file normal_canvas_jpg_file)
+          ;;(delete-file normal_canvas_bmp_file)
           )))
 
    ))

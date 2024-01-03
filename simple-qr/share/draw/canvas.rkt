@@ -14,6 +14,7 @@
                    )
                   ]
           [init-color (-> CANVAS? string? void?)]
+          [fill-color (-> CANVAS? (listof (cons/c natural? natural?)) string? void?)]
           ))
 
 (struct CANVAS
@@ -35,3 +36,9 @@
           (hash-set! (CANVAS-points_map canvas) (cons loop_row loop_col) color)
           (loop-col (add1 loop_col))))
       (loop-row (add1 loop_row)))))
+
+(define (fill-color canvas point_list color)
+  (for-each
+   (lambda (point)
+     (hash-set! (CANVAS-points_map canvas) point color))
+   point_list))

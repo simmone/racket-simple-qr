@@ -8,17 +8,18 @@
 (require "../func.rkt")
 
 (provide (contract-out
-          [draw-png (-> CANVAS? path-string? void?)]
+          [draw-png (-> CANVAS? path-string? (or/c 'png 'jpeg 'bmp) void?)]
           ))
 
-(define (draw-module dc point_color place_pair module_width)
+(define (draw-module dc point_color canvas_fg_color canvas_bg_color place_pair module_width)
     (when (not (string=? point_color "transparent"))
       (if (string=? point_color "pattern")
           (let ([space 10])
-            (send dc set-pen (hex_color->racket_color "black") 1 'solid)
+            (send dc set-pen (hex_color->racket_color canvas_fg_color) 1 'solid)
+            (send dc set-brush (hex_color->racket_color canvas_bg_color) 'solid)
             (send dc draw-rectangle (cdr place_pair) (car place_pair) module_width module_width)
 
-            (send dc set-pen (hex_color->racket_color "black") 1 'solid)
+            (send dc set-pen (hex_color->racket_color canvas_fg_color) 1 'solid)
             (let loop ([loop_col (+ (cdr place_pair) space)])
               (when (<= loop_col (+ (cdr place_pair) module_width))
                 (send dc draw-line
@@ -43,11 +44,13 @@
       (draw-module 
        dc
        (hash-ref points_map (car points_list))
+       fg_color
+       bg_color
        (locate-brick module_width (car points_list))
        module_width)
       (loop (cdr points_list)))))
 
-(define (draw-png canvas file_name)
+(define (draw-png canvas file_name output_type)
   (let* ([canvas_width (* (CANVAS-modules canvas) (CANVAS-module_width canvas))]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
@@ -61,6 +64,6 @@
 
      (draw-points dc (CANVAS-module_width canvas) (CANVAS-points_map canvas) (CANVAS-foreground_color canvas) (CANVAS-background_color canvas))
     
-     (send target save-file file_name 'png)
+     (send target save-file file_name output_type)
      
      (void)))

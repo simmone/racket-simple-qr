@@ -20,7 +20,8 @@
                    )
                   ]
           [init-color (-> CANVAS? string? void?)]
-          [draw (-> CANVAS? path-string? (or/c 'svg 'png) void?)]
+          [fill-color (-> CANVAS? (listof (cons/c natural? natural?)) string? void?)]
+          [draw (-> CANVAS? path-string? (or/c 'svg 'png 'jpeg 'bmp) void?)]
           ))
 
 (define (draw canvas file_name output_type)
@@ -28,5 +29,5 @@
    [(eq? output_type 'svg)
     (draw-svg canvas file_name)]
    [else
-    (draw-png canvas file_name)]
+    (draw-png canvas file_name output_type)]
    ))
