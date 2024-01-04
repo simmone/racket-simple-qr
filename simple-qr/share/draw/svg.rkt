@@ -3,9 +3,10 @@
 (require simple-svg)
 
 (require "lib.rkt")
+(require "canvas.rkt")
 
 (provide (contract-out
-          [draw-svg (-> natural? natural? hash? hash? (cons/c string? string?) path-string? void?)]
+          [draw-svg (-> CANVAS? path-string? void?)]
           ))
 
 (define (draw-points rect rect_sstyle points_map color_map module_width)
@@ -20,14 +21,15 @@
                    #:at? (locate-brick module_width new_point_pair))))
           (loop (cdr points_list)))))
 
-(define (draw-svg modules module_width points_map color_map color file_name)
-  (let* ([canvas_width (* (+ modules 8) module_width)])
+(define (draw-svg canvas file_name)
+  (let* ([canvas_width (* (CANVAS-modules canvas) (CANVAS-module_width canvas))]
     (with-output-to-file
         file_name #:exists 'replace
         (lambda ()
           (printf "~a"
                   (svg-out
-                   canvas_width canvas_width
+                   (CANVAS-module_width canvas)
+                   (CANVAS-module_width canvas))
                    (lambda ()
                      (let ([back_rect (svg-def-rect canvas_width canvas_width)]
                            [back_sstyle (sstyle-new)]
