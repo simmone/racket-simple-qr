@@ -55,7 +55,7 @@
         (lambda ()
           ;(void)
           (delete-file canvas_png_file)
-          ;(delete-file canvas_svg_file)
+          (delete-file canvas_svg_file)
           )))
 
    (test-case
