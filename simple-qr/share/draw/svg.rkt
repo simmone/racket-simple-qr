@@ -9,7 +9,7 @@
           [draw-svg (-> CANVAS? path-string? void?)]
           ))
 
-(define (draw-points rect rect_sstyle points_map module_width)
+(define (draw-points rect points_map module_width)
   (let loop ([points_list
               (sort (hash-keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
     (when (not (null? points_list))
@@ -38,6 +38,6 @@
                        (svg-use-shape back_rect back_sstyle)
                        
                        (sstyle-set! front_sstyle 'fill (CANVAS-foreground_color canvas))
-                       (draw-points rect front_sstyle (CANVAS-points_map canvas) (CANVAS-module_width canvas))
+                       (draw-points rect (CANVAS-points_map canvas) (CANVAS-module_width canvas))
                        
                        (svg-show-default)))))))))
