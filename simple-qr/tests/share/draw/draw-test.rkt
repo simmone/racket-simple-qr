@@ -73,9 +73,9 @@
             (draw canvas fill_canvas_svg_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file fill_canvas_png_file)
-          ;(delete-file fill_canvas_svg_file)
+          ;(void)
+          (delete-file fill_canvas_png_file)
+          (delete-file fill_canvas_svg_file)
           )))
 
    (test-case
@@ -90,9 +90,9 @@
             (draw canvas pattern_canvas_svg_file 'png)
             ))
         (lambda ()
-          ;;(void)
+          ;(void)
           (delete-file pattern_canvas_png_file)
-          ;(delete-file pattern_canvas_svg_file)
+          (delete-file pattern_canvas_svg_file)
           )))
    
    (test-case
