@@ -10,7 +10,10 @@
 (require racket/runtime-path)
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
-(define-runtime-path pattern_canvas_file "pattern_canvas.png")
+(define-runtime-path fill_canvas_png_file "fill_canvas.png")
+(define-runtime-path fill_canvas_svg_file "fill_canvas.svg")
+(define-runtime-path pattern_canvas_png_file "pattern_canvas.png")
+(define-runtime-path pattern_canvas_svg_file "pattern_canvas.svg")
 (define-runtime-path transparent_canvas_file "transparent_canvas.png")
 (define-runtime-path normal_canvas_png_file "normal_canvas.png")
 (define-runtime-path normal_canvas_jpg_file "normal_canvas.jpg")
@@ -59,6 +62,23 @@
           )))
 
    (test-case
+    "test-fill-canvas"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
+            (init-color canvas "red")
+            (draw canvas fill_canvas_png_file 'png)
+            (draw canvas fill_canvas_svg_file 'svg)
+            ))
+        (lambda ()
+          (void)
+          ;(delete-file fill_canvas_png_file)
+          ;(delete-file fill_canvas_svg_file)
+          )))
+
+   (test-case
     "test-pattern-canvas"
     
     (dynamic-wind
@@ -66,10 +86,13 @@
         (lambda ()
           (let ([canvas (CANVAS 5 20 (make-hash) "black" "white")])
             (init-color canvas "pattern")
-            (draw canvas pattern_canvas_file 'png)))
+            (draw canvas pattern_canvas_png_file 'png)
+            (draw canvas pattern_canvas_svg_file 'png)
+            ))
         (lambda ()
           ;;(void)
-          (delete-file pattern_canvas_file)
+          (delete-file pattern_canvas_png_file)
+          ;(delete-file pattern_canvas_svg_file)
           )))
    
    (test-case
