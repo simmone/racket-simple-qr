@@ -15,12 +15,36 @@
     (let loop ([points
                 (sort (hash-keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
       (when (not (null? points))
-        (let ([module_style (sstyle-new)])
-          (sstyle-set! module_style 'fill (hash-ref points_map (car points)))
-          (svg-use-shape
-           rect
-           module_style
-           #:at? (locate-brick module_width (car points))))
+        (let ([point_color (hash-ref points_map (car points))])
+          (if (string=? point_color "pattern")
+              (let (
+                    [line1 (svg-def-line '(10 . 0) (cons 0  module_width))]
+                    [line2 (svg-def-line '(0 . 0) (cons 10 module_width))]
+                    [rect_sstyle (sstyle-new)]
+                    [group_sstyle (sstyle-new)]
+                    )
+
+                (svg-def-group
+                 "rect"
+                 (lambda ()
+                   (svg-use-shape rect (sstyle-new) #:at? '(0 . 0))))
+
+                (sstyle-set! group_sstyle 'stroke-width 1)
+                (sstyle-set! group_sstyle 'stroke "black")
+                (svg-def-group
+                 "pattern"
+                 (lambda ()
+                   (svg-use-shape line1 group_sstyle #:at? '(0 . 0))
+                   (svg-use-shape line2 group_sstyle #:at? '(0 . 0))))
+
+                (svg-show-group "rect")
+                (svg-show-group "pattern" #:at? '(0 . 0)))
+              (let ([module_style (sstyle-new)])
+                (sstyle-set! module_style 'fill (hash-ref points_map (car points)))
+                (svg-use-shape
+                 rect
+                 module_style
+                 #:at? (locate-brick module_width (car points))))))
         (loop (cdr points))))))
 
 (define (draw-svg canvas file_name)
