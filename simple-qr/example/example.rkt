@@ -1,6 +1,6 @@
 #lang racket
 
-(require simple-qr)
+(require "../main.rkt")
 
 ;; block's default width is 5
 

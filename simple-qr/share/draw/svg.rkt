@@ -14,10 +14,10 @@
     (when (not (null? points_list))
           (when (string=? (cdar points_list) "1")
                 (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
-                  (svg-use-shape
+                  (svg-place-widget
                    rect
-                   rect_sstyle
-                   #:at? (locate-brick module_width new_point_pair))))
+                   #:style rect_sstyle
+                   #:at (locate-brick module_width new_point_pair))))
           (loop (cdr points_list)))))
 
 (define (draw-svg modules module_width points_map color_map color file_name)
@@ -29,15 +29,13 @@
                   (svg-out
                    canvas_width canvas_width
                    (lambda ()
-                     (let ([back_rect (svg-def-rect canvas_width canvas_width)]
+                     (let ([back_rect (svg-def-shape (new-rect canvas_width canvas_width))]
                            [back_sstyle (sstyle-new)]
-                           [rect (svg-def-rect module_width module_width)]
+                           [rect (svg-def-shape (new-rect module_width module_width))]
                            [front_sstyle (sstyle-new)])
                        
-                       (sstyle-set! back_sstyle 'fill (cdr color))
-                       (svg-use-shape back_rect back_sstyle)
+                       (set-SSTYLE-fill! back_sstyle (cdr color))
+                       (svg-place-widget back_rect #:style back_sstyle)
                        
-                       (sstyle-set! front_sstyle 'fill (car color))
-                       (draw-points rect front_sstyle points_map color_map module_width)
-                       
-                       (svg-show-default)))))))))
+                       (set-SSTYLE-fill! front_sstyle (car color))
+                       (draw-points rect front_sstyle points_map color_map module_width)))))))))
