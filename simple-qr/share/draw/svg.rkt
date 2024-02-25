@@ -3,68 +3,39 @@
 (require simple-svg)
 
 (require "lib.rkt")
-(require "canvas.rkt")
 
 (provide (contract-out
           [draw-svg (-> CANVAS? path-string? void?)]
           ))
 
-(define (draw-points points_map module_width)
-  (let ([rect (svg-def-rect module_width module_width)])
-
-    (let loop ([points
-                (sort (hash-keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
-      (when (not (null? points))
-        (let ([point_color (hash-ref points_map (car points))])
-          (if (string=? point_color "pattern")
-              (let (
-                    [line1 (svg-def-line '(10 . 0) (cons 0  module_width))]
-                    [line2 (svg-def-line '(0 . 0) (cons 10 module_width))]
-                    [rect_sstyle (sstyle-new)]
-                    [group_sstyle (sstyle-new)]
-                    )
-
-                (svg-def-group
-                 "rect"
-                 (lambda ()
-                   (svg-use-shape rect (sstyle-new) #:at? '(0 . 0))))
-
-                (sstyle-set! group_sstyle 'stroke-width 1)
-                (sstyle-set! group_sstyle 'stroke "black")
-                (svg-def-group
-                 "pattern"
-                 (lambda ()
-                   (svg-use-shape line1 group_sstyle #:at? '(0 . 0))
-                   (svg-use-shape line2 group_sstyle #:at? '(0 . 0))))
-
-                (svg-show-group "rect")
-                (svg-show-group "pattern" #:at? '(0 . 0)))
-              (let ([module_style (sstyle-new)])
-                (sstyle-set! module_style 'fill (hash-ref points_map (car points)))
-                (svg-use-shape
-                 rect
-                 module_style
-                 #:at? (locate-brick module_width (car points))))))
-        (loop (cdr points))))))
+(define (draw-points rect rect_sstyle points_map color_map module_width)
+  (let loop ([points_list
+              (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
+    (when (not (null? points_list))
+          (when (string=? (cdar points_list) "1")
+                (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
+                  (svg-place-widget
+                   rect
+                   #:style rect_sstyle
+                   #:at (locate-brick module_width new_point_pair))))
+          (loop (cdr points_list)))))
 
 (define (draw-svg canvas file_name)
-  (let* ([canvas_width (* (CANVAS-modules canvas) (CANVAS-module_width canvas))]
-         [svg_str
-          (svg-out
-           canvas_width
-           canvas_width
-           (lambda ()
-             (let ([back_rect (svg-def-rect canvas_width canvas_width)]
-                   [back_sstyle (sstyle-new)])
-               
-               (sstyle-set! back_sstyle 'fill (CANVAS-background_color canvas))
-               (svg-use-shape back_rect back_sstyle)
-               
-               (draw-points (CANVAS-points_map canvas) (CANVAS-module_width canvas))
-               
-               (svg-show-default))))])
-
+  (let* ([canvas_width (* (+ modules 8) module_width)])
     (with-output-to-file
         file_name #:exists 'replace
         (lambda ()
-          (printf "~a" svg_str)))))
+          (printf "~a"
+                  (svg-out
+                   canvas_width canvas_width
+                   (lambda ()
+                     (let ([back_rect (svg-def-shape (new-rect canvas_width canvas_width))]
+                           [back_sstyle (sstyle-new)]
+                           [rect (svg-def-shape (new-rect module_width module_width))]
+                           [front_sstyle (sstyle-new)])
+                       
+                       (set-SSTYLE-fill! back_sstyle (cdr color))
+                       (svg-place-widget back_rect #:style back_sstyle)
+                       
+                       (set-SSTYLE-fill! front_sstyle (car color))
+                       (draw-points rect front_sstyle points_map color_map module_width)))))))))

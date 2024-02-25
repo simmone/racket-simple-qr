@@ -216,4 +216,4 @@
             (draw-format-information format_str modules points_map type_map)
             )
 
-          (draw modules module_width points_map (make-hash) color file_name output_type))))))
+          (draw (CANVAS modules module_width points_map (car color) (cdr color)) file_name output_type))))))
