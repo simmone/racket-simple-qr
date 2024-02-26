@@ -1,6 +1,7 @@
 #lang racket
 
 (require racket/runtime-path)
+(define-runtime-path s1_version_directory "../express/content/docs/s1_version")
 (define-runtime-path index_md_file "../express/content/docs/s1_version/_index.md")
 
 (provide (contract-out
@@ -12,6 +13,8 @@
                                 void?)]))
 
 (define (get-version-express char_count mode error_level version)
+  (make-directory* s1_version_directory)
+
   (with-output-to-file index_md_file
     #:exists 'replace
     (lambda ()
