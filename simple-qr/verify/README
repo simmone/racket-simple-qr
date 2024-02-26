@@ -1,0 +1,3 @@
+use racket show.rkt to generate the details markdown files.
+
+cd express; use hugo server to start doc server; http://localhost:1313 show the markdown pages.

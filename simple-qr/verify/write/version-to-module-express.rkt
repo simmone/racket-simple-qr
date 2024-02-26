@@ -13,7 +13,7 @@
 (define (version-to-modules-express version modules)
   (make-directory* s2_module_directory)
 
-  (draw modules 10 (make-hash) (make-hash) '("orange" . "orange") init_bitmap_file 'svg)
+  (draw (CANVAS modules 10 (make-hash) "orange" "orange") init_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

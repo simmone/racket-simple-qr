@@ -13,7 +13,7 @@
 (define (finder-pattern-express modules points_map)
   (make-directory* s3_finder_pattern_directory)
 
-  (draw modules 10 points_map (make-hash) '("black" . "orange") finder_pattern_bitmap_file 'svg)
+  (draw (CANVAS modules 10 points_map "black" "orange") finder_pattern_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

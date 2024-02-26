@@ -39,7 +39,7 @@
     (lambda ()
       (printf "# Explain each step of QR code write\n\n")
       
-      (printf "## qr-write]\n")
+      (printf "## qr-write\n")
 
       (printf "## encoding data:\n")
       

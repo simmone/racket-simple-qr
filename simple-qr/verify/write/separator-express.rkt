@@ -13,7 +13,7 @@
 (define (separator-express modules points_map)
   (make-directory* s4_separator_directory)
 
-  (draw modules 10 points_map (make-hash) '("black" . "orange") separator_bitmap_file 'svg)
+  (draw (CANVAS modules 10 points_map "black" "orange") separator_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

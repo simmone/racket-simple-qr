@@ -1,6 +1,6 @@
 # Explain each step of QR code write
 
-## qr-write]
+## qr-write
 ## encoding data:
 
     chenxiao
