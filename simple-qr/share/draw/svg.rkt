@@ -9,7 +9,7 @@
           [draw-svg (-> CANVAS? path-string? void?)]
           ))
 
-(define (draw-points rect rect_sstyle points_map  module_width)
+(define (draw-points rect rect_sstyle points_map module_width)
   (let loop ([points_list
               (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
     (when (not (null? points_list))
