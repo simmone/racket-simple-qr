@@ -1,13 +1,11 @@
 #lang racket
 
-(require racket/draw)
-
 (provide (contract-out
-          [version->modules (-> exact-nonnegative-integer? exact-nonnegative-integer?)]
+          [version->modules (-> natural? natural?)]
           [transform-points-list (-> list? pair? list?)]
-          [add-terminator (-> string? exact-nonnegative-integer? string?)]
+          [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
-          [repeat-right-pad-string (-> string? exact-nonnegative-integer? string? string?)]
+          [repeat-right-pad-string (-> string? natural? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
           [split-decimal-list-on-contract (-> list? list? list?)]
           [interleave-list (-> list? list?)]

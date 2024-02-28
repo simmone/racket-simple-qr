@@ -1,14 +1,16 @@
 #lang racket
 
-(require "../func/func.rkt")
-(require "../../../share/func.rkt")
-(require "../../../share/separator.rkt")
+(require "func/write-func.rkt")
+(require "../share/func.rkt")
+(require "../share/separator.rkt")
+(require "../share/point.rkt")
+(require "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-separator (-> exact-nonnegative-integer? hash? hash? void?)]
+          [draw-separator (-> QR? void?)]
           ))
 
-(define (draw-separator modules points_map type_map)
+(define (draw-separator qr)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [top_right_point (second finder_pattern_start_points)]

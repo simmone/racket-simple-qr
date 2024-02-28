@@ -4,11 +4,11 @@
           [qr-write (->* (string? path-string?) 
                          (
                           #:mode string?
-                                 #:error_level string?
-                                 #:module_width exact-nonnegative-integer?
-                                 #:color (cons/c string? string?)
-                                 #:output_type (or/c 'png 'svg)
-                                 )
+                          #:error_level string?
+                          #:module_width exact-nonnegative-integer?
+                          #:color (cons/c string? string?)
+                          #:output_type (or/c 'png 'svg)
+                         )
                          any)]
           ))
 
@@ -17,8 +17,8 @@
 (require "version/version.rkt")
 (require "func/func.rkt")
 
-(require "finder-pattern/finder-pattern.rkt")
-(require "separator/separator.rkt")
+(require "finder-pattern.rkt")
+(require "separator.rkt")
 (require "format-information/format-information.rkt")
 (require "version-information/version-information.rkt")
 (require "timing-pattern/timing-pattern.rkt")
@@ -55,7 +55,7 @@
 
       (draw-finder-pattern qr)
 
-      (draw-separator modules points_map type_map)
+      (draw-separator qr)
 
       (draw-timing-pattern modules points_map type_map)
 
