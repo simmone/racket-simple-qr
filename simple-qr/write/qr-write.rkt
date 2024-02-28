@@ -12,22 +12,23 @@
                          any)]
           ))
 
-(require "../share/canvas.rkt")
+(require "../share/qr.rkt")
 
-(require "lib/version/version.rkt")
-(require "lib/func/func.rkt")
+(require "version/version.rkt")
+(require "func/func.rkt")
 
-(require "lib/finder-pattern/finder-pattern.rkt")
-(require "lib/separator/separator.rkt")
-(require "lib/format-information/format-information.rkt")
-(require "lib/version-information/version-information.rkt")
-(require "lib/timing-pattern/timing-pattern.rkt")
-(require "lib/alignment-pattern/alignment-pattern.rkt")
-(require "lib/dark-module/dark-module.rkt")
-(require "lib/data-encoding/data-encoding.rkt")
-(require "lib/fill-data/fill-data.rkt")
-(require "lib/mask-data/mask-data.rkt")
-(require "lib/func/remainder-bits/remainder-bits-func.rkt")
+(require "finder-pattern/finder-pattern.rkt")
+(require "separator/separator.rkt")
+(require "format-information/format-information.rkt")
+(require "version-information/version-information.rkt")
+(require "timing-pattern/timing-pattern.rkt")
+(require "alignment-pattern/alignment-pattern.rkt")
+(require "dark-module/dark-module.rkt")
+(require "data-encoding/data-encoding.rkt")
+(require "fill-data/fill-data.rkt")
+(require "mask-data/mask-data.rkt")
+(require "func/remainder-bits/remainder-bits-func.rkt")
+
 (require "../share/code-info/code-info-func.rkt")
 (require "../share/fill-data.rkt")
 (require "../share/error-level.rkt")
@@ -50,9 +51,9 @@
 
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)]
-         [canvas (CANVAS modules module_width (make-hash) (make-hash) (car color) (cdr color))])
+         [qr (QR mode error_level modules module_width (make-hash) (make-hash) (car color) (cdr color))])
 
-      (draw-finder-pattern canvas)
+      (draw-finder-pattern qr)
 
       (draw-separator modules points_map type_map)
 
@@ -216,4 +217,4 @@
             (draw-format-information format_str modules points_map type_map)
             )
 
-          (draw (CANVAS modules module_width points_map (car color) (cdr color)) file_name output_type))))))
+          (draw (QR modules module_width points_map (car color) (cdr color)) file_name output_type))))))

@@ -1,28 +1,28 @@
 #lang racket
 
-(require "../../../share/canvas.rkt")
-(require "../../../share/func.rkt")
-(require "../../../share/finder-pattern.rkt")
+(require "../../share/qr.rkt")
+(require "../../share/func.rkt")
+(require "../../share/finder-pattern.rkt")
 
 (provide (contract-out
-          [draw-finder-pattern (-> CANVAS? void?)]
+          [draw-finder-pattern (-> QR? void?)]
           ))
 
-(define (draw-finder-pattern canvas)
+(define (draw-finder-pattern qr)
   (for-each
    (lambda (start_point)
      (for-each
       (lambda (point_pair)
-        (add-point point_pair "1" "finder" points_map type_map))
+        (add-point point_pair 1 "finder" qr))
       (transform-points-list (first (get-finder-pattern)) start_point))
 
      (for-each
       (lambda (point_pair)
-        (add-point point_pair "0" "finder" points_map type_map))
+        (add-point point_pair 0 "finder" qr))
       (transform-points-list (second (get-finder-pattern)) start_point))
 
      (for-each
       (lambda (point_pair)
-        (add-point point_pair "1" "finder" points_map type_map))
+        (add-point point_pair 1 "finder" qr))
       (transform-points-list (third (get-finder-pattern)) start_point)))
    (locate-finder-pattern modules)))

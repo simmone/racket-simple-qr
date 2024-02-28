@@ -8,8 +8,10 @@
 ;; one_color: value 1's default color
 ;; zero_color: value 0's default color
 (provide (contract-out
-          [struct CANVAS
+          [struct QR
                   (
+                   (mode string?)
+                   (error_level string?)
                    (modules natural?)
                    (module_width natural?)
                    (points_map (hash/c POINT? (or/c 1 0)))
@@ -18,11 +20,13 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [add-point (-> POINT? (or/c 1 0) string? CANVAS? void?)]
+          [add-point (-> POINT? (or/c 1 0) string? QR? void?)]
           ))
 
-(struct CANVAS
+(struct QR
         (
+         (mode #:mutable)
+         (error_level #:mutable)
          (modules #:mutable)
          (module_width #:mutable)
          (points_map #:mutable)
@@ -33,7 +37,7 @@
         #:transparent
         )
 
-(define (add-point point val type canvas)
-  (hash-set! (CANVAS-points_map canvas) point value)
-  (hash-set! (CANVAS-type_points_map canvas) `(,@(hash-ref (CANVAS-type_points_map canvas) type '()) ,point)))
+(define (add-point point val type qr)
+  (hash-set! (QR-points_map qr) point value)
+  (hash-set! (QR-type_points_map qr) `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))
 
