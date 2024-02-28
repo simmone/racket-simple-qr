@@ -47,10 +47,8 @@
                   )
 
   (let* ([version (get-version (string-length data) mode error_level)]
-         [modules (version->modules version)])
-
-    (let* ([points_map (make-hash)]
-           [type_map (make-hash)])
+         [modules (version->modules version)]
+         [canvas (CANVAS modules module_width (make-hash) (make-hash) (car color) (cdr color))])
 
       (draw-finder-pattern modules points_map type_map)
 

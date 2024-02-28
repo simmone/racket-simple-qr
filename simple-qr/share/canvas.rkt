@@ -2,18 +2,18 @@
 
 ;; points_map: point pair => color
 ;; point pair: '(1 . 1)
-;; color: FF00FF or red or transparent
+;; color: "FF00FF" or "red" or 'transparent
 (provide (contract-out
           [struct CANVAS
                   (
                    (modules natural?)
                    (module_width natural?)
-                   (points_map (hash/c (cons/c natural? natural?) string?))
+                   (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
+                   (color_map (hash/c (cons/c natural? natural?) (cons/c string? string?)))
                    (foreground_color string?)
-                   (background_color string?)
+                   (background_color (or/c string? 'transparent))
                    )
                   ]
-          [init-color (-> CANVAS? string? void?)]
           [fill-color (-> CANVAS? (listof (cons/c natural? natural?)) string? void?)]
           ))
 
@@ -22,20 +22,12 @@
          (modules #:mutable)
          (module_width #:mutable)
          (points_map #:mutable)
+         (color_map #:mutable)
          (foreground_color #:mutable)
          (background_color #:mutable)
          )
         #:transparent
         )
-
-(define (init-color canvas color)
-  (let loop-row ([loop_row 1])
-    (when (<= loop_row (CANVAS-modules canvas))
-      (let loop-col ([loop_col 1])
-        (when (<= loop_col (CANVAS-modules canvas))
-          (hash-set! (CANVAS-points_map canvas) (cons loop_row loop_col) color)
-          (loop-col (add1 loop_col))))
-      (loop-row (add1 loop_row)))))
 
 (define (fill-color canvas point_list color)
   (for-each

@@ -55,6 +55,8 @@
       (printf "6. output image type: **~a**[default: ~a]\n" output_type "'png")
       ))
 
+  (let ([
+
   (define version (get-version (string-length data) mode error_level))
   (get-version-express (string-length data) mode error_level version)
   
