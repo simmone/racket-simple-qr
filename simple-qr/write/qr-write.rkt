@@ -12,6 +12,8 @@
                          any)]
           ))
 
+(require "../share/canvas.rkt")
+
 (require "lib/version/version.rkt")
 (require "lib/func/func.rkt")
 
@@ -50,7 +52,7 @@
          [modules (version->modules version)]
          [canvas (CANVAS modules module_width (make-hash) (make-hash) (car color) (cdr color))])
 
-      (draw-finder-pattern modules points_map type_map)
+      (draw-finder-pattern canvas)
 
       (draw-separator modules points_map type_map)
 

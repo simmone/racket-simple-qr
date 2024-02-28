@@ -13,7 +13,6 @@
           [interleave-list (-> list? list?)]
           [decimal-list-to-string (-> list? string?)]
           [cut-string (-> string? list)]
-          [add-point (-> pair? string? string? hash? hash? void?)]
           [to-message-poly (-> list? string?)]
           ))
 
@@ -139,8 +138,4 @@
               (when (> (length loop_list) 1)
                     (printf "+"))
               (loop (cdr loop_list)))))))
-
-(define (add-point point value type points_map type_map)
-  (hash-set! points_map point value)
-  (hash-set! type_map point type))
 

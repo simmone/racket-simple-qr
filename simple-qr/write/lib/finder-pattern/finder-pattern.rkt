@@ -1,14 +1,14 @@
 #lang racket
 
-(require "../func/func.rkt")
+(require "../../../share/canvas.rkt")
 (require "../../../share/func.rkt")
 (require "../../../share/finder-pattern.rkt")
 
 (provide (contract-out
-          [draw-finder-pattern (-> exact-nonnegative-integer? hash? hash? void?)]
+          [draw-finder-pattern (-> CANVAS? void?)]
           ))
 
-(define (draw-finder-pattern modules points_map type_map)
+(define (draw-finder-pattern canvas)
   (for-each
    (lambda (start_point)
      (for-each
