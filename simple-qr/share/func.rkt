@@ -19,7 +19,6 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           [split-string (-> string? natural? list?)]
-          [locate-finder-pattern (-> natural? list?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           ))
 
@@ -32,12 +31,6 @@
   (cons
    (+ (car point) rows)
    (cdr point)))
-
-(define (locate-finder-pattern modules)
-  (list
-   '(1 . 1)
-   (cons 1 (add1 (- modules 7)))
-   (cons (add1 (- modules 7)) 1)))
 
 (define (display-qr-bits modules points_map)
   (with-output-to-string

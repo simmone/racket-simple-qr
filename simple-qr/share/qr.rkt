@@ -1,7 +1,5 @@
 #lang racket
 
-(require "point.rkt")
-
 ;; points_map: point pair => color
 ;; point pair: '(1 . 1)
 ;; color: "FF00FF" or "red" or 'transparent
@@ -14,13 +12,13 @@
                    (error_level string?)
                    (modules natural?)
                    (module_width natural?)
-                   (points_map (hash/c POINT? (or/c 1 0)))
-                   (type_points_map (hash/c string? (listof POINT?)))
+                   (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
+                   (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [add-point (-> POINT? (or/c 1 0) string? QR? void?)]
+          [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
           ))
 
 (struct QR
@@ -40,4 +38,3 @@
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point value)
   (hash-set! (QR-type_points_map qr) `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))
-

@@ -2,6 +2,7 @@
 
 (provide (contract-out
           [get-finder-pattern (-> list?)]
+          [locate-finder-pattern (-> natural? list?)]
           ))
 
 (define (get-finder-pattern)
@@ -21,3 +22,10 @@
     (                (3 . 3) (3 . 4) (3 . 5)
                      (4 . 3) (4 . 4) (4 . 5)
                      (5 . 3) (5 . 4) (5 . 5))))
+
+
+(define (locate-finder-pattern modules)
+  (list
+   '(1 . 1)
+   (cons 1 (add1 (- modules 7)))
+   (cons (add1 (- modules 7)) 1)))
