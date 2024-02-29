@@ -1,5 +1,7 @@
 #lang racket
 
+(require "version.rkt")
+
 ;; points_map: point pair => color
 ;; point pair: '(1 . 1)
 ;; color: "FF00FF" or "red" or 'transparent
@@ -18,7 +20,9 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
+          [new-qr (-> string? string? string? string? QR?)]
           [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
+          [version->modules (-> natural? natural?)]
           ))
 
 (struct QR
@@ -34,6 +38,16 @@
          )
         #:transparent
         )
+
+(define (version->modules version)
+  (if (and (>= version 1) (<= version 40))
+      (+ 21 (* 4 (sub1 version)))
+      (error "invalid version!")))
+
+(define (new-qr mode error_level one_color zero_color)
+  (let* ([version (get-version (string-length data) mode error_level)]
+         [modules (version->modules version)])
+    (QR mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point value)

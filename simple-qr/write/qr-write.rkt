@@ -14,8 +14,7 @@
 
 (require "../share/qr.rkt")
 
-(require "version/version.rkt")
-(require "func/func.rkt")
+(require "func/write-func.rkt")
 
 (require "finder-pattern.rkt")
 (require "separator.rkt")
@@ -49,10 +48,7 @@
                   #:output_type [output_type 'png]
                   )
 
-  (let* ([version (get-version (string-length data) mode error_level)]
-         [modules (version->modules version)]
-         [qr (QR mode error_level modules module_width (make-hash) (make-hash) (car color) (cdr color))])
-
+  (let* ([qr (new-qr mode error_level (car color) (cdr color))])
       (draw-finder-pattern qr)
 
       (draw-separator qr)

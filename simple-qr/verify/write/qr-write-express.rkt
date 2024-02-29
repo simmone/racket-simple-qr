@@ -60,7 +60,6 @@
   (define version (get-version (string-length data) mode error_level))
   (get-version-express (string-length data) mode error_level version)
   
-  (define modules (version->modules version))
   (version-to-modules-express version modules)
 
   (let* ([points_map (make-hash)]

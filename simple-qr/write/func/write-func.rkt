@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [version->modules (-> natural? natural?)]
           [transform-points-list (-> list? pair? list?)]
           [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
@@ -13,11 +12,6 @@
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (version->modules version)
-  (if (and (>= version 1) (<= version 40))
-      (+ 21 (* 4 (sub1 version)))
-      (error "invalid version!")))
 
 (define (transform-points-list points_list start_point_pair)
   (map
