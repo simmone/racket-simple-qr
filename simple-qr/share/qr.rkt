@@ -10,6 +10,7 @@
 (provide (contract-out
           [struct QR
                   (
+                   (data string?)
                    (mode string?)
                    (error_level string?)
                    (modules natural?)
@@ -27,6 +28,7 @@
 
 (struct QR
         (
+         (data #:mutable)
          (mode #:mutable)
          (error_level #:mutable)
          (modules #:mutable)
@@ -44,11 +46,11 @@
       (+ 21 (* 4 (sub1 version)))
       (error "invalid version!")))
 
-(define (new-qr mode error_level one_color zero_color)
+(define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)])
-    (QR mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
+    (QR data mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (add-point point val type qr)
-  (hash-set! (QR-points_map qr) point value)
+  (hash-set! (QR-points_map qr) point val)
   (hash-set! (QR-type_points_map qr) `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))
