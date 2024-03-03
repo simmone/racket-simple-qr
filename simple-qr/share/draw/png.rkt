@@ -2,13 +2,11 @@
 
 (require racket/draw)
 
-(require "lib.rkt")
-(require "canvas.rkt")
-
-(require "../func.rkt")
+(require "../lib.rkt")
+(require "../qr.rkt")
 
 (provide (contract-out
-          [draw-png (-> CANVAS? path-string? (or/c 'png 'jpeg 'bmp) void?)]
+          [draw-png (-> QR? path-string? (or/c 'png 'jpeg 'bmp) void?)]
           ))
 
 (define (draw-module dc point_color canvas_fg_color canvas_bg_color place_pair module_width)
@@ -50,19 +48,19 @@
        module_width)
       (loop (cdr points_list)))))
 
-(define (draw-png canvas file_name output_type)
-  (let* ([canvas_width (* (CANVAS-modules canvas) (CANVAS-module_width canvas))]
+(define (draw-png qr file_name output_type)
+  (let* ([canvas_width (* (QR-modules qr) (QR-module_width qr))]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
 
      (send dc set-smoothing 'aligned)
 
-     (when (not (string=? (CANVAS-background_color canvas) "transparent"))
-           (send dc set-pen (hex_color->racket_color (CANVAS-background_color canvas)) 1 'solid)
-           (send dc set-brush (hex_color->racket_color (CANVAS-background_color canvas)) 'solid)
+     (when (not (string=? (QR-zero_color canvas) "transparent"))
+           (send dc set-pen (hex_color->racket_color (QR-zero_color qr)) 1 'solid)
+           (send dc set-brush (hex_color->racket_color (QR-zero_color qr)) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
 
-     (draw-points dc (CANVAS-module_width canvas) (CANVAS-points_map canvas) (CANVAS-foreground_color canvas) (CANVAS-background_color canvas))
+     (draw-points dc (QR-module_width qr) (QR-points_map qr) (QR-one_color qr) (QR-zero_color qr))
     
      (send target save-file file_name output_type)
      

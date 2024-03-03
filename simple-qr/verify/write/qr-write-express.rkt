@@ -1,16 +1,13 @@
 #lang racket
 
-(require "../../write/lib/version/version.rkt")
-(require "get-version-express.rkt")
+(require "../../share/qr.rkt")
+(require "../../share/version.rkt")
 
-(require "../../write/lib/func/func.rkt")
+(require "get-version-express.rkt")
 (require "version-to-module-express.rkt")
 
 (require "../../write/lib/finder-pattern/finder-pattern.rkt")
 (require "finder-pattern-express.rkt")
-
-(require "../../write/lib/separator/separator.rkt")
-(require "separator-express.rkt")
 
 (require racket/runtime-path)
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -55,20 +52,11 @@
       (printf "6. output image type: **~a**[default: ~a]\n" output_type "'png")
       ))
 
-  (let ([
+  (let* ([qr (new-qr data module_width mode error_level (car color) (cdr color))])
+    (get-version-express qr)
 
-  (define version (get-version (string-length data) mode error_level))
-  (get-version-express (string-length data) mode error_level version)
-  
-  (version-to-modules-express version modules)
+    (version-to-modules-express qr)
 
-  (let* ([points_map (make-hash)]
-         [type_map (make-hash)])
-
-    (draw-finder-pattern modules points_map type_map)
-    (finder-pattern-express modules points_map)
-
-    (draw-separator modules points_map type_map)
-    (separator-express modules points_map)
-    )
+    (draw-finder-pattern qr)
+    (finder-pattern-express qr))
   )

@@ -5,6 +5,7 @@
 
 (provide (contract-out
           [transform-points-list (-> list? pair? list?)]
+          [locate-brick (-> natural? pair? pair?)]
 
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
@@ -27,6 +28,10 @@
    (lambda (point)
      (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
    points_list))
+
+(define (locate-brick module_width place_pair)
+  (cons (* (sub1 (cdr place_pair)) module_width)
+        (* (sub1 (car place_pair)) module_width)))
 
 (define (move-point-col point cols)
   (cons
