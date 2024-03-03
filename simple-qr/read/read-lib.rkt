@@ -19,7 +19,6 @@
           [trim-matrix (-> (listof list?) (listof list?))]
           [trim-tail (-> (listof list?) (listof list?))]
           [rotate-and-cut-bmp (-> (listof list?) number? pair? number? number? list?)]
-          [transform-points-list (-> list? pair? list?)]
           [exclude-finder-pattern (-> exact-nonnegative-integer? hash? void?)]
           [exclude-separator (-> exact-nonnegative-integer? hash? void?)]
           [exclude-timing-pattern (-> exact-nonnegative-integer? hash? hash? void?)]
@@ -512,12 +511,6 @@
     (send dc rotate (* (* pi 2) ratio))
     (send dc draw-bitmap origin_bmp (+ (* -1 (cdr point_a)) (* 6 module_width)) (+ (* -1 (car point_a)) (* 6 module_width)))
     (points->bw (bitmap->points dest_bmp) 127)))
-
-(define (transform-points-list points_list start_point_pair)
-  (map
-   (lambda (point)
-     (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
-   points_list))
 
 (define (exclude-finder-pattern modules exclude_points_map)
   (let ([finder_pattern (get-finder-pattern)])

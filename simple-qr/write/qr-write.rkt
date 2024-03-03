@@ -48,7 +48,7 @@
                   #:output_type [output_type 'png]
                   )
 
-  (let* ([qr (new-qr mode error_level (car color) (cdr color))])
+  (let* ([qr (new-qr data module_width mode error_level (car color) (cdr color))])
       (draw-finder-pattern qr)
 
       (draw-separator qr)

@@ -4,6 +4,8 @@
 (require file/sha1)
 
 (provide (contract-out
+          [transform-points-list (-> list? pair? list?)]
+
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -14,13 +16,17 @@
           [points->base1_points (-> list? list?)]
           [move-point-col (-> pair? exact-integer? pair?)]
           [move-point-row (-> pair? exact-integer? pair?)]
-          [display-list (->* (list?) (natural? natural?) string?)]
-          [display-double-list (->* (list? list?) (natural? natural?) string?)]
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           [split-string (-> string? natural? list?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           ))
+
+(define (transform-points-list points_list start_point_pair)
+  (map
+   (lambda (point)
+     (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
+   points_list))
 
 (define (move-point-col point cols)
   (cons

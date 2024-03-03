@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [transform-points-list (-> list? pair? list?)]
           [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? natural? string? string?)]
@@ -12,12 +11,6 @@
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (transform-points-list points_list start_point_pair)
-  (map
-   (lambda (point)
-     (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
-   points_list))
 
 (define (add-terminator content limit_length)
   (let* ([content_length (string-length content)]

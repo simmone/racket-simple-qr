@@ -1,12 +1,29 @@
 #lang racket
 
-(require rackunit/text-ui)
-
-(require rackunit "../../share/func.rkt")
+(require rackunit/text-ui
+         rackunit
+         "../../share/lib.rkt")
 
 (define test-func
   (test-suite 
    "test-func"
+
+   (test-case
+    "test-transform-points"
+
+    (let* ([points_list
+            '((1 . 2) (3 . 4) (4 . 3))]
+           [transformed_points_list #f])
+      
+      (set! transformed_points_list
+            (transform-points-list points_list '(1 . 1)))
+      (check-equal? transformed_points_list '((1 . 2) (3 . 4) (4 . 3)))
+
+      (set! transformed_points_list
+            (transform-points-list points_list '(1 . 2)))
+      (check-equal? transformed_points_list '((1 . 3) (3 . 5) (4 . 4)))
+
+      ))
 
    (test-case
     "test-get-points-between"
@@ -47,15 +64,6 @@
       
       (check-equal? (get-points matrix '((6 . 7) (5 . 6) (4 . 5))) '(0 1 1))
       ))
-
-   (test-case
-    "test-locate-finder-pattern"
-
-    (let ([start_points (locate-finder-pattern 21)])
-      (check-equal? (first start_points) '(1 . 1))
-      (check-equal? (second start_points) '(1 . 15))
-      (check-equal? (third start_points) '(15 . 1)))
-    )
 
    (test-case
     "test-hex_color->racket_color"

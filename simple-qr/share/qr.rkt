@@ -21,7 +21,8 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [new-qr (-> string? string? string? string? QR?)]
+          [new-qr (-> string? string? string? string? string? string? QR?)]
+          [new-default-qr (-> string? QR?)]
           [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
           [version->modules (-> natural? natural?)]
           ))
@@ -51,6 +52,9 @@
          [modules (version->modules version)])
     (QR data mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
 
+(define (new-default-qr data)
+  (new-qr data 5 "B" "H" "black" "write"))
+
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point val)
-  (hash-set! (QR-type_points_map qr) `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))
+  (hash-set! (QR-type_points_map qr) type `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))

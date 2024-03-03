@@ -1,8 +1,8 @@
 #lang racket
 
-(require "../../share/qr.rkt")
-(require "../../share/finder-pattern.rkt")
-(require "../../share/func.rkt")
+(require "../share/lib.rkt"
+         "../share/qr.rkt"
+         "../share/finder-pattern.rkt")
 
 (provide (contract-out
           [draw-finder-pattern (-> QR? void?)]
