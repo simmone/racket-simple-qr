@@ -17,9 +17,11 @@
     (let ([qr (new-default-qr "chenxiao")])
       (draw-finder-pattern qr)
       
-      (check-equal? (QR-points_map qr) (make-hash))
+      (check-equal? (hash-ref (QR-points_map qr) '(1 . 1)) 1)
+
       (check-true (hash-has-key? (QR-type_points_map qr) "finder"))
-      (check-true (QR-type_points_map qr) (make-hash))
+
+      (check-equal? (QR-type_points_map qr) (make-hash))
     ))
    ))
 

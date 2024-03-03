@@ -53,7 +53,7 @@
     (QR data mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
-  (new-qr data 5 "B" "H" "black" "write"))
+  (new-qr data 1 "B" "H" "black" "write"))
 
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point val)
