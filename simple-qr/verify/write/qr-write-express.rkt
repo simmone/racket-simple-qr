@@ -6,7 +6,7 @@
 (require "get-version-express.rkt")
 (require "version-to-module-express.rkt")
 
-(require "../../write/lib/finder-pattern/finder-pattern.rkt")
+(require "../../write/finder-pattern.rkt")
 (require "finder-pattern-express.rkt")
 
 (require racket/runtime-path)

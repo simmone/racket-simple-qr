@@ -2,11 +2,11 @@
 
 (require simple-svg)
 
-(require "lib.rkt")
-(require "canvas.rkt")
+(require "../lib.rkt")
+(require "../qr.rkt")
 
 (provide (contract-out
-          [draw-svg (-> CANVAS? path-string? void?)]
+          [draw-svg (-> QR? path-string? void?)]
           ))
 
 (define (draw-points rect rect_sstyle points_map module_width)
@@ -21,8 +21,8 @@
                    #:at (locate-brick module_width new_point_pair))))
           (loop (cdr points_list)))))
 
-(define (draw-svg canvas file_name)
-  (let* ([canvas_width (* (+ (CANVAS-modules canvas) 8) (CANVAS-module_width canvas))])
+(define (draw-svg qr file_name)
+  (let* ([canvas_width (* (+ (QR-modules qr) 8) (QR-module_width qr))])
     (with-output-to-file
         file_name #:exists 'replace
         (lambda ()
@@ -32,11 +32,11 @@
                    (lambda ()
                      (let ([back_rect (svg-def-shape (new-rect canvas_width canvas_width))]
                            [back_sstyle (sstyle-new)]
-                           [rect (svg-def-shape (new-rect (CANVAS-module_width canvas) (CANVAS-module_width canvas)))]
+                           [rect (svg-def-shape (new-rect (QR-module_width qr) (QR-module_width qr)))]
                            [front_sstyle (sstyle-new)])
                        
-                       (set-SSTYLE-fill! back_sstyle (CANVAS-background_color canvas))
+                       (set-SSTYLE-fill! back_sstyle (QR-zero_color qr))
                        (svg-place-widget back_rect #:style back_sstyle)
                        
-                       (set-SSTYLE-fill! front_sstyle (CANVAS-foreground_color canvas))
-                       (draw-points rect front_sstyle (CANVAS-points_map canvas) (CANVAS-module_width canvas))))))))))
+                       (set-SSTYLE-fill! front_sstyle (QR-one_color qr))
+                       (draw-points rect front_sstyle (QR-points_map qr) (QR-module_width qr))))))))))

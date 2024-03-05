@@ -5,15 +5,16 @@
 (define-runtime-path index_md_file "../express/content/docs/s3_finder_pattern/_index.md")
 (define-runtime-path finder_pattern_bitmap_file "../express/content/docs/s3_finder_pattern/finder_pattern.svg")
 
+(require "../../share/qr.rkt")
 (require "../../share/draw/draw.rkt")
 
 (provide (contract-out
-          [finder-pattern-express (-> natural? hash? void?)]))
+          [finder-pattern-express (-> QR? void?)]))
 
-(define (finder-pattern-express modules points_map)
+(define (finder-pattern-express qr)
   (make-directory* s3_finder_pattern_directory)
 
-  (draw (CANVAS modules 10 points_map "black" "orange") finder_pattern_bitmap_file 'svg)
+  (draw qr finder_pattern_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

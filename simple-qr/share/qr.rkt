@@ -13,6 +13,7 @@
                    (data string?)
                    (mode string?)
                    (error_level string?)
+                   (version natural?)
                    (modules natural?)
                    (module_width natural?)
                    (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
@@ -21,7 +22,7 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [new-qr (-> string? string? string? string? string? string? QR?)]
+          [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
           [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
           [version->modules (-> natural? natural?)]
@@ -32,6 +33,7 @@
          (data #:mutable)
          (mode #:mutable)
          (error_level #:mutable)
+         (version #:mutable)
          (modules #:mutable)
          (module_width #:mutable)
          (points_map #:mutable)
@@ -50,7 +52,7 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)])
-    (QR data mode error_level modules module_width (make-hash) (make-hash) one_color zero_color)))
+    (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
   (new-qr data 1 "B" "H" "black" "write"))

@@ -4,15 +4,12 @@
 (define-runtime-path s1_version_directory "../express/content/docs/s1_version")
 (define-runtime-path index_md_file "../express/content/docs/s1_version/_index.md")
 
-(provide (contract-out
-          [get-version-express (->
-                                natural?
-                                string?
-                                string?
-                                natural?
-                                void?)]))
+(require "../../share/qr.rkt")
 
-(define (get-version-express char_count mode error_level version)
+(provide (contract-out
+          [get-version-express (-> QR? void?)]))
+
+(define (get-version-express qr)
   (make-directory* s1_version_directory)
 
   (with-output-to-file index_md_file
@@ -27,7 +24,7 @@
       (printf "capacity controlled by char count, mode and error level\n\n")
       
       (printf "## Elements\n")
-      (printf "1. char count: ~a\n" char_count)
+      (printf "1. char count: ~a\n" (string-length (QR-data data)))
       (printf "2. mode: ~a\n" mode)
       (printf "3. error_level: ~a\n" error_level)
 

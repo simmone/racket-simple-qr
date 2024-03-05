@@ -55,7 +55,7 @@
 
      (send dc set-smoothing 'aligned)
 
-     (when (not (string=? (QR-zero_color canvas) "transparent"))
+     (when (not (string=? (QR-zero_color qr) "transparent"))
            (send dc set-pen (hex_color->racket_color (QR-zero_color qr)) 1 'solid)
            (send dc set-brush (hex_color->racket_color (QR-zero_color qr)) 'solid)
            (send dc draw-rectangle 0 0 canvas_width canvas_width))
