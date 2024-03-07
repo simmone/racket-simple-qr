@@ -22,7 +22,7 @@
           (loop (cdr points_list)))))
 
 (define (draw-svg qr file_name)
-  (let* ([canvas_width (* (+ (QR-modules qr) 8) (QR-module_width qr))])
+  (let* ([canvas_width (* (+ (QR-modules qr) (* QUIET_ZONE_WIDTH 2)) (QR-module_width qr))])
     (with-output-to-file
         file_name #:exists 'replace
         (lambda ()

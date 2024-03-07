@@ -26,7 +26,7 @@
    "test-func"
 
    (test-case
-    "test-canvas"
+    "test-init-canvas-with-quiet-zone"
     
     (dynamic-wind
         (lambda () (void))
@@ -54,9 +54,9 @@
             (draw qr fill_canvas_svg_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file fill_canvas_png_file)
-          ;(delete-file fill_canvas_svg_file)
+          ;(void)
+          (delete-file fill_canvas_png_file)
+          (delete-file fill_canvas_svg_file)
           )))
 
    (test-case
@@ -90,9 +90,9 @@
             (draw qr transparent_canvas_svg_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file transparent_canvas_png_file)
-          ;(delete-file transparent_canvas_svg_file)
+          ;(void)
+          (delete-file transparent_canvas_png_file)
+          (delete-file transparent_canvas_svg_file)
           )))
 
    (test-case
@@ -108,9 +108,9 @@
             (draw qr normal_canvas_svg_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file normal_canvas_png_file)
-          ;(delete-file normal_canvas_svg_file)
+          ;(void)
+          (delete-file normal_canvas_png_file)
+          (delete-file normal_canvas_svg_file)
           )))
    ))
 

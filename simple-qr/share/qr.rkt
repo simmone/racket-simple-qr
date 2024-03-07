@@ -2,6 +2,8 @@
 
 (require "version.rkt")
 
+(define QUIET_ZONE_WIDTH 4)
+
 ;; points_map: point pair => color
 ;; point pair: '(1 . 1)
 ;; color: "FF00FF" or "red" or 'transparent
@@ -26,6 +28,7 @@
           [new-default-qr (-> string? QR?)]
           [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
           [version->modules (-> natural? natural?)]
+          [QUIET_ZONE_WIDTH natural?]
           ))
 
 (struct QR
@@ -55,7 +58,7 @@
     (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
-  (new-qr data 1 "B" "H" "black" "write"))
+  (new-qr data 1 "B" "H" "black" "white"))
 
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point val)
