@@ -24,11 +24,11 @@
       (printf "capacity controlled by char count, mode and error level\n\n")
       
       (printf "## Elements\n")
-      (printf "1. char count: ~a\n" (string-length (QR-data data)))
-      (printf "2. mode: ~a\n" mode)
-      (printf "3. error_level: ~a\n" error_level)
+      (printf "1. char count: ~a\n" (string-length (QR-data qr)))
+      (printf "2. mode: ~a\n" (QR-mode qr))
+      (printf "3. error_level: ~a\n" (QR-error_level qr))
 
       (printf "## Version\n")
-      (printf "version is **~a**\n" version)
+      (printf "version is **~a**\n" (QR-version qr))
       ))
   )

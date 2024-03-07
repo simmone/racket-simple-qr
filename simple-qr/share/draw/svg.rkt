@@ -13,7 +13,7 @@
   (let loop ([points_list
               (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
     (when (not (null? points_list))
-          (when (string=? (cdar points_list) "1")
+          (when (= (cdar points_list) 1)
                 (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
                   (svg-place-widget
                    rect
