@@ -1,13 +1,13 @@
 #lang racket
 
-(require rackunit/text-ui)
+(require rackunit/text-ui
+         rackunit
+         "../../../share/lib.rkt"
+         "../../../share/qr.rkt"
+         "../../../share/draw/draw.rkt"
+         "../../../share/finder-pattern.rkt"
+         racket/runtime-path)
 
-(require rackunit)
-(require "../../../share/draw/lib.rkt")
-(require "../../../share/draw/draw.rkt")
-(require "../../../share/finder-pattern.rkt")
-
-(require racket/runtime-path)
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
 (define-runtime-path fill_canvas_png_file "fill_canvas.png")
@@ -25,35 +25,13 @@
   (test-suite 
    "test-func"
 
-   (test-case 
-    "test-locate-brick"
-    
-    (let ([place_pair (locate-brick 1 (cons 1 1))])
-      (check-equal? place_pair '(0 . 0)))
-
-    (let ([place_pair (locate-brick 2 (cons 1 1))])
-      (check-equal? place_pair '(0 . 0)))
-
-    (let ([place_pair (locate-brick 2 (cons 2 2))])
-      (check-equal? place_pair '(2 . 2)))
-
-    (let ([place_pair (locate-brick 2 (cons 5 5))])
-      (check-equal? place_pair '(8 . 8)))
-
-    (let ([place_pair (locate-brick 3 (cons 5 5))])
-      (check-equal? place_pair '(12 . 12)))
-
-    (let ([place_pair (locate-brick 3 (cons 5 7))])
-      (check-equal? place_pair '(18 . 12)))
-    )
-   
    (test-case
     "test-canvas"
     
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
+          (let ([qr (QR 20 10 (make-hash) "black" "white")])
             (draw canvas canvas_png_file 'png)
             (draw canvas canvas_svg_file 'svg)
             ))
