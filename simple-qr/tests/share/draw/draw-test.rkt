@@ -31,14 +31,14 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([qr (QR 20 10 (make-hash) "black" "white")])
-            (draw canvas canvas_png_file 'png)
-            (draw canvas canvas_svg_file 'svg)
+          (let ([qr (new-default-qr "")])
+            (draw qr canvas_png_file 'png)
+            (draw qr canvas_svg_file 'svg)
             ))
         (lambda ()
-          ;(void)
-          (delete-file canvas_png_file)
-          (delete-file canvas_svg_file)
+          (void)
+          ;(delete-file canvas_png_file)
+          ;(delete-file canvas_svg_file)
           )))
 
    (test-case
@@ -47,15 +47,16 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
-            (init-color canvas "red")
-            (draw canvas fill_canvas_png_file 'png)
-            (draw canvas fill_canvas_svg_file 'svg)
+          (let ([qr (new-default-qr "chenxiao")])
+            (set-QR-module_width! qr 20)
+
+            (draw qr fill_canvas_png_file 'png)
+            (draw qr fill_canvas_svg_file 'svg)
             ))
         (lambda ()
-          ;(void)
-          (delete-file fill_canvas_png_file)
-          (delete-file fill_canvas_svg_file)
+          (void)
+          ;(delete-file fill_canvas_png_file)
+          ;(delete-file fill_canvas_svg_file)
           )))
 
    (test-case
@@ -64,15 +65,16 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 5 20 (make-hash) "black" "white")])
-            (init-color canvas "pattern")
-            (draw canvas pattern_canvas_png_file 'png)
-            (draw canvas pattern_canvas_svg_file 'svg)
+          (let ([qr (new-default-qr "chenxiao")])
+            (set-QR-module_width! qr 20)
+
+            (draw qr pattern_canvas_png_file 'png)
+            (draw qr pattern_canvas_svg_file 'svg)
             ))
         (lambda ()
           ;(void)
           (delete-file pattern_canvas_png_file)
-          ;(delete-file pattern_canvas_svg_file)
+          (delete-file pattern_canvas_svg_file)
           )))
    
    (test-case
@@ -81,14 +83,16 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 20 10 (make-hash) "black" "transparent")])
-            (draw canvas transparent_canvas_png_file 'png)
-            (draw canvas transparent_canvas_svg_file 'svg)
+          (let ([qr (new-default-qr "chenxiao")])
+            (set-QR-module_width! qr 20)
+
+            (draw qr transparent_canvas_png_file 'png)
+            (draw qr transparent_canvas_svg_file 'svg)
             ))
         (lambda ()
-          ;(void)
-          (delete-file transparent_canvas_png_file)
-          (delete-file transparent_canvas_svg_file)
+          (void)
+          ;(delete-file transparent_canvas_png_file)
+          ;(delete-file transparent_canvas_svg_file)
           )))
 
    (test-case
@@ -97,25 +101,16 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([canvas (CANVAS 20 10 (make-hash) "black" "white")])
+          (let ([qr (new-default-qr "chenxiao")])
+            (set-QR-module_width! qr 20)
 
-            (init-color canvas "pattern")
-            
-            (fill-color canvas (first (get-finder-pattern)) "red")
-            (fill-color canvas (second (get-finder-pattern)) "white")
-            (fill-color canvas (third (get-finder-pattern)) "red")
-
-            (draw canvas normal_canvas_png_file 'png)
-            (draw canvas normal_canvas_svg_file 'svg)
-            ;(draw canvas normal_canvas_jpg_file 'jpeg)
-            ;(draw canvas normal_canvas_bmp_file 'bmp)
+            (draw qr normal_canvas_png_file 'png)
+            (draw qr normal_canvas_svg_file 'svg)
             ))
         (lambda ()
           (void)
           ;(delete-file normal_canvas_png_file)
           ;(delete-file normal_canvas_svg_file)
-          ;(delete-file normal_canvas_jpg_file)
-          ;(delete-file normal_canvas_bmp_file)
           )))
    ))
 
