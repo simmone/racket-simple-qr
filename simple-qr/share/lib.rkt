@@ -26,12 +26,12 @@
 (define (transform-points-list points_list start_point_pair)
   (map
    (lambda (point)
-     (cons (+ (car start_point_pair) (sub1 (car point))) (+ (cdr start_point_pair) (sub1 (cdr point)))))
+     (cons (+ (car start_point_pair) (car point)) (+ (cdr start_point_pair) (cdr point))))
    points_list))
 
 (define (locate-brick module_width place_pair)
-  (cons (* (sub1 (cdr place_pair)) module_width)
-        (* (sub1 (car place_pair)) module_width)))
+  (cons (* (cdr place_pair) module_width)
+        (* (car place_pair) module_width)))
 
 (define (move-point-col point cols)
   (cons

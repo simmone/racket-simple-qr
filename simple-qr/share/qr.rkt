@@ -20,7 +20,7 @@
                    (module_width natural?)
                    (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
                    (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
-                   (type_color_map (hash/c (or/c "quiet_zone") string?))
+                   (type_color_map (hash/c (or/c "canvas" "qr_canvas") string?))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )

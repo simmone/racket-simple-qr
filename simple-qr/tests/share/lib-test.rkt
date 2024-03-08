@@ -16,11 +16,11 @@
            [transformed_points_list #f])
       
       (set! transformed_points_list
-            (transform-points-list points_list '(1 . 1)))
+            (transform-points-list points_list '(0 . 0)))
       (check-equal? transformed_points_list '((1 . 2) (3 . 4) (4 . 3)))
 
       (set! transformed_points_list
-            (transform-points-list points_list '(1 . 2)))
+            (transform-points-list points_list '(0 . 1)))
       (check-equal? transformed_points_list '((1 . 3) (3 . 5) (4 . 4)))
 
       ))
@@ -28,22 +28,22 @@
    (test-case 
     "test-locate-brick"
     
-    (let ([place_pair (locate-brick 1 (cons 1 1))])
+    (let ([place_pair (locate-brick 1 (cons 0 0))])
+      (check-equal? place_pair '(0 . 0)))
+
+    (let ([place_pair (locate-brick 2 (cons 0 0))])
       (check-equal? place_pair '(0 . 0)))
 
     (let ([place_pair (locate-brick 2 (cons 1 1))])
-      (check-equal? place_pair '(0 . 0)))
-
-    (let ([place_pair (locate-brick 2 (cons 2 2))])
       (check-equal? place_pair '(2 . 2)))
 
-    (let ([place_pair (locate-brick 2 (cons 5 5))])
+    (let ([place_pair (locate-brick 2 (cons 4 4))])
       (check-equal? place_pair '(8 . 8)))
 
-    (let ([place_pair (locate-brick 3 (cons 5 5))])
+    (let ([place_pair (locate-brick 3 (cons 4 4))])
       (check-equal? place_pair '(12 . 12)))
 
-    (let ([place_pair (locate-brick 3 (cons 5 7))])
+    (let ([place_pair (locate-brick 3 (cons 4 6))])
       (check-equal? place_pair '(18 . 12)))
     )
    
