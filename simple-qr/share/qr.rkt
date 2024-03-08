@@ -20,6 +20,7 @@
                    (module_width natural?)
                    (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
                    (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
+                   (type_color_map (hash/c (or/c "quiet_zone") (cons/c string? string?)))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
@@ -41,6 +42,7 @@
          (module_width #:mutable)
          (points_map #:mutable)
          (type_points_map #:mutable)
+         (type_color_map #:mutable)
          (one_color #:mutable)
          (zero_color #:mutable)
          )
@@ -55,7 +57,7 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)])
-    (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
+    (QR data mode error_level version modules module_width (make-hash) (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
   (new-qr data 1 "B" "H" "black" "white"))

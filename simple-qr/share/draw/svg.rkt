@@ -30,12 +30,16 @@
                   (svg-out
                    canvas_width canvas_width
                    (lambda ()
-                     (let ([back_rect (svg-def-shape (new-rect canvas_width canvas_width))]
+                     (let (
+                           [back_rect (svg-def-shape (new-rect canvas_width canvas_width))]
                            [back_sstyle (sstyle-new)]
                            [rect (svg-def-shape (new-rect (QR-module_width qr) (QR-module_width qr)))]
-                           [front_sstyle (sstyle-new)])
-                       
-                       (set-SSTYLE-fill! back_sstyle (QR-zero_color qr))
+                           [front_sstyle (sstyle-new)]
+                           [quiet_zone_color
+                            (hash-ref (QR-type_color_map qr) "quite_zone" (QR-zero_color qr))]
+                           )
+
+                       (set-SSTYLE-fill! back_sstyle background_color)
                        (svg-place-widget back_rect #:style back_sstyle)
                        
                        (set-SSTYLE-fill! front_sstyle (QR-one_color qr))
