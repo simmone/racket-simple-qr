@@ -20,7 +20,7 @@
                    (module_width natural?)
                    (points_map (hash/c (cons/c natural? natural?) (or/c 1 0)))
                    (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
-                   (type_color_map (hash/c (or/c "quiet_zone") (cons/c string? string?)))
+                   (type_color_map (hash/c (or/c "quiet_zone") string?))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
@@ -60,7 +60,7 @@
     (QR data mode error_level version modules module_width (make-hash) (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
-  (new-qr data 1 "B" "H" "black" "white"))
+  (new-qr data 20 "B" "H" "black" "white"))
 
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point val)

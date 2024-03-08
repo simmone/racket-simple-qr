@@ -36,10 +36,10 @@
                            [rect (svg-def-shape (new-rect (QR-module_width qr) (QR-module_width qr)))]
                            [front_sstyle (sstyle-new)]
                            [quiet_zone_color
-                            (hash-ref (QR-type_color_map qr) "quite_zone" (QR-zero_color qr))]
+                            (hash-ref (QR-type_color_map qr) "quiet_zone" (QR-zero_color qr))]
                            )
 
-                       (set-SSTYLE-fill! back_sstyle background_color)
+                       (set-SSTYLE-fill! back_sstyle quiet_zone_color)
                        (svg-place-widget back_rect #:style back_sstyle)
                        
                        (set-SSTYLE-fill! front_sstyle (QR-one_color qr))
