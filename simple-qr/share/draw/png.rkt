@@ -50,15 +50,29 @@
 
 (define (draw-png qr file_name output_type)
   (let* ([canvas_width (* (+ (QR-modules qr) (* QUIET_ZONE_WIDTH 2)) (QR-module_width qr))]
+         [qr_width (* (QR-modules qr) (QR-module_width qr))]
          [target (make-bitmap canvas_width canvas_width)]
          [dc (new bitmap-dc% [bitmap target])])
 
     (send dc set-smoothing 'aligned)
 
-    (when (not (string=? (QR-zero_color qr) "transparent"))
-      (send dc set-pen (hex_color->racket_color (QR-zero_color qr)) 1 'solid)
-      (send dc set-brush (hex_color->racket_color (QR-zero_color qr)) 'solid)
-      (send dc draw-rectangle 0 0 canvas_width canvas_width))
+    (let (
+          [canvas_color
+           (hash-ref (QR-type_color_map qr) "canvas" (QR-zero_color qr))]
+          [qr_canvas_color
+           (hash-ref (QR-type_color_map qr) "qr_canvas" (QR-zero_color qr))]
+          )
+
+      (when (not (string=? canvas_color "transparent"))
+        (send dc set-pen (hex_color->racket_color canvas_color) 1 'solid)
+        (send dc set-brush (hex_color->racket_color canvas_color) 'solid))
+      (send dc draw-rectangle 0 0 canvas_width canvas_width)
+
+      (when (not (string=? qr_canvas_color "transparent"))
+        (send dc set-pen (hex_color->racket_color qr_canvas_color) 1 'solid)
+        (send dc set-brush (hex_color->racket_color qr_canvas_color) 'solid))
+      (let ([qr_start_point (locate-brick (QR-module_width qr) (cons QUIET_ZONE_WIDTH QUIET_ZONE_WIDTH))])
+        (send dc draw-rectangle (car qr_start_point) (cdr qr_start_point) qr_width qr_width)))
 
     (draw-points dc (QR-module_width qr) (QR-points_map qr) (QR-one_color qr) (QR-zero_color qr))
     
