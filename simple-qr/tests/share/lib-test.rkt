@@ -46,7 +46,19 @@
     (let ([place_pair (locate-brick 3 (cons 4 6))])
       (check-equal? place_pair '(18 . 12)))
     )
-   
+
+   (test-case
+    "test-hex_color->racket_color"
+
+    (let ([racket_color (hex_color->racket_color "#9933cc")])
+      (check-equal? (send racket_color red) 153)
+      (check-equal? (send racket_color green) 51)
+      (check-equal? (send racket_color blue) 204))
+
+    (let ([racket_color (hex_color->racket_color "red")])
+      (check-equal? racket_color "red"))
+    )
+
    (test-case
     "test-get-points-between"
 
@@ -86,18 +98,6 @@
       
       (check-equal? (get-points matrix '((6 . 7) (5 . 6) (4 . 5))) '(0 1 1))
       ))
-
-   (test-case
-    "test-hex_color->racket_color"
-
-    (let ([racket_color (hex_color->racket_color "#9933cc")])
-      (check-equal? (send racket_color red) 153)
-      (check-equal? (send racket_color green) 51)
-      (check-equal? (send racket_color blue) 204))
-
-    (let ([racket_color (hex_color->racket_color "red")])
-      (check-equal? racket_color "red"))
-    )
 
    ))
 

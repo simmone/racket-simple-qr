@@ -6,6 +6,7 @@
 (provide (contract-out
           [transform-points-list (-> list? pair? list?)]
           [locate-brick (-> natural? pair? pair?)]
+          [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
 
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical) list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
@@ -20,7 +21,6 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           [split-string (-> string? natural? list?)]
-          [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           ))
 
 (define (transform-points-list points_list start_point_pair)
@@ -32,6 +32,12 @@
 (define (locate-brick module_width place_pair)
   (cons (* (cdr place_pair) module_width)
         (* (car place_pair) module_width)))
+
+(define (hex_color->racket_color hex_color)
+  (if (regexp-match #px"^#([0-9a-zA-Z]{6})$" hex_color)
+      (let ([rgb_list (bytes->list (hex-string->bytes (substring hex_color 1)))])
+        (make-object color% (first rgb_list) (second rgb_list) (third rgb_list)))
+      hex_color))
 
 (define (move-point-col point cols)
   (cons
@@ -210,9 +216,3 @@
         (if (> (string-length loop_str) line_count)
             (loop (substring loop_str line_count) (printf "~a\n" (substring loop_str 0 line_count)))
             (printf "~a\n" loop_str))))))
-
-(define (hex_color->racket_color hex_color)
-  (if (regexp-match #px"^#([0-9a-zA-Z]{6})$" hex_color)
-      (let ([rgb_list (bytes->list (hex-string->bytes (substring hex_color 1)))])
-        (make-object color% (first rgb_list) (second rgb_list) (third rgb_list)))
-      hex_color))
