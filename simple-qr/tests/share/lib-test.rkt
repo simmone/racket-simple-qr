@@ -63,23 +63,32 @@
     "test-get-points-between"
 
     (check-equal?
-     (get-points-between '(1 . 1) '(1 . 10) #:direction 'horizontal)
-     '((1 . 1) (1 . 2) (1 . 3) (1 . 4) (1 . 5) (1 . 6) (1 . 7) (1 . 8) (1 . 9) (1 . 10)))
+     (get-points-between '(0 . 0) '(3 . 3) #:direction 'cross)
+     '(
+       (0 . 0) (0 . 1) (0 . 2) (0 . 3)
+       (1 . 0) (1 . 1) (1 . 2) (1 . 3)
+       (2 . 0) (2 . 1) (2 . 2) (2 . 3)
+       (3 . 0) (3 . 1) (3 . 2) (3 . 3)
+       ))
 
     (check-equal?
-     (get-points-between '(1 . 1) '(1 . 10) #:direction 'vertical)
+     (get-points-between '(0 . 0) '(0 . 9) #:direction 'horizontal)
+     '((0 . 0) (0 . 1) (0 . 2) (0 . 3) (0 . 4) (0 . 5) (0 . 6) (0 . 7) (0 . 8) (0 . 9)))
+
+    (check-equal?
+     (get-points-between '(0 . 0) '(0 . 9) #:direction 'vertical)
      '())
 
     (check-equal?
-     (get-points-between '(1 . 1) '(5 . 1) #:direction 'vertical)
-     '((1 . 1) (2 . 1) (3 . 1) (4 . 1) (5 . 1)))
+     (get-points-between '(0 . 0) '(4 . 0) #:direction 'vertical)
+     '((0 . 0) (1 . 0) (2 . 0) (3 . 0) (4 . 0)))
 
     (check-equal?
-     (get-points-between '(1 . 1) '(5 . 1) #:direction 'horizontal)
+     (get-points-between '(0 . 0) '(4 . 0) #:direction 'horizontal)
      '())
 
     (check-equal?
-     (get-points-between '(1 . 1) '(5 . 2) #:direction 'vertical)
+     (get-points-between '(0 . 0) '(4 . 1) #:direction 'vertical)
      '())
     )
    

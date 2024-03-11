@@ -55,7 +55,7 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)])
-    (QR data mode error_level version modules module_width (make-hash) (make-hash) (make-hash) one_color zero_color)))
+    (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
   (new-qr data 20 "B" "H" "black" "white"))
