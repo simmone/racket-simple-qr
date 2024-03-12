@@ -1,5 +1,6 @@
 #lang racket
 
+(require "lib.rkt")
 (require "version.rkt")
 
 (define QUIET_ZONE_WIDTH 4)
@@ -26,7 +27,7 @@
                   ]
           [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
-          [add-point (-> (cons/c natural? natural?) (or/c 1 0) string? QR? void?)]
+          [fill-points (-> QR? (listof (cons/c natural? natural?)) (or/c 0 1) string? void?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_WIDTH natural?]
           ))
@@ -51,9 +52,12 @@
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)]
          [modules_with_quiet_zone (+ modules (* QUIET_ZONE_WIDTH 2))]
-         [points (get-points-between '(0 . 0) (cons (sub1 modules_with_quiet_zone) (sub1 modules_with_quiet_zone)))])
+         [qr (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)]
+         [points (get-points-between '(0 . 0) (cons (sub1 modules_with_quiet_zone) (sub1 modules_with_quiet_zone)) #:direction 'cross)])
+    
+    (fill-points qr points 0 zero_color)
 
-    (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
+    qr))
 
 (define (new-default-qr data)
   (new-qr data 20 "B" "H" "black" "white"))
@@ -63,6 +67,9 @@
       (+ 21 (* 4 (sub1 version)))
       (error "invalid version!")))
 
-(define (add-point point val type qr)
-  (hash-set! (QR-points_map qr) point val)
-  (hash-set! (QR-type_points_map qr) type `(,@(hash-ref (QR-type_points_map qr) type '()) ,point)))
+(define (fill-points qr points val color)
+  (for-each
+   (lambda (point)
+     (hash-set! (QR-points_val_map qr) point val)
+     (hash-set! (QR-points_color_map qr) point color))
+   points))

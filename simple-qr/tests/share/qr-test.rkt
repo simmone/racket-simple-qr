@@ -18,6 +18,16 @@
     (check-equal? (version->modules 39) 173)    
     (check-equal? (version->modules 40) 177)
     )
+   
+   (test-case
+    "test-new-qr"
+    
+    (let ([qr (new-default-qr "chenxiao")])
+      (check-equal? (hash-count (QR-points_val_map qr)) 1089)
+      (check-equal? (hash-count (QR-points_color_map qr)) 1089)
+      )
+    )
+
    ))
 
 (run-tests test-qr)
