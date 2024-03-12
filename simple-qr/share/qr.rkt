@@ -47,18 +47,21 @@
         #:transparent
         )
 
-(define (version->modules version)
-  (if (and (>= version 1) (<= version 40))
-      (+ 21 (* 4 (sub1 version)))
-      (error "invalid version!")))
-
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
-         [modules (version->modules version)])
+         [modules (version->modules version)]
+         [modules_with_quiet_zone (+ modules (* QUIET_ZONE_WIDTH 2))]
+         [points (get-points-between '(0 . 0) (cons (sub1 modules_with_quiet_zone) (sub1 modules_with_quiet_zone)))])
+
     (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)))
 
 (define (new-default-qr data)
   (new-qr data 20 "B" "H" "black" "white"))
+
+(define (version->modules version)
+  (if (and (>= version 1) (<= version 40))
+      (+ 21 (* 4 (sub1 version)))
+      (error "invalid version!")))
 
 (define (add-point point val type qr)
   (hash-set! (QR-points_map qr) point val)

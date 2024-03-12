@@ -56,17 +56,24 @@
             (eq? direction 'cross)
             (<= (car start_point) (car end_point))
             (<= (cdr start_point) (cdr end_point)))
-           #t])])
+           #t]
+          [else
+           #f])])
+        
     (if (not is_valid?)
         '()
-        (let loop-y ([loop_y (cdr start_point)]
-                   [result_points '()])
-              (if (<= loop_y (cdr end_point))
-                  (loop-y (car end_point) (add1 loop_y) (cons (cons (car end_point) loop_y) result_points))
-                  (let loop-x ([loop_x (car start_point)])
-                    (if (<= loop_x (car end_point))
-                      (loop (add1 loop_x) (cdr start_point) (cons (cons loop_x loop_y) result_points))
-                      (reverse result_points)))))))
+        (let loop-x ([loop_x (car start_point)]
+                     [result_points '()])
+          (if (<= loop_x (car end_point))
+              (loop-x (add1 loop_x)
+                      (append
+                       result_points
+                       (let loop-y ([loop_y (cdr start_point)]
+                                    [y_result '()])
+                         (if (<= loop_y (cdr end_point))
+                             (loop-y (add1 loop_y) (cons (cons loop_x loop_y) y_result))
+                             (reverse y_result)))))
+              result_points)))))
 
 (define (move-point-col point cols)
   (cons
