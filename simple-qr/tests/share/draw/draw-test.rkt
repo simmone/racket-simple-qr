@@ -32,9 +32,6 @@
         (lambda () (void))
         (lambda ()
           (let ([qr (new-default-qr "")])
-            (hash-set! (QR-type_color_map qr) "canvas" "gray")
-            (hash-set! (QR-type_color_map qr) "qr_canvas" "orange")
-
             (draw qr canvas_png_file 'png)
             (draw qr canvas_svg_file 'svg)
             ))

@@ -25,6 +25,7 @@
     (let ([qr (new-default-qr "chenxiao")])
       (check-equal? (hash-count (QR-points_val_map qr)) 1089)
       (check-equal? (hash-count (QR-points_color_map qr)) 1089)
+      (check-equal? (hash-ref (QR-points_color_map qr) '(0 . 0)) "white")
       )
     )
 
