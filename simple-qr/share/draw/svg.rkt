@@ -9,7 +9,7 @@
           [draw-svg (-> QR? path-string? void?)]
           ))
 
-(define (draw-points rect rect_sstyle points_map module_width)
+(define (draw-points rect points_color_map module_width)
   (let loop ([points_list
               (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
     (when (not (null? points_list))
@@ -31,12 +31,7 @@
                    canvas_width canvas_width
                    (lambda ()
                      (let (
-                           [canvas_sstyle (sstyle-new)]
-                           [qr_rect (svg-def-shape (new-rect qr_width qr_width))]
+                           [brick_rect (svg-def-shape (new-rect qr_width qr_width))]
                            )
 
-                       (set-SSTYLE-fill! canvas_sstyle canvas_color)
-                       (svg-place-widget canvas_rect #:style canvas_sstyle)
-
-                       (set-SSTYLE-fill! front_sstyle (QR-one_color qr))
-                       (draw-points qr_rect front_sstyle (QR-points_map qr) (QR-module_width qr))))))))))
+                       (draw-points brick_rect (QR-points_color_map qr) (QR-module_width qr))))))))))
