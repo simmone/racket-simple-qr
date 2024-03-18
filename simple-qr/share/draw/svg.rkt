@@ -9,19 +9,21 @@
           [draw-svg (-> QR? path-string? void?)]
           ))
 
-(define (draw-points rect qr)
-
 (define (draw-svg qr file_name)
   (with-output-to-file
       file_name #:exists 'replace
       (lambda ()
         (printf "~a"
                 (svg-out
-                 (QR-modules_with_quiet_zone qr) (QR-modules_with_quiet_zone qr)
+                 (QR-canvas_width qr) (QR-canvas_width qr)
                  (lambda ()
-                   (let (
-                         [basic_brick (svg-def-shape (new-rect (QR-modules_with_quiet_zone qr) (QR-modules_with_quiet_zone qr)))]
-                         )
+                   (let ([basic_brick (svg-def-shape (new-rect (QR-module_width qr) (QR-module_width qr)))]
+                         [color_style_map (make-hash)])
+                     
+                     (for-each
+                      (lambda (color)
+                        (hash-set! color_style_map color #f))
+                      (hash-values (QR-points_color_map qr)))
 
                      (let loop ([points 
                                  (get-points-between '(0 . 0) (cons (sub1 (QR-modules_with_quiet_zone qr)) (sub1 (QR-modules_with_quiet_zone qr))))])

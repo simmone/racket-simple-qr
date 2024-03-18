@@ -19,6 +19,7 @@
                    (version natural?)
                    (modules natural?)
                    (module_width natural?)
+                   (canvas_width natural?)
                    (points_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
                    (points_color_map (hash/c (cons/c natural? natural?) string?))
                    (one_color string?)
@@ -40,6 +41,7 @@
          (version #:mutable)
          (modules #:mutable)
          (module_width #:mutable)
+         (canvas_width #:mutable)
          (points_val_map #:mutable)
          (points_color_map #:mutable)
          (one_color #:mutable)
@@ -51,9 +53,9 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)]
-         [modules_with_quiet_zone (+ modules (* QUIET_ZONE_WIDTH 2))]
-         [qr (QR data mode error_level version modules module_width (make-hash) (make-hash) one_color zero_color)]
-         [points (get-points-between '(0 . 0) (cons (sub1 modules_with_quiet_zone) (sub1 modules_with_quiet_zone)) #:direction 'cross)])
+         [canvas_width (+ modules (* QUIET_ZONE_WIDTH 2))]
+         [qr (QR data mode error_level version modules module_width canvas_width (make-hash) (make-hash) one_color zero_color)]
+         [points (get-points-between '(0 . 0) (cons (sub1 canvas_width) (sub1 canvas_width)) #:direction 'cross)])
     
     (fill-points qr points 0 zero_color)
 
