@@ -10,28 +10,26 @@
           ))
 
 (define (draw-points rect qr)
-  (let loop ([points_list
-              (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
-    (when (not (null? points_list))
-          (when (= (cdar points_list) 1)
-                (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
-                  (svg-place-widget
-                   rect
-                   #:style rect_sstyle
-                   #:at (locate-brick module_width new_point_pair))))
-          (loop (cdr points_list)))))
 
 (define (draw-svg qr file_name)
-  (let ([canvas_width (* (+ (QR-modules qr) (* QUIET_ZONE_WIDTH 2)) (QR-module_width qr))])
-    (with-output-to-file
-        file_name #:exists 'replace
-        (lambda ()
-          (printf "~a"
-                  (svg-out
-                   canvas_width canvas_width
-                   (lambda ()
-                     (let (
-                           [brick_rect (svg-def-shape (new-rect qr_width qr_width))]
-                           )
+  (with-output-to-file
+      file_name #:exists 'replace
+      (lambda ()
+        (printf "~a"
+                (svg-out
+                 (QR-modules_with_quiet_zone qr) (QR-modules_with_quiet_zone qr)
+                 (lambda ()
+                   (let (
+                         [basic_brick (svg-def-shape (new-rect (QR-modules_with_quiet_zone qr) (QR-modules_with_quiet_zone qr)))]
+                         )
 
-                       (draw-points brick_rect qr)))))))))
+                     (let loop ([points 
+                                 (get-points-between '(0 . 0) (cons (sub1 (QR-modules_with_quiet_zone qr)) (sub1 (QR-modules_with_quiet_zone qr))))])
+                       (when (not (null? points))
+                         (when (= (cdar points_list) 1)
+                           (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
+                             (svg-place-widget
+                              rect
+                              #:style rect_sstyle
+                              #:at (locate-brick module_width new_point_pair))))
+                         (loop (cdr points_list)))))))))))
