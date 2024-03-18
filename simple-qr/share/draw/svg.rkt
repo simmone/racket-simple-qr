@@ -9,7 +9,7 @@
           [draw-svg (-> QR? path-string? void?)]
           ))
 
-(define (draw-points rect points_color_map module_width)
+(define (draw-points rect qr)
   (let loop ([points_list
               (sort (hash->list points_map) (lambda (c d) (< (+ (caar c) (cdar c)) (+ (caar d) (cdar d)))))])
     (when (not (null? points_list))
@@ -34,4 +34,4 @@
                            [brick_rect (svg-def-shape (new-rect qr_width qr_width))]
                            )
 
-                       (draw-points brick_rect (QR-points_color_map qr) (QR-module_width qr))))))))))
+                       (draw-points brick_rect qr)))))))))
