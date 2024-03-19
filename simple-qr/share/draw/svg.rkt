@@ -25,8 +25,14 @@
                         (hash-set! color_style_map color #f))
                       (hash-values (QR-points_color_map qr)))
 
-                     (let loop ([points 
-                                 (get-points-between '(0 . 0) (cons (sub1 (QR-modules_with_quiet_zone qr)) (sub1 (QR-modules_with_quiet_zone qr))))])
+                     (for-each
+                      (lambda (color)
+                        (let ([sstyle (new-sstyle)])
+                          (set-SSTYLE-fill! _sstyle color)
+                          (hash-set! color_style_map color sstyle)))
+                      (hash-keys color_style_map))
+
+                     (let loop ([points (QR-points qr)])
                        (when (not (null? points))
                          (when (= (cdar points_list) 1)
                            (let ([new_point_pair (cons (+ (cdaar points_list) 4) (+ (caaar points_list) 4))])
