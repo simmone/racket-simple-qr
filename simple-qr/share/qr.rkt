@@ -29,6 +29,7 @@
                   ]
           [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
+          [new-canvas-qr (-> string? QR?)]
           [fill-points (-> QR? (listof (cons/c natural? natural?)) (or/c 0 1) string? void?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_WIDTH natural?]
@@ -65,6 +66,10 @@
 
 (define (new-default-qr data)
   (new-qr data 20 "B" "H" "black" "white"))
+
+(define (new-canvas-qr canvas_width)
+  (let ([points (get-points-between '(0 . 0) (cons (sub1 canvas_width) (sub1 canvas_width)) #:direction 'cross)])
+    (QR "" 0 0 0 canvas_width points (make-hash) (make-hash) "black" "white")))
 
 (define (version->modules version)
   (if (and (>= version 1) (<= version 40))
