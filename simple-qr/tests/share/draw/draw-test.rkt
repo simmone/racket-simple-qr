@@ -2,6 +2,7 @@
 
 (require rackunit/text-ui
          rackunit
+         "../../../share/draw/matrix.rkt"
          "../../../share/lib.rkt"
          "../../../share/qr.rkt"
          "../../../share/draw/draw.rkt"
@@ -28,14 +29,15 @@
    "test-func"
 
    (test-case
-    "test-init-canvas-with-quiet-zone"
+    "test-draw-1X1"
     
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([qr (new-default-qr "")])
-            (draw qr canvas_png_file 'png)
-            (draw qr canvas_svg_file 'svg)
+          (let ([matrix (new-matrix 1)])
+            (fill-points matrix '((0 . 0)) "black")
+            (draw matrix png_1X1_file 'png)
+            (draw matrix svg_1X1_file 'svg)
             ))
         (lambda ()
           (void)

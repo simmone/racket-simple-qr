@@ -1,8 +1,9 @@
 #lang racket
 
 (require "../lib.rkt")
-(require "../qr.rkt")
+(require "../matrix.rkt")
 
+(require "matrix.rkt")
 (require "png.rkt")
 (require "svg.rkt")
 
@@ -10,13 +11,13 @@
 ;; point pair: '(1 . 1)
 ;; color: FF00FF or red or transparent
 (provide (contract-out
-          [draw (-> QR? path-string? (or/c 'svg 'png 'jpeg 'bmp) void?)]
+          [draw (-> MATRIX? path-string? (or/c 'svg 'png 'jpeg 'bmp) void?)]
           ))
 
-(define (draw qr file_name output_type)
+(define (draw matrix file_name output_type)
   (cond
    [(eq? output_type 'svg)
-    (draw-svg qr file_name)]
+    (draw-svg matrix file_name)]
    [else
-    (draw-png qr file_name output_type)]
+    (draw-png matrix file_name output_type)]
    ))

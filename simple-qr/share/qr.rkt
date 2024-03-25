@@ -1,4 +1,4 @@
-#lang racket
+b#lang racket
 
 (require "lib.rkt")
 (require "version.rkt")
@@ -30,7 +30,6 @@
           [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
           [new-canvas-qr (-> string? QR?)]
-          [fill-points (-> QR? (listof (cons/c natural? natural?)) (or/c 0 1) string? void?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_WIDTH natural?]
           ))
@@ -75,10 +74,3 @@
   (if (and (>= version 1) (<= version 40))
       (+ 21 (* 4 (sub1 version)))
       (error "invalid version!")))
-
-(define (fill-points qr points val color)
-  (for-each
-   (lambda (point)
-     (hash-set! (QR-points_val_map qr) point val)
-     (hash-set! (QR-points_color_map qr) point color))
-   points))
