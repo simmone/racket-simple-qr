@@ -2,9 +2,8 @@
 
 (require simple-svg)
 
-(require "matrix.rkt")
-(require "../lib.rkt")
-(require "../matrix.rkt")
+(require "matrix.rkt"
+         "../lib.rkt")
 
 (provide (contract-out
           [draw-svg (-> MATRIX? path-string? void?)]
@@ -29,8 +28,8 @@
 
               (for-each
                (lambda (color)
-                 (let ([sstyle (new-sstyle)])
-                   (set-SSTYLE-fill! _sstyle color)
+                 (let ([sstyle (sstyle-new)])
+                   (set-SSTYLE-fill! sstyle color)
                    (hash-set! color_style_map color sstyle)))
                (hash-keys color_style_map))
 
@@ -43,5 +42,5 @@
                       (svg-place-widget
                        basic_brick
                        #:style style
-                       #:at (locate-brick module_width point)))
+                       #:at (locate-brick (MATRIX-brick_width matrix) point)))
                   (loop (cdr points)))))))))))

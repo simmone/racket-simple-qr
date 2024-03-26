@@ -1,12 +1,11 @@
 #lang racket
 
-(require racket/draw)
-
-(require "../lib.rkt")
-(require "../qr.rkt")
+(require racket/draw
+         "../lib.rkt"
+         "matrix.rkt")
 
 (provide (contract-out
-          [draw-png (-> QR? path-string? (or/c 'png 'jpeg 'bmp) void?)]
+          [draw-png (-> MATRIX? path-string? (or/c 'png 'jpeg 'bmp) void?)]
           ))
 
 (define (draw-module dc point_color canvas_fg_color canvas_bg_color place_pair module_width)
@@ -48,33 +47,15 @@
        module_width)
       (loop (cdr points_list)))))
 
-(define (draw-png qr file_name output_type)
-  (let* ([canvas_width (* (+ (QR-modules qr) (* QUIET_ZONE_WIDTH 2)) (QR-module_width qr))]
-         [qr_width (* (QR-modules qr) (QR-module_width qr))]
-         [target (make-bitmap canvas_width canvas_width)]
+(define (draw-png matrix file_name output_type)
+  (let* ([target (make-bitmap (MATRIX-width matrix) (MATRIX-width matrix))]
          [dc (new bitmap-dc% [bitmap target])])
 
     (send dc set-smoothing 'aligned)
 
-    (let (
-          [canvas_color
-           (hash-ref (QR-type_color_map qr) "canvas" (QR-zero_color qr))]
-          [qr_canvas_color
-           (hash-ref (QR-type_color_map qr) "qr_canvas" (QR-zero_color qr))]
-          )
-
-      (when (not (string=? canvas_color "transparent"))
-        (send dc set-pen (hex_color->racket_color canvas_color) 1 'solid)
-        (send dc set-brush (hex_color->racket_color canvas_color) 'solid))
-      (send dc draw-rectangle 0 0 canvas_width canvas_width)
-
-      (when (not (string=? qr_canvas_color "transparent"))
-        (send dc set-pen (hex_color->racket_color qr_canvas_color) 1 'solid)
-        (send dc set-brush (hex_color->racket_color qr_canvas_color) 'solid))
-      (let ([qr_start_point (locate-brick (QR-module_width qr) (cons QUIET_ZONE_WIDTH QUIET_ZONE_WIDTH))])
-        (send dc draw-rectangle (car qr_start_point) (cdr qr_start_point) qr_width qr_width)))
-
-    (draw-points dc (QR-module_width qr) (QR-points_map qr) (QR-one_color qr) (QR-zero_color qr))
+    (send dc set-pen (hex_color->racket_color "000000") 1 'solid)
+    (send dc set-brush (hex_color->racket_color "000000") 'solid)
+    (draw-points dc (MATRIX-brick_width matrix) (MATRIX-points_color_map matrix) "black" "white")
     
     (send target save-file file_name output_type)
     

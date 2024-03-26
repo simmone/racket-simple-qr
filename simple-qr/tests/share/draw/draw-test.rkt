@@ -34,7 +34,7 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([matrix (new-matrix 1)])
+          (let ([matrix (new-matrix 1 5)])
             (fill-points matrix '((0 . 0)) "black")
 ;            (draw matrix png_1X1_file 'png)
             (draw matrix svg_1X1_file 'svg)
