@@ -1,15 +1,10 @@
-b#lang racket
+#lang racket
 
 (require "lib.rkt")
 (require "version.rkt")
 
 (define QUIET_ZONE_WIDTH 4)
 
-;; points_map: point pair => color
-;; point pair: '(1 . 1)
-;; color: "FF00FF" or "red" or 'transparent
-;; one_color: value 1's default color
-;; zero_color: value 0's default color
 (provide (contract-out
           [struct QR
                   (
@@ -22,7 +17,7 @@ b#lang racket
                    (canvas_width natural?)
                    (points (listof (cons/c natural? natural?)))
                    (points_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'transparent))
+                   (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'transparent)))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
@@ -58,9 +53,6 @@ b#lang racket
          [canvas_width (+ modules (* QUIET_ZONE_WIDTH 2))]
          [points (get-points-between '(0 . 0) (cons (sub1 canvas_width) (sub1 canvas_width)) #:direction 'cross)]
          [qr (QR data mode error_level version modules module_width canvas_width points (make-hash) (make-hash) one_color zero_color)])
-    
-    (fill-points qr points 0 zero_color)
-
     qr))
 
 (define (new-default-qr data)
