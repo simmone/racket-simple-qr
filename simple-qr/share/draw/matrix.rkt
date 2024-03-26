@@ -11,7 +11,7 @@
                    (points (listof (cons/c natural? natural?)))
                    (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'transparent)))
                   )]
-          [new-matrix (-> natural? MATRIX?)]
+          [new-matrix (-> natural? natural? MATRIX?)]
           [fill-points (-> MATRIX? (listof (cons/c natural? natural?)) string? void?)]
           ))
 

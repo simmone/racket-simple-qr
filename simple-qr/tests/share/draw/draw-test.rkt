@@ -11,6 +11,8 @@
 
 (define-runtime-path png_1X1_file "png_1X1.png")
 (define-runtime-path svg_1X1_file "svg_1X1.svg")
+(define-runtime-path png_2X2_file "png_2X2.png")
+(define-runtime-path svg_2X2_file "svg_2X2.svg")
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
 (define-runtime-path fill_canvas_png_file "fill_canvas.png")
@@ -34,16 +36,35 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([matrix (new-matrix 1 5)])
-            (fill-points matrix '((0 . 0)) "black")
-;            (draw matrix png_1X1_file 'png)
+          (let ([matrix (new-matrix 1 50)])
+            (fill-points matrix '((0 . 0)) "red")
+            (draw matrix png_1X1_file 'png)
             (draw matrix svg_1X1_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file canvas_png_file)
-          ;(delete-file canvas_svg_file)
+          ;(void)
+          (delete-file svg_1X1_file)
+          (delete-file png_1X1_file)
           )))
+
+   (test-case
+    "test-draw-2X2"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([matrix (new-matrix 2 50)])
+            (fill-points matrix '((0 . 0) (1 . 1)) "red")
+            (fill-points matrix '((0 . 1) (1 . 0)) "yellow")
+            (draw matrix png_2X2_file 'png)
+            (draw matrix svg_2X2_file 'svg)
+            ))
+        (lambda ()
+          (void)
+          ;(delete-file svg_2X2_file)
+          ;(delete-file png_2X2_file)
+          )))
+
 ;
 ;   (test-case
 ;    "test-init-canvas-with-quiet-zone"

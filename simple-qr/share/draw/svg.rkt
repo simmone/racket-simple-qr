@@ -36,11 +36,12 @@
               (let loop ([points (MATRIX-points matrix)])
                 (when (not (null? points))
                   (let* ([point (car points)]
-                         [color (hash-ref (MATRIX-points_color_map matrix) point )]
-                         [style (hash-ref color_style_map color)])
+                         [color (hash-ref (MATRIX-points_color_map matrix) point #f)]
+                         [style (hash-ref color_style_map color #f)])
 
+                    (when color
                       (svg-place-widget
                        basic_brick
                        #:style style
-                       #:at (locate-brick (MATRIX-brick_width matrix) point)))
+                       #:at (locate-brick (MATRIX-brick_width matrix) point))))
                   (loop (cdr points)))))))))))
