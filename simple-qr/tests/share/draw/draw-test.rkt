@@ -13,6 +13,8 @@
 (define-runtime-path svg_1X1_file "svg_1X1.svg")
 (define-runtime-path png_2X2_file "png_2X2.png")
 (define-runtime-path svg_2X2_file "svg_2X2.svg")
+(define-runtime-path png_3X3_file "png_3X3.png")
+(define-runtime-path svg_3X3_file "svg_3X3.svg")
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
 (define-runtime-path fill_canvas_png_file "fill_canvas.png")
@@ -60,9 +62,32 @@
             (draw matrix svg_2X2_file 'svg)
             ))
         (lambda ()
-          (void)
-          ;(delete-file svg_2X2_file)
-          ;(delete-file png_2X2_file)
+          ;(void)
+          (delete-file svg_2X2_file)
+          (delete-file png_2X2_file)
+          )))
+
+   (test-case
+    "test-draw-3X3"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([matrix (new-matrix 3 50)])
+            (let loop ([points (MATRIX-points matrix)]
+                       [index 1])
+              (when (not (null? points))
+                (if (odd? index)
+                    (fill-points matrix (list (car points)) "red")
+                    (fill-points matrix (list (car points)) "yellow"))
+                (loop (cdr points) (add1 index))))
+            (draw matrix png_3X3_file 'png)
+            (draw matrix svg_3X3_file 'svg)
+            ))
+        (lambda ()
+          ;(void)
+          (delete-file svg_3X3_file)
+          (delete-file png_3X3_file)
           )))
 
 ;
