@@ -15,6 +15,8 @@
 (define-runtime-path svg_2X2_file "svg_2X2.svg")
 (define-runtime-path png_3X3_file "png_3X3.png")
 (define-runtime-path svg_3X3_file "svg_3X3.svg")
+(define-runtime-path svg_1X1_pattern1_file "svg_1X1_pattern1.svg")
+
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
 (define-runtime-path fill_canvas_png_file "fill_canvas.png")
@@ -88,6 +90,21 @@
           ;(void)
           (delete-file svg_3X3_file)
           (delete-file png_3X3_file)
+          )))
+
+   (test-case
+    "test-draw-1X1-pattern1"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([matrix (new-matrix 1 50)])
+            (fill-points matrix '((0 . 0)) "pattern1")
+            (draw matrix svg_1X1_pattern1_file 'svg)
+            ))
+        (lambda ()
+          (void)
+          ;(delete-file svg_1X1_pattern1_file)
           )))
 
 ;

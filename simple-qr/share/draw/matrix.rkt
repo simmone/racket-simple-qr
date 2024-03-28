@@ -9,10 +9,10 @@
                    (bricks natural?)
                    (brick_width natural?)
                    (points (listof (cons/c natural? natural?)))
-                   (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'transparent)))
+                   (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'pattern1)))
                   )]
           [new-matrix (-> natural? natural? MATRIX?)]
-          [fill-points (-> MATRIX? (listof (cons/c natural? natural?)) string? void?)]
+          [fill-points (-> MATRIX? (listof (cons/c natural? natural?)) (or/c string? 'pattern1) void?)]
           ))
 
 (struct MATRIX
