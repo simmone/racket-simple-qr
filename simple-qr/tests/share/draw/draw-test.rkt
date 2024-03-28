@@ -16,6 +16,8 @@
 (define-runtime-path png_3X3_file "png_3X3.png")
 (define-runtime-path svg_3X3_file "svg_3X3.svg")
 (define-runtime-path svg_1X1_pattern1_file "svg_1X1_pattern1.svg")
+(define-runtime-path png_5X5_file "png_5X5.png")
+(define-runtime-path svg_5X5_file "svg_5X5.svg")
 
 (define-runtime-path canvas_png_file "canvas.png")
 (define-runtime-path canvas_svg_file "canvas.svg")
@@ -75,7 +77,7 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([matrix (new-matrix 3 50)])
+          (let ([matrix (new-matrix 3 100)])
             (let loop ([points (MATRIX-points matrix)]
                        [index 1])
               (when (not (null? points))
@@ -98,13 +100,40 @@
     (dynamic-wind
         (lambda () (void))
         (lambda ()
-          (let ([matrix (new-matrix 1 50)])
-            (fill-points matrix '((0 . 0)) "pattern1")
+          (let ([matrix (new-matrix 1 60)])
+            (fill-points matrix '((0 . 0)) 'pattern1)
             (draw matrix svg_1X1_pattern1_file 'svg)
             ))
         (lambda ()
+          ;(void)
+          (delete-file svg_1X1_pattern1_file)
+          )))
+
+   (test-case
+    "test-draw-5X5"
+    
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([matrix (new-matrix 5 100)])
+            (let loop ([points (MATRIX-points matrix)]
+                       [index 1])
+              (when (not (null? points))
+                (cond
+                 [(= (remainder index 3) 1)
+                  (fill-points matrix (list (car points)) "red")]
+                 [(= (remainder index 3) 2)
+                  (fill-points matrix (list (car points)) 'pattern1)]
+                 [(= (remainder index 3) 0)
+                  (fill-points matrix (list (car points)) "yellow")])
+                (loop (cdr points) (add1 index))))
+            (draw matrix png_5X5_file 'png)
+            (draw matrix svg_5X5_file 'svg)
+            ))
+        (lambda ()
           (void)
-          ;(delete-file svg_1X1_pattern1_file)
+          ;(delete-file svg_5X5_file)
+          ;(delete-file png_5X5_file)
           )))
 
 ;
