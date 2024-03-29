@@ -5,8 +5,9 @@
 (define-runtime-path index_md_file "../express/content/docs/s2_module/_index.md")
 (define-runtime-path init_bitmap_file "../express/content/docs/s2_module/init.svg")
 
-(require "../../share/qr.rkt")
-(require "../../share/draw/draw.rkt")
+(require "../../share/qr.rkt"
+         "../../share/draw/matrix.rkt"
+         "../../share/draw/draw.rkt")
 
 (provide (contract-out
           [version-to-modules-express (-> QR? void?)]))
@@ -14,7 +15,9 @@
 (define (version-to-modules-express qr)
   (make-directory* s2_module_directory)
 
-  (draw qr init_bitmap_file 'svg)
+  (fill-points (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("red" "yellow"))
+
+  (draw (QR-matrix qr) init_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace

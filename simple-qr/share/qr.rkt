@@ -14,7 +14,9 @@
                    (error_level string?)
                    (version natural?)
                    (modules natural?)
-                   (points_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
+                   (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
+                   (point_type_map (hash/c (cons/c natural? natural?) string?))
+                   (matrix MATRIX?)
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
@@ -23,6 +25,7 @@
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_WIDTH natural?]
+          [add-point (-> (cons/c natural? natural?) (or/c 0 1) string? QR? void?)]
           ))
 
 (struct QR
@@ -32,7 +35,9 @@
          (error_level #:mutable)
          (version #:mutable)
          (modules #:mutable)
-         (points_val_map #:mutable)
+         (point_val_map #:mutable)
+         (point_type_map #:mutable)
+         (matrix #:mutable)
          (one_color #:mutable)
          (zero_color #:mutable)
          )
@@ -44,7 +49,7 @@
          [modules (version->modules version)]
          [canvas_modules (+ modules (* QUIET_ZONE_WIDTH 2))]
          [matrix (new-matrix canvas_modules module_width)]
-         [qr (QR data mode error_level version modules (make-hash) one_color zero_color)])
+         [qr (QR data mode error_level version modules (make-hash) (make-hash) matrix one_color zero_color)])
     qr))
 
 (define (new-default-qr data)
@@ -54,3 +59,7 @@
   (if (and (>= version 1) (<= version 40))
       (+ 21 (* 4 (sub1 version)))
       (error "invalid version!")))
+
+(define (add-point point val type qr)
+  (hash-set! (QR-point_val_map qr) point val)
+  (hash-set! (QR-point_type_map qr) point type))

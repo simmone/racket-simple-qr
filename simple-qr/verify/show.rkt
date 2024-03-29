@@ -7,4 +7,4 @@
 
 (make-directory* (build-path "express" "content" "docs"))
 
-(qr-write-express "chenxiao" "chenxiao.svg" #:output_type 'svg)
+(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)

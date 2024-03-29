@@ -57,6 +57,6 @@
 
     (version-to-modules-express qr)
 
-    (draw-finder-pattern qr)
-    (finder-pattern-express qr))
-  )
+;    (draw-finder-pattern qr)
+;    (finder-pattern-express qr))
+  ))

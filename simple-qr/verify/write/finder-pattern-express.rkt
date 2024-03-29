@@ -1,12 +1,12 @@
 #lang racket
 
-(require racket/runtime-path)
+(require racket/runtime-path
+         "../../share/qr.rkt"
+         "../../share/draw/draw.rkt")
+
 (define-runtime-path s3_finder_pattern_directory "../express/content/docs/s3_finder_pattern")
 (define-runtime-path index_md_file "../express/content/docs/s3_finder_pattern/_index.md")
 (define-runtime-path finder_pattern_bitmap_file "../express/content/docs/s3_finder_pattern/finder_pattern.svg")
-
-(require "../../share/qr.rkt")
-(require "../../share/draw/draw.rkt")
 
 (provide (contract-out
           [finder-pattern-express (-> QR? void?)]))
