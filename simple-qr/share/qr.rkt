@@ -1,7 +1,8 @@
 #lang racket
 
-(require "lib.rkt")
-(require "version.rkt")
+(require "lib.rkt"
+         "version.rkt"
+         "draw/matrix.rkt")
 
 (define QUIET_ZONE_WIDTH 4)
 
@@ -13,18 +14,13 @@
                    (error_level string?)
                    (version natural?)
                    (modules natural?)
-                   (module_width natural?)
-                   (canvas_width natural?)
-                   (points (listof (cons/c natural? natural?)))
                    (points_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'transparent)))
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
           [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
-          [new-canvas-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_WIDTH natural?]
           ))
@@ -36,11 +32,7 @@
          (error_level #:mutable)
          (version #:mutable)
          (modules #:mutable)
-         (module_width #:mutable)
-         (canvas_width #:mutable)
-         (points #:mutable)
          (points_val_map #:mutable)
-         (points_color_map #:mutable)
          (one_color #:mutable)
          (zero_color #:mutable)
          )
@@ -50,17 +42,13 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)]
-         [canvas_width (+ modules (* QUIET_ZONE_WIDTH 2))]
-         [points (get-points-between '(0 . 0) (cons (sub1 canvas_width) (sub1 canvas_width)) #:direction 'cross)]
-         [qr (QR data mode error_level version modules module_width canvas_width points (make-hash) (make-hash) one_color zero_color)])
+         [canvas_modules (+ modules (* QUIET_ZONE_WIDTH 2))]
+         [matrix (new-matrix canvas_modules module_width)]
+         [qr (QR data mode error_level version modules (make-hash) one_color zero_color)])
     qr))
 
 (define (new-default-qr data)
   (new-qr data 20 "B" "H" "black" "white"))
-
-(define (new-canvas-qr canvas_width)
-  (let ([points (get-points-between '(0 . 0) (cons (sub1 canvas_width) (sub1 canvas_width)) #:direction 'cross)])
-    (QR "" 0 0 0 canvas_width points (make-hash) (make-hash) "black" "white")))
 
 (define (version->modules version)
   (if (and (>= version 1) (<= version 40))
