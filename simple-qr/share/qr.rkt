@@ -4,7 +4,7 @@
          "version.rkt"
          "draw/matrix.rkt")
 
-(define QUIET_ZONE_WIDTH 4)
+(define QUIET_ZONE_BRICKS 4)
 
 (provide (contract-out
           [struct QR
@@ -15,7 +15,7 @@
                    (version natural?)
                    (modules natural?)
                    (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (point_type_map (hash/c (cons/c natural? natural?) string?))
+                   (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
                    (matrix MATRIX?)
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
@@ -24,8 +24,9 @@
           [new-qr (-> string? natural? string? string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
-          [QUIET_ZONE_WIDTH natural?]
+          [QUIET_ZONE_BRICKS natural?]
           [add-point (-> (cons/c natural? natural?) (or/c 0 1) string? QR? void?)]
+          [fill-type-points (-> string? (cons/c string? string?) QR? void?)]
           ))
 
 (struct QR
@@ -36,7 +37,7 @@
          (version #:mutable)
          (modules #:mutable)
          (point_val_map #:mutable)
-         (point_type_map #:mutable)
+         (type_points_map #:mutable)
          (matrix #:mutable)
          (one_color #:mutable)
          (zero_color #:mutable)
@@ -47,7 +48,7 @@
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
          [modules (version->modules version)]
-         [canvas_modules (+ modules (* QUIET_ZONE_WIDTH 2))]
+         [canvas_modules (+ modules (* QUIET_ZONE_BRICKS 2))]
          [matrix (new-matrix canvas_modules module_width)]
          [qr (QR data mode error_level version modules (make-hash) (make-hash) matrix one_color zero_color)])
     qr))
@@ -61,5 +62,24 @@
       (error "invalid version!")))
 
 (define (add-point point val type qr)
-  (hash-set! (QR-point_val_map qr) point val)
-  (hash-set! (QR-point_type_map qr) point type))
+  (let ([new_point
+         (cons
+          (+ QUIET_ZONE_BRICKS (car point))
+          (+ QUIET_ZONE_BRICKS (cdr point)))])
+    (hash-set! (QR-point_val_map qr) new_point val)
+    (hash-set! (QR-type_points_map qr) type `(,@(hash-ref (QR-type_points_map qr) type '()) ,new_point))))
+
+(define (fill-type-points type color_pair qr)
+  (fill-points (QR-matrix qr)
+               (filter
+                (lambda (point)
+                  (= (hash-ref (QR-point_val_map qr) point) 1))
+                (hash-ref (QR-type_points_map qr) type))
+               (list (car color_pair)))
+
+  (fill-points (QR-matrix qr)
+               (filter
+                (lambda (point)
+                  (= (hash-ref (QR-point_val_map qr) point) 0))
+                (hash-ref (QR-type_points_map qr) type))
+               (list (cdr color_pair))))

@@ -1,16 +1,19 @@
 #lang racket
 
-(require "../../share/qr.rkt")
-(require "../../share/version.rkt")
+(require "../../share/qr.rkt"
+         "../../share/draw/matrix.rkt"
+         "../../share/draw/draw.rkt"
+         "../../share/lib.rkt"
+         "../../share/version.rkt"
+         "get-version-express.rkt"
+         "version-to-module-express.rkt"
+         "../../write/finder-pattern.rkt"
+         "finder-pattern-express.rkt"
+         racket/runtime-path)
 
-(require "get-version-express.rkt")
-(require "version-to-module-express.rkt")
-
-(require "../../write/finder-pattern.rkt")
-(require "finder-pattern-express.rkt")
-
-(require racket/runtime-path)
 (define-runtime-path index_md_file "../express/content/_index.md")
+(define-runtime-path init_file "../express/content/docs/s2_module/init.svg")
+(define-runtime-path finder_pattern_file "../express/content/docs/s3_finder_pattern/finder_pattern.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -55,8 +58,19 @@
   (let* ([qr (new-qr data module_width mode error_level (car color) (cdr color))])
     (get-version-express qr)
 
+    (fill-points (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("grey" "white"))
+    (fill-points (QR-matrix qr)
+                 (get-points-between
+                  (cons QUIET_ZONE_BRICKS QUIET_ZONE_BRICKS)
+                  (cons (- (MATRIX-bricks (QR-matrix qr)) QUIET_ZONE_BRICKS 1) (- (MATRIX-bricks (QR-matrix qr)) QUIET_ZONE_BRICKS 1))
+                  #:direction 'cross)
+                 '(pattern1))
+    (draw (QR-matrix qr) init_file 'svg)
+
     (version-to-modules-express qr)
 
-;    (draw-finder-pattern qr)
-;    (finder-pattern-express qr))
-  ))
+    (draw-finder-pattern qr)
+    (fill-type-points "finder" '("black" . "white") qr)
+    (draw (QR-matrix qr) finder_pattern_file 'svg)
+    (finder-pattern-express qr))
+  )
