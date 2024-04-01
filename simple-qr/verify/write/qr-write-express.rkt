@@ -82,5 +82,7 @@
     (draw (QR-matrix qr) separator_file 'svg)
     (finder-pattern-express qr)
 
+    (draw-timing-pattern qr)
+
     )
   )
