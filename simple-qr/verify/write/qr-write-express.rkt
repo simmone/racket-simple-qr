@@ -9,11 +9,14 @@
          "version-to-module-express.rkt"
          "../../write/finder-pattern.rkt"
          "finder-pattern-express.rkt"
+         "../../write/separator.rkt"
+         "separator-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
 (define-runtime-path init_file "../express/content/docs/s2_module/init.svg")
 (define-runtime-path finder_pattern_file "../express/content/docs/s3_finder_pattern/finder_pattern.svg")
+(define-runtime-path separator_file "../express/content/docs/s4_separator/separator.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -72,5 +75,12 @@
     (draw-finder-pattern qr)
     (fill-type-points "finder" '("black" . "white") qr)
     (draw (QR-matrix qr) finder_pattern_file 'svg)
-    (finder-pattern-express qr))
+    (finder-pattern-express qr)
+
+    (draw-separator qr)
+    (fill-type-points "separator" '("black" . "orange") qr)
+    (draw (QR-matrix qr) separator_file 'svg)
+    (finder-pattern-express qr)
+
+    )
   )

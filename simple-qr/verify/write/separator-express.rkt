@@ -1,19 +1,16 @@
 #lang racket
 
-(require racket/runtime-path)
+(require racket/runtime-path
+         "../../share/qr.rkt")
+
 (define-runtime-path s4_separator_directory "../express/content/docs/s4_separator")
 (define-runtime-path index_md_file "../express/content/docs/s4_separator/_index.md")
-(define-runtime-path separator_bitmap_file "../express/content/docs/s4_separator/separator.svg")
-
-(require "../../share/draw/draw.rkt")
 
 (provide (contract-out
-          [separator-express (-> natural? hash? void?)]))
+          [separator-express (-> QR? void?)]))
 
-(define (separator-express modules points_map)
+(define (separator-express qr)
   (make-directory* s4_separator_directory)
-
-  (draw (CANVAS modules 10 points_map "black" "orange") separator_bitmap_file 'svg)
 
   (with-output-to-file index_md_file
     #:exists 'replace
