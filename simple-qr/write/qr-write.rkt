@@ -12,15 +12,14 @@
                          any)]
           ))
 
-(require "../share/qr.rkt")
+(require "../share/qr.rkt"
+         "../share/lib.rkt"
+         "finder-pattern.rkt"
+         "separator.rkt"
+         "format-information.rkt"
+         "version-information.rkt"
+         "timing-pattern.rkt"
 
-(require "func/write-func.rkt")
-
-(require "finder-pattern.rkt")
-(require "separator.rkt")
-(require "format-information/format-information.rkt")
-(require "version-information/version-information.rkt")
-(require "timing-pattern/timing-pattern.rkt")
 (require "alignment-pattern/alignment-pattern.rkt")
 (require "dark-module/dark-module.rkt")
 (require "data-encoding/data-encoding.rkt")

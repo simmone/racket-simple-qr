@@ -1,17 +1,17 @@
 #lang racket
 
-(require "func.rkt")
+(require "lib.rkt")
 
 (provide (contract-out
-          [locate-timing-pattern-joints (-> exact-nonnegative-integer? list?)]
-          [get-timing-pattern-points (-> exact-nonnegative-integer? (listof list?))]
+          [locate-timing-pattern-joints (-> natural? list?)]
+          [get-timing-pattern-points (-> natural? (listof list?))]
           ))
 
 (define (locate-timing-pattern-joints modules)
-  (let ([joint (- modules 8)])
+  (let ([joint (- modules 9)])
     (list 
-     (list (cons 7  9) (cons 7 joint))
-     (list (cons 9  7) (cons joint 7)))))
+     (list (cons 6  8) (cons 6 joint))
+     (list (cons 8  6) (cons joint 6)))))
 
 (define (get-timing-pattern-points modules)
   (let* ([joints (locate-timing-pattern-joints modules)]
