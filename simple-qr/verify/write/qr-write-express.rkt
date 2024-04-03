@@ -22,6 +22,7 @@
 (define-runtime-path finder_pattern_file "../express/content/docs/s3_finder_pattern/finder_pattern.svg")
 (define-runtime-path separator_file "../express/content/docs/s4_separator/separator.svg")
 (define-runtime-path timing_pattern_file "../express/content/docs/s5_timing_pattern/timing_pattern.svg")
+(define-runtime-path alignment_pattern_file "../express/content/docs/s6_alignment_pattern/alignment_pattern.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -93,5 +94,8 @@
     (draw (QR-matrix qr) timing_pattern_file 'svg)
 
     (draw-alignment-pattern qr)
+    (fill-type-points "alignment" '("#1E90FF" . "#B0C4DE") qr)
+    (alignment-pattern-express qr)
+    (draw (QR-matrix qr) alignment_pattern_file 'svg)
     )
   )

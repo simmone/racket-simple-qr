@@ -28,7 +28,7 @@
         (lambda (point)
           (add-point point 1 "alignment" qr))
         (third alignment_points))))
-     (get-alignment-pattern-center-points version points_map type_map)))
+     (get-alignment-pattern-center-points (QR-version qr) (QR-point_val_map qr))))
   
 
 

@@ -3,7 +3,7 @@
 (provide (contract-out
           [get-center-point-sets (-> list? list?)]
           [fill-alignment-pattern-points (-> pair? (listof pair?))]
-          [get-alignment-pattern-center-points (-> exact-nonnegative-integer? hash? hash? (listof pair?))]
+          [get-alignment-pattern-center-points (-> natural? hash? (listof pair?))]
           ))
 
 (define (get-version-alignment-pattern-list)
@@ -79,7 +79,7 @@
                                    (unquote-splicing result1_list))))
          result1_list))))
 
-(define (get-alignment-pattern-center-points version points_map type_map)
+(define (get-alignment-pattern-center-points version point_val_map)
   (let loop ([center_points (get-center-point-sets (hash-ref (get-version-alignment-pattern-list) version))]
              [result_list '()])
     (if (not (null? center_points))
@@ -87,11 +87,11 @@
                [alignment_points 
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
                        (fill-alignment-pattern-points center_point))])
+
           ;; find if occupied with exists points, exclude "timing pattern" points
           (if (andmap
                (lambda (point)
-                 (or (not (hash-has-key? points_map point))
-                     (and (hash-has-key? points_map point) (string=? (hash-ref type_map point "") "timing"))))
+                 (not (hash-has-key? point_val_map point)))
                alignment_points)
               (loop (cdr center_points) (cons center_point result_list))
               (loop (cdr center_points) result_list)))
