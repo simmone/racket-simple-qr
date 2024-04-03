@@ -83,7 +83,7 @@
   (let loop ([center_points (get-center-point-sets (hash-ref (get-version-alignment-pattern-list) version))]
              [result_list '()])
     (if (not (null? center_points))
-        (let* ([center_point (cons (add1 (car (car center_points))) (add1 (cdr (car center_points))))]
+        (let* ([center_point (cons (car (car center_points)) (cdr (car center_points)))]
                [alignment_points 
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
                        (fill-alignment-pattern-points center_point))])

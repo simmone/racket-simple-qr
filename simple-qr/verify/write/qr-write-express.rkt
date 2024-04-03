@@ -70,6 +70,7 @@
     (version-to-modules-express qr)
 
     (fill-points (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("grey" "white"))
+
     (fill-points (QR-matrix qr)
                  (get-points-between
                   (cons QUIET_ZONE_BRICKS QUIET_ZONE_BRICKS)
