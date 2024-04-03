@@ -13,6 +13,8 @@
          "separator-express.rkt"
          "../../write/timing-pattern.rkt"
          "timing-pattern-express.rkt"
+         "../../write/alignment-pattern.rkt"
+         "alignment-pattern-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -76,7 +78,7 @@
     (draw (QR-matrix qr) init_file 'svg)
 
     (draw-finder-pattern qr)
-    (fill-type-points "finder" '("black" . "white") qr)
+    (fill-type-points "finder" '("#32CD32" . "#ADFF2F") qr)
     (finder-pattern-express qr)
     (draw (QR-matrix qr) finder_pattern_file 'svg)
 
@@ -89,5 +91,7 @@
     (fill-type-points "timing" '("#FF00FF" . "#DDA0DD") qr)
     (timing-pattern-express qr)
     (draw (QR-matrix qr) timing_pattern_file 'svg)
+
+    (draw-alignment-pattern qr)
     )
   )
