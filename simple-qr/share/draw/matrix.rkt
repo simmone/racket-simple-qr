@@ -12,7 +12,8 @@
                    (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'pattern1)))
                   )]
           [new-matrix (-> natural? natural? MATRIX?)]
-          [fill-points (-> MATRIX? (listof (cons/c natural? natural?)) (listof (or/c string? 'pattern1)) void?)]
+          [fill-point-color (-> MATRIX? (cons/c natural? natural?) (listof (or/c string? 'pattern1)) void?)]
+          [fill-points-color (-> MATRIX? (listof (cons/c natural? natural?)) (listof (or/c string? 'pattern1)) void?)]
           ))
 
 (struct MATRIX
@@ -31,10 +32,13 @@
          [points (get-points-between '(0 . 0) (cons (sub1 bricks) (sub1 bricks)) #:direction 'cross)])
     (MATRIX width bricks brick_width points (make-hash))))
 
-(define (fill-points matrix points colors)
+(define (fill-point-color matrix point color)
+  (hash-set! (MATRIX-points_color_map matrix) point color))
+
+(define (fill-points-color matrix points colors)
   (let loop-point ([loop_points points]
                    [index 0])
     (when (not (null? loop_points))
-      (hash-set! (MATRIX-points_color_map matrix)
-                 (car loop_points) (list-ref colors (remainder index (length colors))))
+      (fill-point-color matrix 
+                        (car loop_points) (list-ref colors (remainder index (length colors))))
       (loop-point (cdr loop_points) (add1 index)))))

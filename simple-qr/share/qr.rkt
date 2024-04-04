@@ -15,7 +15,7 @@
                    (version natural?)
                    (modules natural?)
                    (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (type_points_map (hash/c string? (listof (cons/c natural? natural?))))
+                   (point_type_map (hash/c (listof (cons/c natural? natural?)) '(finder separator timing alignment)))
                    (matrix MATRIX?)
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
@@ -67,19 +67,16 @@
           (+ QUIET_ZONE_BRICKS (car point))
           (+ QUIET_ZONE_BRICKS (cdr point)))])
     (hash-set! (QR-point_val_map qr) new_point val)
-    (hash-set! (QR-type_points_map qr) type `(,@(hash-ref (QR-type_points_map qr) type '()) ,new_point))))
+    (hash-set! (QR-point_type_map qr) type new_point type)))
 
 (define (fill-type-points type color_pair qr)
-  (fill-points (QR-matrix qr)
-               (filter
-                (lambda (point)
-                  (= (hash-ref (QR-point_val_map qr) point) 1))
-                (hash-ref (QR-type_points_map qr) type))
-               (list (car color_pair)))
-
-  (fill-points (QR-matrix qr)
-               (filter
-                (lambda (point)
-                  (= (hash-ref (QR-point_val_map qr) point) 0))
-                (hash-ref (QR-type_points_map qr) type))
-               (list (cdr color_pair))))
+  (let loop ([type_points
+              (filter
+               (lambda (point)
+                 (eq? (hash-ref (QR-point_type_map qr) point) type))
+               (hash-keys (QR-point_val_map qr)))])
+    (when (not (null? type_points))
+      (if (= (hash-ref (QR-point_value_map qr) (car type_points)) 1)
+          (fill-point-color (QR-matrix qr) (car type_points) (car color_pair))
+          (fill-point-color (QR-matrix qr) (car type_points) (cdr color_pair)))
+      (loop (cdr type_points)))))
