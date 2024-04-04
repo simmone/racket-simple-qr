@@ -16,19 +16,19 @@
      (let ([alignment_points (fill-alignment-pattern-points center_point)])
        (for-each
         (lambda (point)
-          (add-point point 1 "alignment" qr))
+          (add-point point 1 'alignment qr))
         (first alignment_points))
 
        (for-each
         (lambda (point)
-          (add-point point 0 "alignment" qr))
+          (add-point point 0 'alignment qr))
         (second alignment_points))
 
        (for-each
         (lambda (point)
-          (add-point point 1 "alignment" qr))
+          (add-point point 1 'alignment qr))
         (third alignment_points))))
-     (get-alignment-pattern-center-points (QR-version qr) (QR-point_val_map qr))))
+     (get-alignment-pattern-center-points (QR-version qr) (QR-point_val_map qr) (QR-point_type_map qr))))
   
 
 

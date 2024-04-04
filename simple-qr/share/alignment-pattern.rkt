@@ -1,9 +1,11 @@
 #lang racket
 
+(require "qr.rkt")
+
 (provide (contract-out
           [get-center-point-sets (-> list? list?)]
           [fill-alignment-pattern-points (-> pair? (listof pair?))]
-          [get-alignment-pattern-center-points (-> natural? hash? (listof pair?))]
+          [get-alignment-pattern-center-points (-> natural? hash? hash? (listof pair?))]
           ))
 
 (define (get-version-alignment-pattern-list)
@@ -64,34 +66,38 @@
      (list                                           center_point))))
 
 (define (get-center-point-sets num_list)
-  (reverse
-   (let loop1 ([loop1_list num_list]
-               [result1_list '()])
-     (if (not (null? loop1_list))
-         (loop1 (cdr loop1_list) (quasiquote
-                                  (
-                                   (unquote-splicing
-                                    (let loop2 ([loop2_list num_list]
-                                                [result2_list '()])
-                                      (if (not (null? loop2_list))
-                                          (loop2 (cdr loop2_list) (cons (cons (car loop1_list) (car loop2_list)) result2_list))
-                                          result2_list)))
-                                   (unquote-splicing result1_list))))
-         result1_list))))
+  (let loop-out ([out_list num_list]
+                 [result_out_list '()])
+    (if (not (null? out_list))
+        (loop-out (cdr out_list)
+                  `(
+                    ,@(let loop-in ([in_list num_list]
+                                    [result_in_list '()])
+                        (if (not (null? in_list))
+                            (loop-in
+                             (cdr in_list)
+                             (cons
+                              (cons (car out_list) (car in_list))
+                              result_in_list))
+                            result_in_list))
+                    ,@result_out_list))
+        (reverse result_out_list))))
 
-(define (get-alignment-pattern-center-points version point_val_map)
+(define (get-alignment-pattern-center-points version point_val_map point_type_map)
   (let loop ([center_points (get-center-point-sets (hash-ref (get-version-alignment-pattern-list) version))]
              [result_list '()])
     (if (not (null? center_points))
-        (let* ([center_point (cons (car (car center_points)) (cdr (car center_points)))]
+        (let* ([center_point (car center_points)]
                [alignment_points 
                 (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
-                       (fill-alignment-pattern-points center_point))])
+                       (fill-alignment-pattern-points (add-quiet-zone-offset center_point)))])
 
           ;; find if occupied with exists points, exclude "timing pattern" points
           (if (andmap
                (lambda (point)
-                 (not (hash-has-key? point_val_map point)))
+                 (or
+                  (not (hash-has-key? point_val_map point))
+                  (eq? (hash-ref point_type_map point) 'timing)))
                alignment_points)
               (loop (cdr center_points) (cons center_point result_list))
               (loop (cdr center_points) result_list)))

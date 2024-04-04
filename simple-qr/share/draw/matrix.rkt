@@ -12,7 +12,7 @@
                    (points_color_map (hash/c (cons/c natural? natural?) (or/c string? 'pattern1)))
                   )]
           [new-matrix (-> natural? natural? MATRIX?)]
-          [fill-point-color (-> MATRIX? (cons/c natural? natural?) (listof (or/c string? 'pattern1)) void?)]
+          [fill-point-color (-> MATRIX? (cons/c natural? natural?) (or/c string? 'pattern1) void?)]
           [fill-points-color (-> MATRIX? (listof (cons/c natural? natural?)) (listof (or/c string? 'pattern1)) void?)]
           ))
 

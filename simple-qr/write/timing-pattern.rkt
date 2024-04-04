@@ -17,8 +17,8 @@
       (when (not (null? points))
             (let ([point (car points)])
               (if (even? index)
-                  (add-point point 1 "timing" qr)
-                  (add-point point 0 "timing" qr)))
+                  (add-point point 1 'timing qr)
+                  (add-point point 0 'timing qr)))
             (loop (cdr points) (add1 index))))
 
     (let loop ([points (second timing_pattern_points)]
@@ -26,6 +26,6 @@
       (when (not (null? points))
             (let ([point (car points)])
               (if (even? index)
-                  (add-point point 1 "timing" qr)
-                  (add-point point 0 "timing" qr)))
+                  (add-point point 1 'timing qr)
+                  (add-point point 0 'timing qr)))
             (loop (cdr points) (add1 index))))))

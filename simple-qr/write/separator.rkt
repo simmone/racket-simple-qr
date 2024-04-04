@@ -19,16 +19,16 @@
 
     (for-each
      (lambda (point)
-       (add-point point 0 "separator" qr))
+       (add-point point 0 'separator qr))
      (transform-points-list (first (get-separator)) top_left_point))
 
      (for-each
       (lambda (point)
-        (add-point point 0 "separator" qr))
+        (add-point point 0 'separator qr))
       (transform-points-list (second (get-separator)) new_top_right_point))
 
      (for-each
       (lambda (point)
-        (add-point point 0 "separator" qr))
+        (add-point point 0 'separator qr))
       (transform-points-list (third (get-separator)) new_bottom_left_point))
      ))

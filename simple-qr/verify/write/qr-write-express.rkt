@@ -69,9 +69,9 @@
 
     (version-to-modules-express qr)
 
-    (fill-points (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("grey" "white"))
+    (fill-points-color (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("grey" "white"))
 
-    (fill-points (QR-matrix qr)
+    (fill-points-color (QR-matrix qr)
                  (get-points-between
                   (cons QUIET_ZONE_BRICKS QUIET_ZONE_BRICKS)
                   (cons (- (MATRIX-bricks (QR-matrix qr)) QUIET_ZONE_BRICKS 1) (- (MATRIX-bricks (QR-matrix qr)) QUIET_ZONE_BRICKS 1))
@@ -80,22 +80,22 @@
     (draw (QR-matrix qr) init_file 'svg)
 
     (draw-finder-pattern qr)
-    (fill-type-points "finder" '("#32CD32" . "#ADFF2F") qr)
+    (fill-type-points 'finder '("#32CD32" . "#ADFF2F") qr)
     (finder-pattern-express qr)
     (draw (QR-matrix qr) finder_pattern_file 'svg)
 
     (draw-separator qr)
-    (fill-type-points "separator" '("black" . "orange") qr)
+    (fill-type-points 'separator '("black" . "orange") qr)
     (separator-express qr)
     (draw (QR-matrix qr) separator_file 'svg)
 
     (draw-timing-pattern qr)
-    (fill-type-points "timing" '("#FF00FF" . "#DDA0DD") qr)
+    (fill-type-points 'timing '("#FF00FF" . "#DDA0DD") qr)
     (timing-pattern-express qr)
     (draw (QR-matrix qr) timing_pattern_file 'svg)
 
     (draw-alignment-pattern qr)
-    (fill-type-points "alignment" '("#1E90FF" . "#B0C4DE") qr)
+    (fill-type-points 'alignment '("#1E90FF" . "#B0C4DE") qr)
     (alignment-pattern-express qr)
     (draw (QR-matrix qr) alignment_pattern_file 'svg)
     )

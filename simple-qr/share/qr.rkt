@@ -15,7 +15,7 @@
                    (version natural?)
                    (modules natural?)
                    (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (point_type_map (hash/c (listof (cons/c natural? natural?)) '(finder separator timing alignment)))
+                   (point_type_map (hash/c (cons/c natural? natural?) (or/c 'finder 'separator 'timing 'alignment)))
                    (matrix MATRIX?)
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
@@ -25,8 +25,9 @@
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]
-          [add-point (-> (cons/c natural? natural?) (or/c 0 1) string? QR? void?)]
-          [fill-type-points (-> string? (cons/c string? string?) QR? void?)]
+          [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment) QR? void?)]
+          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment) (cons/c string? string?) QR? void?)]
+          [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
           ))
 
 (struct QR
@@ -37,7 +38,7 @@
          (version #:mutable)
          (modules #:mutable)
          (point_val_map #:mutable)
-         (type_points_map #:mutable)
+         (point_type_map #:mutable)
          (matrix #:mutable)
          (one_color #:mutable)
          (zero_color #:mutable)
@@ -67,7 +68,7 @@
           (+ QUIET_ZONE_BRICKS (car point))
           (+ QUIET_ZONE_BRICKS (cdr point)))])
     (hash-set! (QR-point_val_map qr) new_point val)
-    (hash-set! (QR-point_type_map qr) type new_point type)))
+    (hash-set! (QR-point_type_map qr) new_point type)))
 
 (define (fill-type-points type color_pair qr)
   (let loop ([type_points
@@ -76,7 +77,12 @@
                  (eq? (hash-ref (QR-point_type_map qr) point) type))
                (hash-keys (QR-point_val_map qr)))])
     (when (not (null? type_points))
-      (if (= (hash-ref (QR-point_value_map qr) (car type_points)) 1)
+      (if (= (hash-ref (QR-point_val_map qr) (car type_points)) 1)
           (fill-point-color (QR-matrix qr) (car type_points) (car color_pair))
           (fill-point-color (QR-matrix qr) (car type_points) (cdr color_pair)))
       (loop (cdr type_points)))))
+
+(define (add-quiet-zone-offset point)
+  (cons
+   (+ (car point) QUIET_ZONE_BRICKS)
+   (+ (cdr point) QUIET_ZONE_BRICKS)))
