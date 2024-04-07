@@ -15,8 +15,8 @@
          "timing-pattern-express.rkt"
          "../../write/alignment-pattern.rkt"
          "alignment-pattern-express.rkt"
-         "../../write/format-information.rkt"
-         "format-information-express.rkt"
+         "../../write/dark-module.rkt"
+         "dark-module-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -25,7 +25,7 @@
 (define-runtime-path separator_file "../express/content/docs/s4_separator/separator.svg")
 (define-runtime-path timing_pattern_file "../express/content/docs/s5_timing_pattern/timing_pattern.svg")
 (define-runtime-path alignment_pattern_file "../express/content/docs/s6_alignment_pattern/alignment_pattern.svg")
-(define-runtime-path format_information_file "../express/content/docs/s7_format_information/format_information.svg")
+(define-runtime-path dark_module_file "../express/content/docs/s7_dark_module/dark_module.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -102,6 +102,9 @@
     (alignment-pattern-express qr)
     (draw (QR-matrix qr) alignment_pattern_file 'svg)
 
-    (draw-format-information "111100011011100" qr)
+    (draw-dark-module qr)
+    (fill-type-points 'dark '("#330099" . "#330099") qr)
+    (dark-module-express qr)
+    (draw (QR-matrix qr) dark_module_file 'svg)
     )
   )
