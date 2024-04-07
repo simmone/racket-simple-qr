@@ -15,6 +15,8 @@
          "timing-pattern-express.rkt"
          "../../write/alignment-pattern.rkt"
          "alignment-pattern-express.rkt"
+         "../../write/format-information.rkt"
+         "format-information-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -23,6 +25,7 @@
 (define-runtime-path separator_file "../express/content/docs/s4_separator/separator.svg")
 (define-runtime-path timing_pattern_file "../express/content/docs/s5_timing_pattern/timing_pattern.svg")
 (define-runtime-path alignment_pattern_file "../express/content/docs/s6_alignment_pattern/alignment_pattern.svg")
+(define-runtime-path format_information_file "../express/content/docs/s7_format_information/format_information.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -98,5 +101,7 @@
     (fill-type-points 'alignment '("#1E90FF" . "#B0C4DE") qr)
     (alignment-pattern-express qr)
     (draw (QR-matrix qr) alignment_pattern_file 'svg)
+
+    (draw-format-information "111100011011100" qr)
     )
   )

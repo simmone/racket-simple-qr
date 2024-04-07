@@ -1,16 +1,16 @@
 #lang racket
 
-(require "../func/func.rkt")
-(require "../../../share/func.rkt")
-(require "../../../share/format-information.rkt")
+(require "../share/lib.rkt"
+         "../share/qr.rkt")
+         "../share/format-information.rkt")
 
 (require racket/format)
 
 (provide (contract-out
-          [draw-format-information (-> string? exact-nonnegative-integer? hash? hash? void?)]
+          [draw-format-information (-> string? QR? void?)]
           ))
 
-(define (draw-format-information format_string modules points_map type_map)
+(define (draw-format-information format_string qr)
   (let* ([finder_pattern_start_points (locate-finder-pattern modules)]
          [top_left_point (first finder_pattern_start_points)]
          [top_right_point (second finder_pattern_start_points)]
@@ -26,7 +26,7 @@
 
       (when (and (not (null? data_list)) (not (null? trace_list)))
             (if (char=? (car data_list) #\0)
-                (add-point (car trace_list) "0" "format" points_map type_map)
-                (add-point (car trace_list) "1" "format" points_map type_map))
+                (add-point (car trace_list) 0 "format" qr)
+                (add-point (car trace_list) 1 "format" qr))
             (loop (cdr data_list) (cdr trace_list))))
      ))
