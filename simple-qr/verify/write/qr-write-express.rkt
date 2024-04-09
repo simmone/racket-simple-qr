@@ -19,6 +19,8 @@
          "dark-module-express.rkt"
          "../../write/format-information.rkt"
          "format-information-express.rkt"
+         "../../write/version-information.rkt"
+         "version-information-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -29,6 +31,7 @@
 (define-runtime-path alignment_pattern_file "../express/content/docs/s6_alignment_pattern/alignment_pattern.svg")
 (define-runtime-path dark_module_file "../express/content/docs/s7_dark_module/dark_module.svg")
 (define-runtime-path format_information_file "../express/content/docs/s8_format_information/format_information.svg")
+(define-runtime-path version_information_file "../express/content/docs/s9_version_information/version_information.svg")
 
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
@@ -114,5 +117,10 @@
     (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
     (format-information-express qr)
     (draw (QR-matrix qr) format_information_file 'svg)
+
+    (draw-version-information qr)
+    (fill-type-points 'version '("#0E29F0" . "#5866C8") qr)
+    (version-information-express qr)
+    (draw (QR-matrix qr) version_information_file 'svg)
     )
   )
