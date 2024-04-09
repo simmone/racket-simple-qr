@@ -15,7 +15,7 @@
                    (version natural?)
                    (modules natural?)
                    (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
-                   (point_type_map (hash/c (cons/c natural? natural?) (or/c 'finder 'separator 'timing 'alignment 'dark)))
+                   (point_type_map (hash/c (cons/c natural? natural?) (or/c 'finder 'separator 'timing 'alignment 'dark 'format)))
                    (matrix MATRIX?)
                    (one_color string?)
                    (zero_color (or/c string? 'transparent))
@@ -25,8 +25,8 @@
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]
-          [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark) QR? void?)]
-          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark) (cons/c string? string?) QR? void?)]
+          [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format) QR? void?)]
+          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format) (cons/c string? string?) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
           ))
 
