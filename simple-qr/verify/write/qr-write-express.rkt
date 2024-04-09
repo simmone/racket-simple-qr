@@ -21,6 +21,8 @@
          "format-information-express.rkt"
          "../../write/version-information.rkt"
          "version-information-express.rkt"
+         "../../write/data-encoding/data-encoding.rkt"
+         "s1-data-encoding-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -36,7 +38,7 @@
 (provide (contract-out
           [qr-write-express (->* (string? path-string?) 
                                  (
-                                  #:mode string?
+                                  #:mode (or/c 'N 'A 'B)
                                          #:error_level string?
                                          #:module_width exact-nonnegative-integer?
                                          #:color (cons/c string? string?)
@@ -46,7 +48,7 @@
           ))
 
 (define (qr-write-express data file_name
-                          #:mode [mode "B"]
+                          #:mode [mode 'B]
                           #:error_level [error_level "H"]
                           #:module_width [module_width 5]
                           #:color [color '("black" . "white")]
@@ -66,7 +68,7 @@
       (printf "## Options:\n")
       
       (printf "1. output file name: **~a**\n" file_name)
-      (printf "2. mode: **~a**[default: ~a]\n" mode "B")
+      (printf "2. mode: **~a**[default: 'B]\n" mode)
       (printf "3. error level: **~a**[default: ~a]\n" error_level "H")
       (printf "4. module width: **~a**[default: ~a]\n" module_width 5)
       (printf "5. color: **~a**[default: ~a]\n" color '("black" . "white"))
@@ -122,5 +124,40 @@
     (fill-type-points 'version '("#0E29F0" . "#5866C8") qr)
     (version-information-express qr)
     (draw (QR-matrix qr) version_information_file 'svg)
+
+    (let ([s1_data_bits #f]
+          [s2_character_count #f]
+          [s3_character_count_indicator #f]
+          [s4_mode_indicator #f]
+          [s5_header_added_bits #f]
+          [s6_capacity_char_count #f]
+          [s7_capacity_bits_width #f]
+          [s8_terminator_added_bits #f]
+          [s9_multiple8_bits #f]
+          [s10_repeat_pad_bits #f]
+          [s11_decimal_list #f]
+          [s12_split_contract #f]
+          [s13_origin_data_group #f]
+          [s14_ec_count #f]
+          [s15_origin_poly_generator #f]
+          [s16_error_code_group #f]
+          [s17_interleave_data_group #f]
+          [s18_interleave_data_bits #f]
+          [s19_remainder_bits_width #f]
+          [s20_padded_remainder_bits #f]
+          [s21_data_list #f]
+          [s22_trace_list #f]
+          )
+
+      ;; data to bits
+      (cond
+       [(eq? mode 'A)
+        (set! s1_data_bits (encode-a data))]
+       [(eq? mode 'B)
+        (set! s1_data_bits (encode-b data))]
+       [(eq? mode 'N)
+        (set! s1_data_bits (encode-n data))])
+      (s1-data-encoding-express s1_data_bits qr)
+      )
     )
   )
