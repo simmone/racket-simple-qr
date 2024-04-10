@@ -8,6 +8,7 @@
           [locate-brick (-> natural? pair? pair?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical 'cross) list?)]
+          [split-string (-> string? natural? list?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -20,7 +21,6 @@
           [move-point-row (-> pair? exact-integer? pair?)]
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
-          [split-string (-> string? natural? list?)]
           ))
 
 (define (transform-points-list points_list start_point_pair)
