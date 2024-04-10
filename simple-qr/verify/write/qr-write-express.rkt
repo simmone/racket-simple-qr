@@ -22,7 +22,7 @@
          "../../write/version-information.rkt"
          "version-information-express.rkt"
          "../../write/data-encoding/data-encoding.rkt"
-         "s1-data-encoding-express.rkt"
+         "s10-data-encoding-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -157,7 +157,7 @@
         (set! s1_data_bits (encode-b data))]
        [(eq? mode 'N)
         (set! s1_data_bits (encode-n data))])
-      (s1-data-encoding-express s1_data_bits qr)
+      (s10-data-encoding-express s1_data_bits qr)
       )
     )
   )

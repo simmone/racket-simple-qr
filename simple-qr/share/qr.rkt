@@ -10,7 +10,7 @@
           [struct QR
                   (
                    (data string?)
-                   (mode string?)
+                   (mode (or/c 'A 'N 'B))
                    (error_level string?)
                    (version natural?)
                    (modules natural?)
@@ -21,7 +21,7 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [new-qr (-> string? natural? string? string? string? string? QR?)]
+          [new-qr (-> string? natural? (or/c 'A 'N 'B) string? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]
@@ -55,7 +55,7 @@
     qr))
 
 (define (new-default-qr data)
-  (new-qr data 20 "B" "H" "black" "white"))
+  (new-qr data 20 'B "H" "black" "white"))
 
 (define (version->modules version)
   (if (and (>= version 1) (<= version 40))

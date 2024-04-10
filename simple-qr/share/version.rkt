@@ -3,13 +3,13 @@
 (provide (contract-out
   [get-version (->
                 natural?
-                string?
+                (or/c 'A 'N 'B)
                 string?
                 natural?)]
   ))
 
 (define (get-version char_count mode error_level)
-  (let loop ([loop_list (hash-ref *capacity_table* (string-append mode "-" error_level))])
+  (let loop ([loop_list (hash-ref *capacity_table* (format "~a-~a" mode error_level))])
     (if (not (null? loop_list))
         (if (<= char_count (cdar loop_list))
             (caar loop_list)

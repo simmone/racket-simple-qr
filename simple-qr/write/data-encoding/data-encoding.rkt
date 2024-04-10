@@ -9,18 +9,15 @@
           [interleave-data-group (-> list? list?)]
           ))
 
-(require "alphanumeric.rkt")
-(require "../func/func.rkt")
-
-(require "../func/code-info/code-info-func.rkt")
-(require "../func/code-info/code-info-func.rkt")
-(require "../func/remainder-bits/remainder-bits-func.rkt")
-(require "../../../share/data-encoding.rkt")
-(require "../../../share/func.rkt")
-(require "../../../share/data-group.rkt")
-(require "../../../share/character-bit-width.rkt")
-
-(require racket/format)
+(require "alphanumeric.rkt"
+         "../func/write-func.rkt"
+         "../func/code-info/code-info-func.rkt"
+         "../func/remainder-bits/remainder-bits-func.rkt"
+         "../../share/data-encoding.rkt"
+         "../../share/lib.rkt"
+         "../../share/data-group.rkt"
+         "../../share/character-bit-width.rkt"
+         racket/format)
 
 (define (get-character-count-indicator character_count version mode)
   (~r character_count #:base 2 #:min-width (get-character-bit-width version mode) #:pad-string "0"))
