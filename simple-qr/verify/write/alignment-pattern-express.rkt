@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 6\n")
-      (printf "title: \"Step6: alignment-pattern\"\n")
+      (printf "title: \"Step6: Alignment-pattern\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Alignment-Pattern\n\n")

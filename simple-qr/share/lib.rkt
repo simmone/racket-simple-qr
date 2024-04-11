@@ -8,8 +8,9 @@
           [locate-brick (-> natural? pair? pair?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical 'cross) list?)]
-          [split-string (-> string? natural? list?)]
+          [string-to-bits-markdown-table (-> string? string? string?)]
 
+          [split-string (-> string? natural? list?)]
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
           [bitmap->points (-> (is-a?/c bitmap%) (listof list?))]
@@ -74,6 +75,25 @@
                              (loop-y (add1 loop_y) (cons (cons loop_x loop_y) y_result))
                              (reverse y_result)))))
               result_points)))))
+
+(define (split-string bit_str width)
+  (let loop ([loop_str bit_str]
+             [result_list '()])
+    (if (not (string=? loop_str ""))
+        (if (>= (string-length loop_str) width)
+            (loop (substring loop_str width) (cons (substring loop_str 0 width) result_list))
+            (loop "" (cons loop_str result_list)))
+        (reverse result_list))))
+
+(define (string-to-bits-markdown-table data bits)
+  (with-output-to-string
+    (lambda ()
+      (printf "|char|byte|\n|---|---|\n")
+      (let loop ([chars (string->list data)]
+                 [bytes (split-string bits 8)])
+        (when (not (null? bytes))
+          (printf "|~a|~a|\n" (car chars) (car bytes))
+          (loop (cdr chars) (cdr bytes)))))))
 
 (define (move-point-col point cols)
   (cons
@@ -205,15 +225,6 @@
                [mask (if (mask-proc i j) 1 0)])
           (loop (cdr loop_list) (cons (bitwise-xor val mask) result_list) (cons mask mask_list)))
         (cons (reverse result_list) (reverse mask_list)))))
-
-(define (split-string bit_str width)
-  (let loop ([loop_str bit_str]
-             [result_list '()])
-    (if (not (string=? loop_str ""))
-        (if (>= (string-length loop_str) 8)
-            (loop (substring loop_str width) (cons (substring loop_str 0 width) result_list))
-            (loop "" (cons loop_str result_list)))
-        (reverse result_list))))
 
 (define (format-string data line_count)
   (with-output-to-string

@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 4\n")
-      (printf "title: \"Step4: separator\"\n")
+      (printf "title: \"Step4: Separator\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Separator\n\n")

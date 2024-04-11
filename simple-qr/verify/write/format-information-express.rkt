@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 8\n")
-      (printf "title: \"Step8: reserve format information\"\n")
+      (printf "title: \"Step8: Format information\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Format_Information\n\n")

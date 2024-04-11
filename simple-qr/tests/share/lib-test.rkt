@@ -91,6 +91,25 @@
      (get-points-between '(0 . 0) '(4 . 1) #:direction 'vertical)
      '())
     )
+
+   (test-case
+    "test-string-to-bits-markdown-table"
+    
+    (check-equal? (string-to-bits-markdown-table
+                   "chenxiao"
+                   "0110001101101000011001010110111001111000011010010110000101101111")
+                  (string-append
+                   "|char|byte|\n"
+                   "|---|---|\n"
+                   "|c|01100011|\n"
+                   "|h|01101000|\n"
+                   "|e|01100101|\n"
+                   "|n|01101110|\n"
+                   "|x|01111000|\n"
+                   "|i|01101001|\n"
+                   "|a|01100001|\n"
+                   "|o|01101111|\n"
+                   )))
    
    (test-case
     "test-get-points"

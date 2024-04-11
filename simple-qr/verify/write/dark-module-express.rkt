@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 7\n")
-      (printf "title: \"Step7: dark_module\"\n")
+      (printf "title: \"Step7: Dark_module\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Dark_Module\n\n")

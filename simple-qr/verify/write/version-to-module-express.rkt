@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 2\n")
-      (printf "title: \"Step2: modules(bricks) count\"\n")
+      (printf "title: \"Step2: Modules(bricks) count\"\n")
       (printf "---\n\n")
       
       (printf "# Decide modules from version\n\n")

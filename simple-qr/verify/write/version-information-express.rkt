@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 9\n")
-      (printf "title: \"Step9: version information\"\n")
+      (printf "title: \"Step9: Version information\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Version_Information\n\n")

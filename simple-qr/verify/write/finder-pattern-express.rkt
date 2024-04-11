@@ -17,7 +17,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 3\n")
-      (printf "title: \"Step3: finder pattern\"\n")
+      (printf "title: \"Step3: Finder pattern\"\n")
       (printf "---\n\n")
       
       (printf "# Draw Finder Pattern\n\n")
