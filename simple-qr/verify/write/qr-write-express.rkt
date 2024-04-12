@@ -158,6 +158,16 @@
        [(eq? mode 'N)
         (set! s1_data_bits (encode-n data))])
       (s10-data-encoding-express s1_data_bits qr)
+
+      ;; add mode and count indicator
+      (set! s2_character_count (string-length data))
+
+      (set! s3_character_count_indicator (get-character-count-indicator s2_character_count version mode))
+
+      (set! s4_mode_indicator (get-mode-indicator mode))
+
+      (set! s5_header_added_bits (string-append s4_mode_indicator s3_character_count_indicator s1_data_bits))
+
       )
     )
   )

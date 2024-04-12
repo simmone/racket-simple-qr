@@ -7,6 +7,7 @@
           [string-split (-> string? exact-nonnegative-integer? list?)]
           [encode-a (-> string? string?)]
           [interleave-data-group (-> list? list?)]
+          [get-bit-mode-table (-> (hash/c symbol? string?))]
           ))
 
 (require "alphanumeric.rkt"
@@ -21,6 +22,48 @@
 
 (define (get-character-count-indicator character_count version mode)
   (~r character_count #:base 2 #:min-width (get-character-bit-width version mode) #:pad-string "0"))
+
+(define (get-character-bit-width version mode)
+  (cond
+   [(and (>= version 1) (<= version 9))
+    (cond
+     [(eq? mode 'N)
+      10]
+     [(eq? mode 'A)
+      9]
+     [(eq? mode 'B)
+      8]
+     [(eq? mode 'K)
+      8])]
+   [(and (>= version 10) (<= version 26))
+    (cond
+     [(eq? mode 'N)
+      12]
+     [(eq? mode 'A)
+      11]
+     [(eq? mode 'B)
+      16]
+     [(eq? mode 'K)
+      10])]
+   [(and (>= version 27) (<= version 40))
+    (cond
+     [(eq? mode 'N)
+      14]
+     [(eq? mode 'A)
+      13]
+     [(eq? mode 'B)
+      16]
+     [(eq? mode 'K)
+      12])]))
+
+(define (get-mode-bit-table)
+  '#hash(
+         ('N . "0001") 
+         ('A . "0010") 
+         ('B . "0100") 
+         ('K . "1000") 
+         ('E . "0111")
+         ))
 
 (define (encode-b content)
   (with-output-to-string
