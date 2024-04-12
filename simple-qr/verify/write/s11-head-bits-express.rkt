@@ -8,26 +8,29 @@
 (define-runtime-path index_md_file "../express/content/docs/s11_head_bits/_index.md")
 
 (provide (contract-out
-          [s11-head-bits-express (-> string? QR? void?)]))
+          [s11-head-bits-express (-> natural? natural? string? string? string? QR? void?)]))
 
-(define (s11-head-bits-express bits_str qr)
-   (s11-head-bits-express s2_character_count s2_1_count_bit_width s3_character_count_indicator s4_mode_indicator s5_header_added_bits qr)
-s1_data_bits qr)
-s1_data_bits qr)
+(define (s11-head-bits-express character_count count_bit_width character_count_indicator s4_mode_indicator s5_header_added_bits qr)
   (make-directory* s11_head_bits_directory)
 
   (with-output-to-file index_md_file
     #:exists 'replace
     (lambda ()
       (printf "---\n")
-      (printf "weight: 10\n")
-      (printf "title: \"Step10: Data to bits\"\n")
+      (printf "weight: 11\n")
+      (printf "title: \"Step11: Head bits\"\n")
       (printf "---\n\n")
       
-      (printf "# Data to bits\n\n")
+      (printf "# Add head bits\n\n")
+
+      (printf "## mode indicator\n\n")
+      (printf "mode indicator:[~a]\n\n" s4_mode_indicator)
       
-      (printf "## head_bits\n\n")
-      (printf "convert [~a] to bits on mode[~a]\n\n" (QR-data qr) (QR-mode qr))
-      (printf "data string to bits:\n~a\n" (string-to-bits-markdown-table (QR-data qr) bits_str))
-      )))
+      (printf "## character count bits\n\n")
+      (printf "character count:[~a]\n\n" character_count)
+      (printf "character count bit width:[~a]\n\n" count_bit_width)
+      (printf "character count bits:[~a]\n\n" character_count_indicator)
+
+      (printf "## concat mode, character count indicator, data bits\n\n")
+      (printf "data bits:\n~a\n" (bits-to-markdown-table s5_header_added_bits 8)))))
 

@@ -8,9 +8,10 @@
           [locate-brick (-> natural? pair? pair?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical 'cross) list?)]
-          [string-to-bits-markdown-table (-> string? string? string?)]
-
           [split-string (-> string? natural? list?)]
+          [string-to-bits-markdown-table (-> string? string? string?)]
+          [bits-to-markdown-table (-> string? natural? string?)]
+
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
           [bitmap->points (-> (is-a?/c bitmap%) (listof list?))]
@@ -94,6 +95,16 @@
         (when (not (null? bytes))
           (printf "|~a|~a|\n" (car chars) (car bytes))
           (loop (cdr chars) (cdr bytes)))))))
+
+(define (bits-to-markdown-table bits line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|bits|\n|---|---|\n")
+      (let loop ([bytes (split-string bits line_width)]
+                 [index 1])
+        (when (not (null? bytes))
+          (printf "|~a|~a|\n" index (car bytes))
+          (loop (cdr bytes) (add1 index)))))))
 
 (define (move-point-col point cols)
   (cons

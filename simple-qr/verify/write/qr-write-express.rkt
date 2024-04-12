@@ -23,6 +23,7 @@
          "version-information-express.rkt"
          "../../write/data-encoding/data-encoding.rkt"
          "s10-data-encoding-express.rkt"
+         "s11-head-bits-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path index_md_file "../express/content/_index.md")
@@ -163,9 +164,10 @@
       ;; add mode and count indicator
       (set! s2_character_count (string-length data))
       
-      (set! s2_1_count_bit_width (get-character-bit-width (QR-version qr) (QR-mode qr))
+      (set! s2_1_count_bit_width (get-character-bit-width (QR-version qr) (QR-mode qr)))
 
-      (set! s3_character_count_indicator (get-character-count-indicator s2_character_count s2_1_count_bit_width))
+      (set! s3_character_count_indicator 
+            (~r s2_character_count #:base 2 #:min-width s2_1_count_bit_width #:pad-string "0"))
 
       (set! s4_mode_indicator
             (cond

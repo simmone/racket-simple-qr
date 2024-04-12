@@ -1,27 +1,21 @@
 #lang racket
 
+(require "alphanumeric.rkt"
+         "../func/write-func.rkt"
+         "../func/code-info/code-info-func.rkt"
+         "../func/remainder-bits/remainder-bits-func.rkt"
+         "../../share/lib.rkt"
+         "../../share/data-group.rkt"
+        racket/format)
+
 (provide (contract-out
-          [get-character-bit-width (-> natural? natural? string?)]
-          [get-character-count-indicator (-> natural? natural? string? string?)]
+          [get-character-bit-width (-> natural? (or/c 'A 'B 'K 'N) natural?)]
           [encode-b (-> string? string?)]
           [encode-n (-> string? string?)]
           [string-split (-> string? natural? list?)]
           [encode-a (-> string? string?)]
           [interleave-data-group (-> list? list?)]
           ))
-
-(require "alphanumeric.rkt"
-         "../func/write-func.rkt"
-         "../func/code-info/code-info-func.rkt"
-         "../func/remainder-bits/remainder-bits-func.rkt"
-         "../../share/data-encoding.rkt"
-         "../../share/lib.rkt"
-         "../../share/data-group.rkt"
-         "../../share/character-bit-width.rkt"
-         racket/format)
-
-(define (get-character-count-indicator character_count bit_width)
-  (~r character_count #:base 2 #:min-width bit_width #:pad-string "0"))
 
 (define (get-character-bit-width version mode)
   (cond
