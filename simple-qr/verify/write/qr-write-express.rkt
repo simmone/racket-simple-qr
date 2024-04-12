@@ -127,6 +127,7 @@
 
     (let ([s1_data_bits #f]
           [s2_character_count #f]
+          [s2_1_count_bit_width #f]
           [s3_character_count_indicator #f]
           [s4_mode_indicator #f]
           [s5_header_added_bits #f]
@@ -161,13 +162,21 @@
 
       ;; add mode and count indicator
       (set! s2_character_count (string-length data))
+      
+      (set! s2_1_count_bit_width (get-character-bit-width (QR-version qr) (QR-mode qr))
 
-      (set! s3_character_count_indicator (get-character-count-indicator s2_character_count version mode))
+      (set! s3_character_count_indicator (get-character-count-indicator s2_character_count s2_1_count_bit_width))
 
-      (set! s4_mode_indicator (get-mode-indicator mode))
+      (set! s4_mode_indicator
+            (cond
+             [(eq? (QR-mode qr) 'N) "0001"]
+             [(eq? (QR-mode qr) 'A) "0010"]
+             [(eq? (QR-mode qr) 'B) "0100"]
+             [(eq? (QR-mode qr) 'K) "1000"]))
 
       (set! s5_header_added_bits (string-append s4_mode_indicator s3_character_count_indicator s1_data_bits))
 
+      (s11-head-bits-express s2_character_count s2_1_count_bit_width s3_character_count_indicator s4_mode_indicator s5_header_added_bits qr)
       )
     )
   )

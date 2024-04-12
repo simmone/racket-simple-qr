@@ -1,13 +1,13 @@
 #lang racket
 
-(provide (contract-out 
-          [get-character-count-indicator (-> exact-nonnegative-integer? exact-nonnegative-integer? string? string?)]
+(provide (contract-out
+          [get-character-bit-width (-> natural? natural? string?)]
+          [get-character-count-indicator (-> natural? natural? string? string?)]
           [encode-b (-> string? string?)]
           [encode-n (-> string? string?)]
-          [string-split (-> string? exact-nonnegative-integer? list?)]
+          [string-split (-> string? natural? list?)]
           [encode-a (-> string? string?)]
           [interleave-data-group (-> list? list?)]
-          [get-bit-mode-table (-> (hash/c symbol? string?))]
           ))
 
 (require "alphanumeric.rkt"
@@ -20,8 +20,8 @@
          "../../share/character-bit-width.rkt"
          racket/format)
 
-(define (get-character-count-indicator character_count version mode)
-  (~r character_count #:base 2 #:min-width (get-character-bit-width version mode) #:pad-string "0"))
+(define (get-character-count-indicator character_count bit_width)
+  (~r character_count #:base 2 #:min-width bit_width #:pad-string "0"))
 
 (define (get-character-bit-width version mode)
   (cond
@@ -55,15 +55,6 @@
       16]
      [(eq? mode 'K)
       12])]))
-
-(define (get-mode-bit-table)
-  '#hash(
-         ('N . "0001") 
-         ('A . "0010") 
-         ('B . "0100") 
-         ('K . "1000") 
-         ('E . "0111")
-         ))
 
 (define (encode-b content)
   (with-output-to-string
