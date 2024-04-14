@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? natural? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
@@ -11,15 +10,6 @@
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (add-terminator content limit_length)
-  (let* ([content_length (string-length content)]
-         [gap (- limit_length content_length)])
-    (if (<= gap 0)
-        content
-        (if (<= gap 4)
-            (~a content #:min-width (+ content_length gap) #:right-pad-string "0")
-            (~a content #:min-width (+ content_length 4) #:right-pad-string "0")))))
 
 (define (add-multi-eight content)
   (let* ([content_length (string-length content)]

@@ -11,6 +11,7 @@
           [split-string (-> string? natural? list?)]
           [string-to-bits-markdown-table (-> string? string? string?)]
           [bits-to-markdown-table (-> string? natural? string?)]
+          [add-terminator (-> string? natural? string?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -24,6 +25,15 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           ))
+
+(define (add-terminator content limit_length)
+  (let* ([content_length (string-length content)]
+         [gap (- limit_length content_length)])
+    (if (<= gap 0)
+        content
+        (if (<= gap 4)
+            (~a content #:min-width (+ content_length gap) #:right-pad-string "0")
+            (~a content #:min-width (+ content_length 4) #:right-pad-string "0")))))
 
 (define (transform-points-list points_list start_point_pair)
   (map
