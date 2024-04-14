@@ -1,7 +1,6 @@
 #lang racket
 
 (provide (contract-out
-          [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? natural? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
           [split-decimal-list-on-contract (-> list? list? list?)]
@@ -10,11 +9,6 @@
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (add-multi-eight content)
-  (let* ([content_length (string-length content)]
-         [eight_length (* 8 (ceiling (/ content_length 8)))])
-    (~a content #:min-width eight_length #:right-pad-string "0")))
 
 (define (repeat-right-pad-string content limit_length pad_str)
   (with-output-to-string

@@ -12,6 +12,7 @@
           [string-to-bits-markdown-table (-> string? string? string?)]
           [bits-to-markdown-table (-> string? natural? string?)]
           [add-terminator (-> string? natural? string?)]
+          [add-multi-eight (-> string? string?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -25,6 +26,11 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           ))
+
+(define (add-multi-eight content)
+  (let* ([content_length (string-length content)]
+         [eight_length (* 8 (ceiling (/ content_length 8)))])
+    (~a content #:min-width eight_length #:right-pad-string "0")))
 
 (define (add-terminator content limit_length)
   (let* ([content_length (string-length content)]

@@ -27,6 +27,7 @@
          "write/s11-head-bits-express.rkt"
          "../share/bits-width.rkt"
          "write/s12-terminator-express.rkt"
+         "write/s13-padding-multiple8-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path content_directory (build-path "express" "content"))
@@ -140,8 +141,7 @@
           [s19_remainder_bits_width #f]
           [s20_padded_remainder_bits #f]
           [s21_data_list #f]
-          [s22_trace_list #f]
-          )
+          [s22_trace_list #f])
 
       ;; data to bits
       (cond
@@ -180,6 +180,11 @@
       (set! s8_terminator_appended_bits (add-terminator s5_header_added_bits s7_capacity_bits_width))
 
       (s12-terminator-express s6_capacity_char_count s7_capacity_bits_width s8_terminator_appended_bits qr)
+
+      ;; add multiple eight
+      (set! s9_multiple8_bits (add-multi-eight s8_terminator_appended_bits))
+
+      (s13-padding-multiple8-express s9_multiple8_bits qr)
       )
     )
   )
