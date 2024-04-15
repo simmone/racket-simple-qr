@@ -28,6 +28,7 @@
          "../share/bits-width.rkt"
          "write/s12-terminator-express.rkt"
          "write/s13-padding-multiple8-express.rkt"
+         "write/s14-repeat-pad-bits-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path content_directory (build-path "express" "content"))
@@ -185,6 +186,13 @@
       (set! s9_multiple8_bits (add-multi-eight s8_terminator_appended_bits))
 
       (s13-padding-multiple8-express s9_multiple8_bits qr)
+
+      ;; repeat padding
+      (let ([repeat_str "1110110000010001"])
+        (set! s10_repeat_pad_bits (repeat-right-pad-string s9_multiple8_bits s7_capacity_bits_width "1110110000010001"))
+
+        (s14-repeat-pad-bits-express repeat_str s7_capacity_bits_width s10_repeat_pad_bits qr)
+        )
       )
     )
   )

@@ -13,6 +13,7 @@
           [bits-to-markdown-table (-> string? natural? string?)]
           [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
+          [repeat-right-pad-string (-> string? natural? string? string?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -26,6 +27,20 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           ))
+
+(define (repeat-right-pad-string content limit_length pad_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_content content])
+        (if (>= (string-length loop_content) limit_length)
+            (printf "~a" loop_content)
+            (let loop_inner ([inner_loop_content loop_content]
+                             [pad_list (string->list pad_str)])
+              (if (not (null? pad_list))
+                  (if (>= (string-length inner_loop_content) limit_length)
+                      (printf "~a" inner_loop_content)
+                      (loop_inner (format "~a~a" inner_loop_content (car pad_list)) (cdr pad_list)))
+                  (loop inner_loop_content))))))))
 
 (define (add-multi-eight content)
   (let* ([content_length (string-length content)]
@@ -115,7 +130,7 @@
 (define (bits-to-markdown-table bits line_width)
   (with-output-to-string
     (lambda ()
-      (printf "|index|bits|\n|---|---|\n")
+      (printf "|index|bits(~a)|\n|---|---|\n" line_width)
       (let loop ([bytes (split-string bits line_width)]
                  [index 1])
         (when (not (null? bytes))
