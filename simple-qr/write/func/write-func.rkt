@@ -1,53 +1,11 @@
 #lang racket
 
 (provide (contract-out
-          [split-bit-string-to-decimal (-> string? list?)]
-          [split-decimal-list-on-contract (-> list? list? list?)]
           [interleave-list (-> list? list?)]
           [decimal-list-to-string (-> list? string?)]
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (split-bit-string-to-decimal bit_str)
-  (reverse
-   (let loop ([loop_str bit_str]
-              [result_list '()])
-     (if (not (string=? loop_str ""))
-         (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
-         result_list))))
-
-(define (split-decimal-list-on-contract num_list contract)
-  (let ([group1_block_count (car (first contract))]
-        [group1_count_per_block (cdr (first contract))]
-        [group2_block_count (car (second contract))]
-        [group2_count_per_block (cdr (second contract))]
-        [remain_list #f])
-
-    (list
-     (let loop ([loop_list num_list]
-                [loop_block_count group1_block_count]
-                [loop_count group1_count_per_block]
-                [temp_result_list '()]
-                [result_list '()])
-       (if (= loop_block_count 0)
-           (begin
-             (set! remain_list loop_list)
-             (reverse result_list))
-           (if (= loop_count 1)
-               (loop (cdr loop_list) (sub1 loop_block_count) group1_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
-               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list))))
-
-     (let loop ([loop_list remain_list]
-                [loop_block_count group2_block_count]
-                [loop_count group2_count_per_block]
-                [temp_result_list '()]
-                [result_list '()])
-       (if (= loop_block_count 0)
-           (reverse result_list)
-           (if (= loop_count 1)
-               (loop (cdr loop_list) (sub1 loop_block_count) group2_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
-               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list)))))))
 
 (define (interleave-list data_list)
   (let loop ([count 0]

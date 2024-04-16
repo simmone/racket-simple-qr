@@ -11,9 +11,12 @@
           [split-string (-> string? natural? list?)]
           [string-to-bits-markdown-table (-> string? string? string?)]
           [bits-to-markdown-table (-> string? natural? string?)]
+          [list-to-markdown-table (-> list? natural? string?)]
           [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? natural? string? string?)]
+          [split-bit-string-to-decimal (-> string? list?)]
+          [split-decimal-list-on-contract (-> list? list? list?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -27,6 +30,46 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           ))
+
+(define (split-decimal-list-on-contract num_list contract)
+  (let ([group1_block_count (car (first contract))]
+        [group1_count_per_block (cdr (first contract))]
+        [group2_block_count (car (second contract))]
+        [group2_count_per_block (cdr (second contract))]
+        [remain_list #f])
+
+    (list
+     (let loop ([loop_list num_list]
+                [loop_block_count group1_block_count]
+                [loop_count group1_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (begin
+             (set! remain_list loop_list)
+             (reverse result_list))
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group1_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list))))
+
+     (let loop ([loop_list remain_list]
+                [loop_block_count group2_block_count]
+                [loop_count group2_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (reverse result_list)
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group2_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list)))))))
+
+(define (split-bit-string-to-decimal bit_str)
+  (reverse
+   (let loop ([loop_str bit_str]
+              [result_list '()])
+     (if (not (string=? loop_str ""))
+         (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
+         result_list))))
 
 (define (repeat-right-pad-string content limit_length pad_str)
   (with-output-to-string
@@ -136,6 +179,23 @@
         (when (not (null? bytes))
           (printf "|~a|~a|\n" index (car bytes))
           (loop (cdr bytes) (add1 index)))))))
+
+(define (list-to-markdown-table items_list line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|items(~a)|\n|---|---|\n" line_width)
+      (let loop ([groups
+                  (let loop-group ([items items_list]
+                                   [result_list '()])
+                    (if (not (null? items))
+                        (if (> (length items) line_width)
+                            (loop-group (list-tail items line_width) (cons (take items line_width) result_list))
+                            (loop-group '() (cons items result_list)))
+                        (reverse result_list)))]
+                 [index 1])
+        (when (not (null? bytes))
+          (printf "|~a|~a|\n" index (car groups))
+          (loop (cdr groups) (add1 index)))))))
 
 (define (move-point-col point cols)
   (cons

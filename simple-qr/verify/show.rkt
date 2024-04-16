@@ -30,6 +30,7 @@
          "write/s13-padding-multiple8-express.rkt"
          "write/s14-repeat-pad-bits-express.rkt"
          "../share/data-group.rkt"
+         "write/s15-split-to-groups-express.rkt"
          racket/runtime-path)
 
 (define-runtime-path content_directory (build-path "express" "content"))
@@ -201,14 +202,15 @@
       (set! s11_decimal_list (split-bit-string-to-decimal s10_repeat_pad_bits))
 
       ;; group data
-      (set! s12_split_contract (get-group-width version error_level))
+      (set! s12_split_contract (get-group-width (QR-version qr) (QR-error_level qr)))
           
       ;; split decimal list on contract
       (set! s13_origin_data_group (split-decimal-list-on-contract s11_decimal_list s12_split_contract))
+      
+      (s15-split-to-groups-express s11_decimal_list s12_split_contract s13_origin_data_group qr)
       )
     )
   )
-
 
 (make-directory* (build-path "express" "content" "docs"))
 
