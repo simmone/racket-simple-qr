@@ -32,4 +32,4 @@ the string, repeating until the string has reached the maximum length:
       (printf "## repeat bytes: 11101100 00010001\n\n")
 
       (printf "## after repeat pad:\n\n")
-      (printf "~a\n" (bits-to-markdown-table repeat_pad_bits 8)))))
+      (printf "~a\n" (bits-to-markdown-table repeat_pad_bits 16)))))

@@ -29,6 +29,7 @@
          "write/s12-terminator-express.rkt"
          "write/s13-padding-multiple8-express.rkt"
          "write/s14-repeat-pad-bits-express.rkt"
+         "../share/data-group.rkt"
          racket/runtime-path)
 
 (define-runtime-path content_directory (build-path "express" "content"))
@@ -193,6 +194,17 @@
 
         (s14-repeat-pad-bits-express repeat_str s7_capacity_bits_width s10_repeat_pad_bits qr)
         )
+
+      ;; split to groups
+
+      ;; to decimal list
+      (set! s11_decimal_list (split-bit-string-to-decimal s10_repeat_pad_bits))
+
+      ;; group data
+      (set! s12_split_contract (get-group-width version error_level))
+          
+      ;; split decimal list on contract
+      (set! s13_origin_data_group (split-decimal-list-on-contract s11_decimal_list s12_split_contract))
       )
     )
   )
