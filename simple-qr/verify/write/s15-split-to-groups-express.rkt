@@ -28,4 +28,15 @@ into smaller blocks if the QR code is larger than version 2. \n\n")
 
       (printf "## convert bit string to byte list: \n\n")
       (printf "~a\n" (list-to-markdown-table decimal_list 8))
+
+      (printf "## [~a-~a]'s split contract is [~a]\n\n" (QR-version qr) (QR-error_level qr) split_contract)
+      (printf "split contract's meaning: \n\n(group1_block_count group1_byte_count_per_block)\n\n(group2_block_count group2_byte_count_per_block)\n\n")
+
+      (printf "## split to groups by contract: \n\n")
+
+      (printf "group1: \n\n")
+      (printf "~a\n" (list-to-markdown-table (first origin_data_groups) 1))
+
+      (printf "group2: \n\n")
+      (printf "~a\n" (list-to-markdown-table (second origin_data_groups) 1))
       )))

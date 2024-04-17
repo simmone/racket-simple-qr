@@ -193,7 +193,7 @@
                             (loop-group '() (cons items result_list)))
                         (reverse result_list)))]
                  [index 1])
-        (when (not (null? bytes))
+        (when (not (null? groups))
           (printf "|~a|~a|\n" index (car groups))
           (loop (cdr groups) (add1 index)))))))
 
