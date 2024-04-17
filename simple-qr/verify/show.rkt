@@ -31,7 +31,10 @@
          "write/s14-repeat-pad-bits-express.rkt"
          "../share/data-group.rkt"
          "write/s15-split-to-groups-express.rkt"
-         racket/runtime-path)
+         "../share/ec-count.rkt"
+         "write/s16-error-correction-express.rkt"
+         racket/runtime-path
+         reed-solomon)
 
 (define-runtime-path content_directory (build-path "express" "content"))
 (define-runtime-path index_md_file (build-path "express" "content" "_index.md"))
@@ -208,12 +211,31 @@
       (set! s13_origin_data_group (split-decimal-list-on-contract s11_decimal_list s12_split_contract))
       
       (s15-split-to-groups-express s11_decimal_list s12_split_contract s13_origin_data_group qr)
+
+      ;; calculate error code
+      (set! s14_ec_count (get-ec-count (QR-version qr) (QR-error_level qr)))
+          
+      (set! s16_error_code_group
+            (list
+             (map
+              (lambda (block_list)
+                (list block_list
+                      (rs-encode block_list s14_ec_count)))
+              (first s13_origin_data_group))
+
+             (map
+              (lambda (block_list)
+                (list block_list
+                      (rs-encode block_list s14_ec_count)))
+              (second s13_origin_data_group))))
+
+      (s16-error-correction-express s14_ec_count s16_error_code_group qr)
       )
     )
   )
 
 (make-directory* (build-path "express" "content" "docs"))
 
-;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+;(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
