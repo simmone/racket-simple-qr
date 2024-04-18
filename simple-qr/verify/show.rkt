@@ -34,6 +34,8 @@
          "../share/ec-count.rkt"
          "write/s16-error-correction-express.rkt"
          "write/s17-interleave-data-group-express.rkt"
+         "../write/remainder-bits.rkt"
+         "write/s18-add-remainder-bits-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -238,10 +240,19 @@
       (set! s18_interleave_data_bits (decimal-list-to-string s17_interleave_data_group))
 
       (s17-interleave-data-group-express s17_interleave_data_group s18_interleave_data_bits qr)
+
+      ;; padded remainder bits
+      (set! s19_remainder_bits_width (get-remainder-bits (QR-version qr)))
+
+      (set! s20_padded_remainder_bits
+            (~a s18_interleave_data_bits #:min-width (+ (string-length s18_interleave_data_bits) s19_remainder_bits_width) #:right-pad-string "0"))
+
+      (s18-add-remainder-bits-express s19_remainder_bits_width s20_padded_remainder_bits qr)
       )
     )
   )
 
+(delete-directory/files (build-path "express" "content"))
 (make-directory* (build-path "express" "content" "docs"))
 
 ;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)

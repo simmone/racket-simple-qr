@@ -1,8 +1,11 @@
 #lang racket
 
 (provide (contract-out
-          [*remainder_bits_table* hash?]
-          ))
+     [get-remainder-bits (-> natural? natural?)]
+     ))
+
+(define (get-remainder-bits version)
+  (hash-ref *remainder_bits_table* version))
 
 (define *remainder_bits_table*
   #hash(
@@ -47,3 +50,4 @@
         (39 . 0)
         (40 . 0)
         ))
+

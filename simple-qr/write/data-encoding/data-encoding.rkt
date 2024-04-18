@@ -2,7 +2,6 @@
 
 (require "alphanumeric.rkt"
          "../func/write-func.rkt"
-         "../func/remainder-bits/remainder-bits-func.rkt"
          "../../share/lib.rkt"
          "../../share/data-group.rkt"
         racket/format)
