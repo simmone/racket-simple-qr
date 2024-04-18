@@ -17,6 +17,9 @@
           [repeat-right-pad-string (-> string? natural? string? string?)]
           [split-bit-string-to-decimal (-> string? list?)]
           [split-decimal-list-on-contract (-> list? list? list?)]
+          [interleave-list (-> list? list?)]
+          [interleave-data-group (-> list? list?)]
+          [decimal-list-to-string (-> list? string?)]
 
           [get-points (-> (listof list?) (listof pair?) any)]
           [get-unmask-points (-> (listof list?) (listof pair?) procedure? pair?)]
@@ -30,6 +33,41 @@
           [format-string (-> string? natural? string?)]
           [display-qr-bits (-> natural? hash? string?)]
           ))
+
+(define (interleave-list data_list)
+  (let loop ([count 0]
+             [result_list '()])
+    (let ([temp_list '()])
+      (for-each
+       (lambda (item_list)
+         (when (<= count (sub1 (length item_list)))
+               (set! temp_list `(,@temp_list ,(list-ref item_list count)))))
+       data_list)
+      
+      (if (null? temp_list)
+          result_list
+          (loop (add1 count) `(,@result_list ,@temp_list))))))
+
+(define (interleave-data-group data_group)
+  (let ([data_list
+         (quasiquote
+          (
+           (unquote-splicing (map car (car data_group)))
+           (unquote-splicing (map car (cadr data_group)))))]
+        [ec_list
+         (quasiquote
+          (
+          (unquote-splicing (map cadr (car data_group)))
+          (unquote-splicing (map cadr (cadr data_group)))))])
+    `(,@(interleave-list data_list) ,@(interleave-list ec_list))))
+
+(define (decimal-list-to-string decimal_list)
+  (with-output-to-string
+    (lambda ()
+      (for-each
+       (lambda (num)
+         (printf "~a" (~r num #:base 2 #:min-width 8 #:pad-string "0")))
+       decimal_list))))
 
 (define (split-decimal-list-on-contract num_list contract)
   (let ([group1_block_count (car (first contract))]

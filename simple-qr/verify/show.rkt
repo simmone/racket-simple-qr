@@ -33,6 +33,7 @@
          "write/s15-split-to-groups-express.rkt"
          "../share/ec-count.rkt"
          "write/s16-error-correction-express.rkt"
+         "write/s17-interleave-data-group-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -230,12 +231,19 @@
               (second s13_origin_data_group))))
 
       (s16-error-correction-express s14_ec_count s16_error_code_group qr)
+
+      ;; interleave data group
+      (set! s17_interleave_data_group (interleave-data-group s16_error_code_group))
+          
+      (set! s18_interleave_data_bits (decimal-list-to-string s17_interleave_data_group))
+
+      (s17-interleave-data-group-express s17_interleave_data_group s18_interleave_data_bits qr)
       )
     )
   )
 
 (make-directory* (build-path "express" "content" "docs"))
 
-(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-;(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)

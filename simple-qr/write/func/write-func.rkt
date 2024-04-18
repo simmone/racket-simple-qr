@@ -1,33 +1,9 @@
 #lang racket
 
 (provide (contract-out
-          [interleave-list (-> list? list?)]
-          [decimal-list-to-string (-> list? string?)]
           [cut-string (-> string? list)]
           [to-message-poly (-> list? string?)]
           ))
-
-(define (interleave-list data_list)
-  (let loop ([count 0]
-             [result_list '()])
-    (let ([temp_list '()])
-      (for-each
-       (lambda (item_list)
-         (when (<= count (sub1 (length item_list)))
-               (set! temp_list `(,@temp_list ,(list-ref item_list count)))))
-       data_list)
-      
-      (if (null? temp_list)
-          result_list
-          (loop (add1 count) `(,@result_list ,@temp_list))))))
-
-(define (decimal-list-to-string decimal_list)
-  (with-output-to-string
-    (lambda ()
-      (for-each
-       (lambda (num)
-         (printf "~a" (~r num #:base 2 #:min-width 8 #:pad-string "0")))
-       decimal_list))))
 
 (define (cut-string str)
   (reverse

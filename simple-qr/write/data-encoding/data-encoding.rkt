@@ -13,7 +13,6 @@
           [encode-n (-> string? string?)]
           [string-split (-> string? natural? list?)]
           [encode-a (-> string? string?)]
-          [interleave-data-group (-> list? list?)]
           ))
 
 (define (get-character-bit-width version mode)
@@ -93,16 +92,3 @@
                     [value (+ (* num_1_value 45) num_2_value)])
                (printf "~a" (~r value #:base 2 #:min-width 11 #:pad-string "0")))))
        (string-split str 2)))))
-
-(define (interleave-data-group data_group)
-  (let ([data_list
-         (quasiquote
-          (
-           (unquote-splicing (map car (car data_group)))
-           (unquote-splicing (map car (cadr data_group)))))]
-        [ec_list
-         (quasiquote
-          (
-          (unquote-splicing (map cadr (car data_group)))
-          (unquote-splicing (map cadr (cadr data_group)))))])
-    `(,@(interleave-list data_list) ,@(interleave-list ec_list))))
