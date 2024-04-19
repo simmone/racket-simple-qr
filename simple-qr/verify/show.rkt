@@ -37,6 +37,7 @@
          "../write/remainder-bits.rkt"
          "write/s18-add-remainder-bits-express.rkt"
          "../write/fill-data.rkt"
+         "write/s19-draw-data-bits-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -50,6 +51,7 @@
 (define-runtime-path dark_module_file (build-path "express" "content" "docs" "s7_dark_module" "dark_module.svg"))
 (define-runtime-path format_information_file (build-path "express" "content" "docs" "s8_format_information" "format_information.svg"))
 (define-runtime-path version_information_file (build-path "express" "content" "docs" "s9_version_information" "version_information.svg"))
+(define-runtime-path data_bits_file (build-path "express" "content" "docs" "s19_data_bits" "data_bits.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -252,7 +254,10 @@
       ;; fill data bits, skip reserved points
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-type_map qr)))
 
-      (draw-data s20_padded_remainder_bits s22_trace_list points_map type_map)
+      (draw-data s20_padded_remainder_bits s22_trace_list qr)
+      (fill-type-points 'data '("black" . "white") qr)
+      (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
+      (draw (QR-matrix qr) data_bits_file 'svg)
       )
     )
   )

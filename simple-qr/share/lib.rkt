@@ -12,6 +12,7 @@
           [string-to-bits-markdown-table (-> string? string? string?)]
           [bits-to-markdown-table (-> string? natural? string?)]
           [list-to-markdown-table (-> list? natural? string?)]
+          [dual-list-to-markdown-table (-> list? list? natural? string?)]
           [add-terminator (-> string? natural? string?)]
           [add-multi-eight (-> string? string?)]
           [repeat-right-pad-string (-> string? natural? string? string?)]
@@ -234,6 +235,33 @@
         (when (not (null? groups))
           (printf "|~a|~a|\n" index (car groups))
           (loop (cdr groups) (add1 index)))))))
+
+(define (dual-list-to-markdown-table items1_list items2_list line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|items(~a)|\n|---|---|\n" line_width)
+      (let loop (
+                 [groups1
+                  (let loop-group ([items1 items1_list]
+                                   [result_list '()])
+                    (if (not (null? items1))
+                        (if (> (length items1) line_width)
+                            (loop-group (list-tail items1 line_width) (cons (take items1 line_width) result_list))
+                            (loop-group '() (cons items1 result_list)))
+                        (reverse result_list)))]
+                 [groups2
+                  (let loop-group ([items2 items2_list]
+                                   [result_list '()])
+                    (if (not (null? items2))
+                        (if (> (length items2) line_width)
+                            (loop-group (list-tail items2 line_width) (cons (take items2 line_width) result_list))
+                            (loop-group '() (cons items2 result_list)))
+                        (reverse result_list)))]
+                 [index 1])
+        (when (not (null? groups1))
+          (printf "|~a|~a|\n" index (car groups1))
+          (printf "|~a|~a|\n" index (car groups2))
+          (loop (cdr groups1) (cdr groups2) (add1 index)))))))
 
 (define (move-point-col point cols)
   (cons
