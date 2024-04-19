@@ -36,6 +36,7 @@
          "write/s17-interleave-data-group-express.rkt"
          "../write/remainder-bits.rkt"
          "write/s18-add-remainder-bits-express.rkt"
+         "../write/fill-data.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -149,7 +150,6 @@
           [s18_interleave_data_bits #f]
           [s19_remainder_bits_width #f]
           [s20_padded_remainder_bits #f]
-          [s21_data_list #f]
           [s22_trace_list #f])
 
       ;; data to bits
@@ -248,6 +248,11 @@
             (~a s18_interleave_data_bits #:min-width (+ (string-length s18_interleave_data_bits) s19_remainder_bits_width) #:right-pad-string "0"))
 
       (s18-add-remainder-bits-express s19_remainder_bits_width s20_padded_remainder_bits qr)
+
+      ;; fill data bits, skip reserved points
+      (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-type_map qr)))
+
+      (draw-data s20_padded_remainder_bits s22_trace_list points_map type_map)
       )
     )
   )
