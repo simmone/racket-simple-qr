@@ -27,44 +27,34 @@
                 [current_move 'up_left]
                 [result_list '()])
 
-       (if (and (not (null? result_list)) (equal? (car result_list) end_point))
-           (if (hash-has-key? skip_hash (car result_list))
-               (cdr result_list)
-               result_list)
-           (begin
-             (if (and (not (null? result_list)) (hash-has-key? skip_hash (car result_list)))
-                 (loop point current_move (cdr result_list))
-                 (begin
-                   (when (= (cdr point) 6)
-                         (set! point (cons (car point) (cdr point))))
+       (let ([next_point #f]
+             [next_move #f])
 
-                   (let ([next_point #f]
-                         [next_move #f])
+         (cond
+          [(equal? current_move 'up_left)
+           (set! next_point (cons (car point) (sub1 (cdr point))))
+           (set! next_move 'up_right)]
+          [(equal? current_move 'up_right)
+           (set! next_point (cons (sub1 (car point)) (add1 (cdr point))))
+           (set! next_move 'up_left)]
+          [(equal? current_move 'down_left)
+           (set! next_point (cons (car point) (sub1 (cdr point))))
+           (set! next_move 'down_right)]
+          [(equal? current_move 'down_right)
+           (set! next_point (cons (add1 (car point)) (add1 (cdr point))))
+           (set! next_move 'down_left)])
+
+         (if (not (in-range? next_point modules))
+             (reverse result_list)
+             (if (hash-has-key? skip_hash (car result_list))
+                 (loop next_point next_move result_list)
+                 (if (not (in-range? next_point modules))
                      (cond
-                      [(equal? current_move 'up_left)
-                       (begin
-                         (set! next_point (cons (car point) (sub1 (cdr point))))
-                         (set! next_move 'up_right))]
                       [(equal? current_move 'up_right)
-                       (begin
-                         (set! next_point (cons (sub1 (car point)) (add1 (cdr point))))
-                         (set! next_move 'up_left))]
-                      [(equal? current_move 'down_left)
-                       (begin
-                         (set! next_point (cons (car point) (sub1 (cdr point))))
-                         (set! next_move 'down_right))]
+                       (loop (add-quiet-zone-offset (cons 0 (cdr point))) 'down_left (cons point result_list))]
                       [(equal? current_move 'down_right)
-                       (begin
-                         (set! next_point (cons (add1 (car point)) (add1 (cdr point))))
-                         (set! next_move 'down_left))])
-
-                     (if (not (in-range? next_point modules))
-                         (cond
-                          [(equal? current_move 'up_right)
-                           (loop (cons 1 (sub1 (cdr point))) 'down_left (cons point result_list))]
-                          [(equal? current_move 'down_right)
-                           (loop (cons modules (sub1 (cdr point))) 'up_left (cons point result_list))])
-                         (loop next_point next_move (cons point result_list))))))))))))
+                       (loop (add-quiet-zone-offset (cons modules (cdr point))) 'up_left (cons point result_list))])
+                     (loop next_point next_move (cons point result_list)))))))))
 
 (define (in-range? point modules)
   (and (>= (car point) 0) (<= (car point) (+ modules QUIET_ZONE_BRICKS)) (>= (cdr point) 0) (<= (cdr point) (+ modules QUIET_ZONE_BRICKS))))
