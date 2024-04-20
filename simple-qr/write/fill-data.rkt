@@ -3,11 +3,11 @@
 (require "../share/qr.rkt")
 
 (provide (contract-out 
-          [draw-data (-> string? list? hash? hash? void?)]
+          [draw-data (-> string? list? QR? void?)]
           [get-data-socket-list (->* (natural?) (#:skip_points_hash hash?) list?)]
           ))
 
-(define (draw-data bits_string trace_list points_map type_map)
+(define (draw-data bits_string trace_list qr)
   (let loop ([loop_data_list (string->list bits_string)]
              [loop_trace_list trace_list])
     (when (not (null? loop_trace_list))
@@ -21,9 +21,8 @@
               (loop (cdr loop_data_list) (cdr loop_trace_list))))))
 
 (define (get-data-socket-list modules #:skip_points_hash [skip_hash (make-hash)])
-  (let ([start_point (cons modules modules)]
-        [end_point (cons modules 1)])
-    (reverse
+  (let ([start_point (add-quiet-zone-offset (cons modules modules))]
+        [end_point (add-quiet-zone-offset (cons modules 0))])
      (let loop ([point start_point]
                 [current_move 'up_left]
                 [result_list '()])
@@ -36,8 +35,8 @@
              (if (and (not (null? result_list)) (hash-has-key? skip_hash (car result_list)))
                  (loop point current_move (cdr result_list))
                  (begin
-                   (when (= (cdr point) 7)
-                         (set! point (cons (car point) (- (cdr point) 1))))
+                   (when (= (cdr point) 6)
+                         (set! point (cons (car point) (cdr point))))
 
                    (let ([next_point #f]
                          [next_move #f])
@@ -68,5 +67,5 @@
                          (loop next_point next_move (cons point result_list))))))))))))
 
 (define (in-range? point modules)
-  (and (>= (car point) 1) (<= (car point) modules) (>= (cdr point) 1) (<= (cdr point) modules)))
+  (and (>= (car point) 0) (<= (car point) (+ modules QUIET_ZONE_BRICKS)) (>= (cdr point) 0) (<= (cdr point) (+ modules QUIET_ZONE_BRICKS))))
 

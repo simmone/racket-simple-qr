@@ -51,7 +51,7 @@
 (define-runtime-path dark_module_file (build-path "express" "content" "docs" "s7_dark_module" "dark_module.svg"))
 (define-runtime-path format_information_file (build-path "express" "content" "docs" "s8_format_information" "format_information.svg"))
 (define-runtime-path version_information_file (build-path "express" "content" "docs" "s9_version_information" "version_information.svg"))
-(define-runtime-path data_bits_file (build-path "express" "content" "docs" "s19_data_bits" "data_bits.svg"))
+(define-runtime-path data_bits_file (build-path "express" "content" "docs" "s19_draw_data_bits" "data_bits.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -252,7 +252,7 @@
       (s18-add-remainder-bits-express s19_remainder_bits_width s20_padded_remainder_bits qr)
 
       ;; fill data bits, skip reserved points
-      (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-type_map qr)))
+      (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
       (draw-data s20_padded_remainder_bits s22_trace_list qr)
       (fill-type-points 'data '("black" . "white") qr)
