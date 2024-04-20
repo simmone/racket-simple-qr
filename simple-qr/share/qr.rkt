@@ -28,6 +28,7 @@
           [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
           [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) (cons/c string? string?) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
+          [add-quiet-zone-bricks (-> natural? natural?)]
           ))
 
 (struct QR
@@ -86,3 +87,6 @@
   (cons
    (+ (car point) QUIET_ZONE_BRICKS)
    (+ (cdr point) QUIET_ZONE_BRICKS)))
+
+(define (add-quiet-zone-bricks modules)
+  (+ modules (* 2 QUIET_ZONE_BRICKS)))
