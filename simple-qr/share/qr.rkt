@@ -26,9 +26,9 @@
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]
           [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
+          [add-raw-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
           [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) (cons/c string? string?) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
-          [add-quiet-zone-bricks (-> natural? natural?)]
           ))
 
 (struct QR
@@ -68,8 +68,11 @@
          (cons
           (+ QUIET_ZONE_BRICKS (car point))
           (+ QUIET_ZONE_BRICKS (cdr point)))])
-    (hash-set! (QR-point_val_map qr) new_point val)
-    (hash-set! (QR-point_type_map qr) new_point type)))
+    (add-raw-point new_point val type qr)))
+
+(define (add-raw-point point val type qr)
+  (hash-set! (QR-point_val_map qr) point val)
+  (hash-set! (QR-point_type_map qr) point type))
 
 (define (fill-type-points type color_pair qr)
   (let loop ([type_points
@@ -87,6 +90,3 @@
   (cons
    (+ (car point) QUIET_ZONE_BRICKS)
    (+ (cdr point) QUIET_ZONE_BRICKS)))
-
-(define (add-quiet-zone-bricks modules)
-  (+ modules (* 2 QUIET_ZONE_BRICKS)))

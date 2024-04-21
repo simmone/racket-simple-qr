@@ -255,7 +255,7 @@
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
       (draw-data s20_padded_remainder_bits s22_trace_list qr)
-      (fill-type-points 'data '("black" . "white") qr)
+      (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
       (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
       (draw (QR-matrix qr) data_bits_file 'svg)
       )
