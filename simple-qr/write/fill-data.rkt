@@ -13,10 +13,11 @@
     (when (not (null? loop_trace_list))
           (let ([bit_data (if (null? loop_data_list) #\0 (car loop_data_list))]
                 [point_pair (car loop_trace_list)])
-            (printf "loop_data_list length:~a, point_pair=~a, bit_data:~a\n" (length loop_data_list) point_pair bit_data)
+
             (if (char=? bit_data #\1)
                 (add-raw-point point_pair 1 'data qr)
-                (add-raw-point point_pair 0 'data qr)))
+                (add-raw-point point_pair 0 'data qr))
+            )
           (if (null? loop_data_list)
               (loop '() (cdr loop_trace_list))
               (loop (cdr loop_data_list) (cdr loop_trace_list))))))
@@ -50,7 +51,7 @@
             (set! next_point (cons QUIET_ZONE_BRICKS (sub1 (cdr loop_point))))
             (set! next_move 'down_left)]
            [(equal? current_move 'down_right)
-            (set! next_point (cons (sub1 (+ QUIET_ZONE_BRICKS modules)) (cdr loop_point)))
+            (set! next_point (cons (sub1 (+ QUIET_ZONE_BRICKS modules)) (sub1 (cdr loop_point))))
             (set! next_move 'up_left)]))
 
         (if (hash-has-key? skip_hash loop_point)

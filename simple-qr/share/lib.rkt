@@ -260,8 +260,8 @@
                  [index 1])
         (when (not (null? groups1))
           (printf "|~a|~a|\n" index (car groups1))
-          (printf "|~a|~a|\n" index (car groups2))
-          (loop (cdr groups1) (cdr groups2) (add1 index)))))))
+          (printf "|~a|~a|\n" index (if (null? groups2) "" (car groups2)))
+          (loop (cdr groups1) (if (null? groups2) '() (cdr groups2)) (add1 index)))))))
 
 (define (move-point-col point cols)
   (cons
