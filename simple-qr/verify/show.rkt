@@ -255,6 +255,10 @@
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
       (draw-data s20_padded_remainder_bits s22_trace_list qr)
+      (printf "~a=~a\n" (hash-ref (QR-point_val_map qr) '(13 . 28)) (hash-ref (QR-point_type_map qr) '(13 . 28)))
+      (printf "~a=~a\n" (hash-ref (QR-point_val_map qr) '(13 . 27)) (hash-ref (QR-point_type_map qr) '(13 . 27)))
+      (printf "~a=~a\n" (hash-ref (QR-point_val_map qr) '(13 . 26)) (hash-ref (QR-point_type_map qr) '(13 . 26)))
+      (printf "~a=~a\n" (hash-ref (QR-point_val_map qr) '(13 . 25)) (hash-ref (QR-point_type_map qr) '(13 . 25)))
       (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
       (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
       (draw (QR-matrix qr) data_bits_file 'svg)

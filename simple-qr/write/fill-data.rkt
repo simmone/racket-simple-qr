@@ -13,6 +13,7 @@
     (when (not (null? loop_trace_list))
           (let ([bit_data (if (null? loop_data_list) #\0 (car loop_data_list))]
                 [point_pair (car loop_trace_list)])
+            (printf "loop_data_list length:~a, point_pair=~a, bit_data:~a\n" (length loop_data_list) point_pair bit_data)
             (if (char=? bit_data #\1)
                 (add-raw-point point_pair 1 'data qr)
                 (add-raw-point point_pair 0 'data qr)))
