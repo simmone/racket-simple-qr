@@ -46,13 +46,19 @@
           (set! next_move 'down_left)])
 
         (when (not (in-range? next_point modules))
-          (cond
-           [(equal? current_move 'up_right)
-            (set! next_point (cons QUIET_ZONE_BRICKS (sub1 (cdr loop_point))))
-            (set! next_move 'down_left)]
-           [(equal? current_move 'down_right)
-            (set! next_point (cons (sub1 (+ QUIET_ZONE_BRICKS modules)) (sub1 (cdr loop_point))))
-            (set! next_move 'up_left)]))
+          (let ([next_col (sub1 (cdr loop_point))])
+
+            ;; if next column is vertical timing pattern, skip
+            (when (= next_col (+ QUIET_ZONE_BRICKS 6))
+              (set! next_col (sub1 next_col)))
+
+            (cond
+             [(equal? current_move 'up_right)
+              (set! next_point (cons QUIET_ZONE_BRICKS next_col))
+              (set! next_move 'down_left)]
+             [(equal? current_move 'down_right)
+              (set! next_point (cons (sub1 (+ QUIET_ZONE_BRICKS modules)) next_col))
+              (set! next_move 'up_left)])))
 
         (if (hash-has-key? skip_hash loop_point)
             (if (equal? next_point end_point)
