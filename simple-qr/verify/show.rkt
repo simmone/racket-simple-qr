@@ -38,6 +38,7 @@
          "write/s18-add-remainder-bits-express.rkt"
          "../write/fill-data.rkt"
          "write/s19-draw-data-bits-express.rkt"
+         "../write/mask-data.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -280,7 +281,7 @@
             
         (set! mask_list (map
                          (lambda (mask_number)
-                           (let ([new_points_map (hash-copy points_map)])
+                           (let ([new_points_map (hash-copy (QR-point_val_map qr))])
                              (for-each
                               (lambda (item)
                                 (hash-set! new_points_map (car item) (cdr item)))
@@ -291,9 +292,9 @@
         (set! penalty_list (map
                             (lambda (new_points_map)
                               (+
-                               (mask-on-condition1 modules new_points_map)
+                               (mask-on-condition1 (QR-modules qr) new_points_map)
                                (mask-on-condition2 new_points_map)
-                               (mask-on-condition3 modules new_points_map)
+                               (mask-on-condition3 (QR-modules qr) new_points_map)
                                (mask-on-condition4 new_points_map)))
                             mask_list))
         )
@@ -306,4 +307,4 @@
 
 ;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-(qr-write-express "chenxiao" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+(qr-write-express "HELLO WORLD" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
