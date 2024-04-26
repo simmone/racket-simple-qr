@@ -258,6 +258,45 @@
       (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
       (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
       (draw (QR-matrix qr) data_bits_file 'svg)
+
+      ;; mask data
+      (let* ([format_str #f]
+             [data_list #f]
+             [mask_list #f]
+             [penalty_list #f]
+             [min_penalty #f]
+             [mask_index #f])
+            
+        (set! data_list
+              (let loop ([loop_trace_list s22_trace_list]
+                         [loop_data_list (map (lambda (ch) (string ch)) (string->list s20_padded_remainder_bits))]
+                         [result_list '()])
+                (if (not (null? loop_trace_list))
+                    (loop
+                     (cdr loop_trace_list)
+                     (cdr loop_data_list)
+                     (cons (cons (car loop_trace_list) (car loop_data_list)) result_list))
+                    (reverse result_list))))
+            
+        (set! mask_list (map
+                         (lambda (mask_number)
+                           (let ([new_points_map (hash-copy points_map)])
+                             (for-each
+                              (lambda (item)
+                                (hash-set! new_points_map (car item) (cdr item)))
+                              (mask-func data_list mask_number))
+                             new_points_map))
+                         '(0 1 2 3 4 5 6 7)))
+
+        (set! penalty_list (map
+                            (lambda (new_points_map)
+                              (+
+                               (mask-on-condition1 modules new_points_map)
+                               (mask-on-condition2 new_points_map)
+                               (mask-on-condition3 modules new_points_map)
+                               (mask-on-condition4 new_points_map)))
+                            mask_list))
+        )
       )
     )
   )
