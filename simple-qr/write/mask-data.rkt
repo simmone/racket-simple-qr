@@ -1,8 +1,11 @@
 #lang racket
 
+(require "../share/qr.rkt")
+
 (provide (contract-out
           [mask-func (-> list? natural? list?)]
-          [split-matrix (-> natural? list?)]
+          [get-all-data-rows (-> natural? list?)]
+          [get-all-data-cols (-> natural? list?)]
           [mask-condition1 (-> list? natural?)]
           [mask-on-condition1 (-> natural? hash? natural?)]
           [mask-on-condition2 (-> hash? natural?)]
@@ -32,52 +35,49 @@
                 [result_list '()])
        (if (not (null? loop_list))
            (let ([point_pair (caar loop_list)]
-                 [bit_char (cdar loop_list)])
+                 [bit (cdar loop_list)])
              (loop
               (cdr loop_list)
-              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit_char) bit_chhar)) result_list)))
+              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
            result_list)))))
 
 (define (switch-bit bit)
-  (if (char=? bit #\1)
-      #\0
-      #\1))
+  (if (= bit 1)
+      0
+      1))
 
-(define (split-matrix modules)
-  `(,@(reverse
-       (let loop-row ([row 1]
-                      [result_list '()])
-         (if (<= row modules)
-             (loop-row (add1 row)
-                       (cons 
-                        (reverse
-                         (let loop-col ([col 1]
-                                        [row_list '()])
-                           (if (<= col modules)
-                               (loop-col (add1 col) (cons (cons row col) row_list))
-                               row_list)))
-                        result_list))
-             result_list)))
+(define (get-all-data-rows modules)
+  (let loop-row ([row 0]
+                 [result_list '()])
+    (if (< row modules)
+        (loop-row (add1 row)
+                  (cons
+                   (let loop-col ([col 0]
+                                  [row_list '()])
+                     (if (< col modules)
+                         (loop-col (add1 col) (cons (add-quiet-zone-offset (cons row col)) row_list))
+                         (reverse row_list)))
+                   result_list))
+        (reverse result_list))))
 
-    ,@(reverse
-       (let loop-row ([col 1]
-                      [result_list '()])
-         (if (<= col modules)
-             (loop-row (add1 col)
-                       (cons 
-                        (reverse
-                         (let loop-col ([row 1]
-                                        [col_list '()])
-                           (if (<= row modules)
-                               (loop-col (add1 row) (cons (cons row col) col_list))
-                               col_list)))
-                        result_list))
-             result_list)))))
+(define (get-all-data-cols modules)
+  (let loop-row ([col 0]
+                 [result_list '()])
+    (if (< col modules)
+        (loop-row (add1 col)
+                  (cons
+                   (let loop-col ([row 0]
+                                  [col_list '()])
+                     (if (< row modules)
+                         (loop-col (add1 row) (cons (add-quiet-zone-offset (cons row col)) col_list))
+                         (reverse col_list)))
+                   result_list))
+        (reverse result_list))))
 
-(define (mask-condition1 row)
+(define (mask-condition1 line)
   (let ([sum_count 0])
-    (let loop ([loop_list row]
-               [last_item ""]
+    (let loop ([loop_list line]
+               [last_item -1]
                [single_count 0])
       (cond
        [(= single_count 5)
@@ -86,24 +86,26 @@
         (set! sum_count (add1 sum_count))])
 
       (when (not (null? loop_list))
-            (if (string=? (car loop_list) last_item)
+            (if (= (car loop_list) last_item)
                 (loop (cdr loop_list) (car loop_list) (add1 single_count))
                 (loop (cdr loop_list) (car loop_list) 1))))
     sum_count))
 
 (define (mask-on-condition1 modules points_map)
-  (foldr 
-   + 0 
+  (foldr
+   + 0
    (map
-    (lambda (row)
-      (mask-condition1 row))
+    (lambda (line)
+      (mask-condition1 line))
     (map
-     (lambda (point_row)
+     (lambda (point_line)
        (map
         (lambda (point)
           (hash-ref points_map point))
-        point_row))
-     (split-matrix modules)))))
+        point_line))
+     (append
+      (get-all-data-rows modules)
+      (get-all-data-cols modules))))))
 
 (define (mask-on-condition2 points_map)
   (let loop ([loop_list (hash-keys points_map)]
@@ -116,9 +118,9 @@
                [point3 (cons (add1 row) col)]
                [point4 (cons (add1 row) (add1 col))])
           (if (and
-               (hash-has-key? points_map point2) (=? (hash-ref points_map point2) val)
-               (hash-has-key? points_map point3) (=? (hash-ref points_map point3) val)
-               (hash-has-key? points_map point4) (=? (hash-ref points_map point4) val))
+               (hash-has-key? points_map point2) (= (hash-ref points_map point2) val)
+               (hash-has-key? points_map point3) (= (hash-ref points_map point3) val)
+               (hash-has-key? points_map point4) (= (hash-ref points_map point4) val))
               (loop (cdr loop_list) (+ sum 3))
               (loop (cdr loop_list) sum)))
         sum)))
@@ -133,8 +135,8 @@
      0)))
 
 (define (mask-on-condition3 modules points_map)
-  (foldr 
-   + 0 
+  (foldr
+   + 0
    (map
     (lambda (row)
       (mask-condition3 row))
@@ -144,7 +146,9 @@
         (lambda (point)
           (hash-ref points_map point))
         point_row))
-     (split-matrix modules)))))
+     (append
+      (get-all-data-rows modules)
+      (get-all-data-cols modules))))))
 
 (define (mask-on-condition4 points_map)
   (let ([sum_count (hash-count points_map)]
@@ -155,9 +159,9 @@
         [low_result #f]
         [high_result #f])
     (set! bili (* (/ dark_count sum_count) 100))
-    
+
     (set! low_val (* (floor (/ bili 5)) 5))
-    
+
     (set! high_val (* (ceiling (/ bili 5)) 5))
 
     (set! low_result (/ (abs (- low_val 50)) 5))

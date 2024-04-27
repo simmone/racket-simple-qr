@@ -270,7 +270,7 @@
             
         (set! data_list
               (let loop ([loop_trace_list s22_trace_list]
-                         [loop_data_list (string->list s20_padded_remainder_bits)]
+                         [loop_data_list (map (lambda (bit_char) (- (char->integer bit_char) 48)) (string->list s20_padded_remainder_bits))]
                          [result_list '()])
                 (if (not (null? loop_trace_list))
                     (loop
@@ -281,21 +281,21 @@
             
         (set! mask_list (map
                          (lambda (mask_number)
-                           (let ([new_points_map (hash-copy (QR-point_val_map qr))])
+                           (let ([mask_points_map (hash-copy (QR-point_val_map qr))])
                              (for-each
                               (lambda (item)
-                                (hash-set! new_points_map (car item) (cdr item)))
+                                (hash-set! mask_points_map (car item) (cdr item)))
                               (mask-func data_list mask_number))
-                             new_points_map))
+                             mask_points_map))
                          '(0 1 2 3 4 5 6 7)))
 
         (set! penalty_list (map
-                            (lambda (new_points_map)
+                            (lambda (mask_points_map)
                               (+
-                               (mask-on-condition1 (QR-modules qr) new_points_map)
-                               (mask-on-condition2 new_points_map)
-                               (mask-on-condition3 (QR-modules qr) new_points_map)
-                               (mask-on-condition4 new_points_map)))
+                               (mask-on-condition1 (QR-modules qr) mask_points_map)
+                               (mask-on-condition2 mask_points_map)
+                               (mask-on-condition3 (QR-modules qr) mask_points_map)
+                               (mask-on-condition4 mask_points_map)))
                             mask_list))
         )
       )
