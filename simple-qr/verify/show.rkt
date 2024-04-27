@@ -270,7 +270,7 @@
             
         (set! data_list
               (let loop ([loop_trace_list s22_trace_list]
-                         [loop_data_list (map (lambda (ch) (string ch)) (string->list s20_padded_remainder_bits))]
+                         [loop_data_list (string->list s20_padded_remainder_bits)]
                          [result_list '()])
                 (if (not (null? loop_trace_list))
                     (loop

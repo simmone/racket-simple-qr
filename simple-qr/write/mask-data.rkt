@@ -1,14 +1,14 @@
 #lang racket
 
 (provide (contract-out
-          [mask-func (-> list? exact-nonnegative-integer? list?)]
-          [split-matrix (-> exact-nonnegative-integer? list?)]
-          [mask-condition1 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition1 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
-          [mask-on-condition2 (-> hash? exact-nonnegative-integer?)]
-          [mask-condition3 (-> list? exact-nonnegative-integer?)]
-          [mask-on-condition3 (-> exact-nonnegative-integer? hash? exact-nonnegative-integer?)]
-          [mask-on-condition4 (-> hash? exact-nonnegative-integer?)]
+          [mask-func (-> list? natural? list?)]
+          [split-matrix (-> natural? list?)]
+          [mask-condition1 (-> list? natural?)]
+          [mask-on-condition1 (-> natural? hash? natural?)]
+          [mask-on-condition2 (-> hash? natural?)]
+          [mask-condition3 (-> list? natural?)]
+          [mask-on-condition3 (-> natural? hash? natural?)]
+          [mask-on-condition4 (-> hash? natural?)]
           ))
 
 (define (get-mask-proc mask)
@@ -32,16 +32,16 @@
                 [result_list '()])
        (if (not (null? loop_list))
            (let ([point_pair (caar loop_list)]
-                 [bit (cdar loop_list)])
+                 [bit_char (cdar loop_list)])
              (loop
               (cdr loop_list)
-              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
+              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit_char) bit_chhar)) result_list)))
            result_list)))))
 
 (define (switch-bit bit)
-  (if (string=? bit "1")
-      "0"
-      "1"))
+  (if (char=? bit #\1)
+      #\0
+      #\1))
 
 (define (split-matrix modules)
   `(,@(reverse
@@ -116,15 +116,15 @@
                [point3 (cons (add1 row) col)]
                [point4 (cons (add1 row) (add1 col))])
           (if (and
-               (hash-has-key? points_map point2) (string=? (hash-ref points_map point2) val)
-               (hash-has-key? points_map point3) (string=? (hash-ref points_map point3) val)
-               (hash-has-key? points_map point4) (string=? (hash-ref points_map point4) val))
+               (hash-has-key? points_map point2) (=? (hash-ref points_map point2) val)
+               (hash-has-key? points_map point3) (=? (hash-ref points_map point3) val)
+               (hash-has-key? points_map point4) (=? (hash-ref points_map point4) val))
               (loop (cdr loop_list) (+ sum 3))
               (loop (cdr loop_list) sum)))
         sum)))
 
 (define (mask-condition3 row)
-  (let ([row_str (foldr string-append "" row)])
+  (let ([row_str (foldr string-append "" (map (lambda (val) (format "~a" val)) row))])
     (if
      (or
       (regexp-match #rx"10111010000" row_str)
@@ -148,7 +148,7 @@
 
 (define (mask-on-condition4 points_map)
   (let ([sum_count (hash-count points_map)]
-        [dark_count (foldr + 0 (map (lambda (val) (string->number val)) (hash-values points_map)))]
+        [dark_count (foldr + 0 (hash-values points_map))]
         [bili #f]
         [low_val #f]
         [high_val #f]
