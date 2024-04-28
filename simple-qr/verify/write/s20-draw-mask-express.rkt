@@ -5,8 +5,8 @@
          "../../share/lib.rkt")
 
 (define-runtime-path data_bits_file (build-path 'up "express" "content" "docs" "s19_draw_data_bits" "data_bits.svg"))
-(define-runtime-path s20_draw-mask_directory "../express/content/docs/s20_draw_mask")
-(define-runtime-path index_md_file "../express/content/docs/s20_draw_mask/_index.md")
+(define-runtime-path s20_draw-mask_directory (build-path 'up "express" "content" "docs" "s20_draw_mask"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s20_draw_mask" "_index.md"))
 
 (provide (contract-out
           [s20-draw-mask-express (-> list? list? list? QR? void?)]))

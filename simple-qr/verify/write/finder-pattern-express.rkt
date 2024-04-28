@@ -3,8 +3,8 @@
 (require racket/runtime-path
          "../../share/qr.rkt")
 
-(define-runtime-path s3_finder_pattern_directory "../express/content/docs/s3_finder_pattern")
-(define-runtime-path index_md_file "../express/content/docs/s3_finder_pattern/_index.md")
+(define-runtime-path s3_finder_pattern_directory (build-path 'up "express" "content" "docs" "s3_finder_pattern"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s3_finder_pattern" "_index.md"))
 
 (provide (contract-out
           [finder-pattern-express (-> QR? void?)]))

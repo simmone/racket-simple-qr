@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s16_error_correction_directory "../express/content/docs/s16_error_correction")
-(define-runtime-path index_md_file "../express/content/docs/s16_error_correction/_index.md")
+(define-runtime-path s16_error_correction_directory (build-path 'up "express" "content" "docs" "s16_error_correction"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s16_error_correction" "_index.md"))
 
 (provide (contract-out
           [s16-error-correction-express (-> natural? list? QR? void?)]))

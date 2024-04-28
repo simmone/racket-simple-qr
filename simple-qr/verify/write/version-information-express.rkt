@@ -3,8 +3,8 @@
 (require racket/runtime-path
          "../../share/qr.rkt")
 
-(define-runtime-path s9_version_information_directory "../express/content/docs/s9_version_information")
-(define-runtime-path index_md_file "../express/content/docs/s9_version_information/_index.md")
+(define-runtime-path s9_version_information_directory (build-path 'up "express" "content" "docs" "s9_version_information"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s9_version_information" "_index.md"))
 
 (provide (contract-out
           [version-information-express (-> QR? void?)]))

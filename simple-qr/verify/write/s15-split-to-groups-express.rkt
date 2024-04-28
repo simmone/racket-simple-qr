@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s15_split_to_groups_directory "../express/content/docs/s15_split_to_groups")
-(define-runtime-path index_md_file "../express/content/docs/s15_split_to_groups/_index.md")
+(define-runtime-path s15_split_to_groups_directory (build-path 'up "express" "content" "docs" "s15_split_to_groups"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s15_split_to_groups" "_index.md"))
 
 (provide (contract-out
           [s15-split-to-groups-express (-> list? list? list? QR? void?)]))

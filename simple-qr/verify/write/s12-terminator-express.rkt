@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s12_terminator_directory "../express/content/docs/s12_terminator")
-(define-runtime-path index_md_file "../express/content/docs/s12_terminator/_index.md")
+(define-runtime-path s12_terminator_directory (build-path 'up "express" "content" "docs" "s12_terminator"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s12_terminator" "_index.md"))
 
 (provide (contract-out
           [s12-terminator-express (-> natural? natural? string? QR? void?)]))

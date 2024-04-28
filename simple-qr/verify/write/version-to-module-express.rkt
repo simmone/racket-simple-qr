@@ -3,8 +3,8 @@
 (require "../../share/qr.rkt"
          racket/runtime-path)
 
-(define-runtime-path s2_module_directory "../express/content/docs/s2_module")
-(define-runtime-path index_md_file "../express/content/docs/s2_module/_index.md")
+(define-runtime-path s2_module_directory (build-path 'up "express" "content" "docs" "s2_module"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s2_module" "_index.md"))
 
 (provide (contract-out
           [version-to-modules-express (-> QR? void?)]))

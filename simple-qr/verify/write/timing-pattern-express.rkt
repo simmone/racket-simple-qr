@@ -3,8 +3,8 @@
 (require racket/runtime-path
          "../../share/qr.rkt")
 
-(define-runtime-path s5_timing_pattern_directory "../express/content/docs/s5_timing_pattern")
-(define-runtime-path index_md_file "../express/content/docs/s5_timing_pattern/_index.md")
+(define-runtime-path s5_timing_pattern_directory (build-path 'up "express" "content" "docs" "s5_timing_pattern"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s5_timing_pattern" "_index.md"))
 
 (provide (contract-out
           [timing-pattern-express (-> QR? void?)]))

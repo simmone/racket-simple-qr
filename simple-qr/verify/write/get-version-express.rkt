@@ -1,8 +1,8 @@
 #lang racket
 
 (require racket/runtime-path)
-(define-runtime-path s1_version_directory "../express/content/docs/s1_version")
-(define-runtime-path index_md_file "../express/content/docs/s1_version/_index.md")
+(define-runtime-path s1_version_directory (build-path 'up "express" "content" "docs" "s1_version"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s1_version" "_index.md"))
 
 (require "../../share/qr.rkt")
 

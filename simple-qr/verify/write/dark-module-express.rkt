@@ -3,8 +3,8 @@
 (require racket/runtime-path
          "../../share/qr.rkt")
 
-(define-runtime-path s7_dark_module_directory "../express/content/docs/s7_dark_module")
-(define-runtime-path index_md_file "../express/content/docs/s7_dark_module/_index.md")
+(define-runtime-path s7_dark_module_directory (build-path 'up "express" "content" "docs" "s7_dark_module"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s7_dark_module" "_index.md"))
 
 (provide (contract-out
           [dark-module-express (-> QR? void?)]))

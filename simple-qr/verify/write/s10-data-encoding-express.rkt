@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s10_data_encoding_directory "../express/content/docs/s10_data_encoding")
-(define-runtime-path index_md_file "../express/content/docs/s10_data_encoding/_index.md")
+(define-runtime-path s10_data_encoding_directory (build-path 'up "express" "content" "docs" "s10_data_encoding"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s10_data_encoding" "_index.md"))
 
 (provide (contract-out
           [s10-data-encoding-express (-> string? QR? void?)]))

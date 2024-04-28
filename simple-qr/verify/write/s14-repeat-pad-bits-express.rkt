@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s14_repeat_pad_bits_directory "../express/content/docs/s14_repeat_pad_bits")
-(define-runtime-path index_md_file "../express/content/docs/s14_repeat_pad_bits/_index.md")
+(define-runtime-path s14_repeat_pad_bits_directory (build-path 'up "express" "content" "docs" "s14_repeat_pad_bits"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s14_repeat_pad_bits" "_index.md"))
 
 (provide (contract-out
           [s14-repeat-pad-bits-express (-> string? natural? string? QR? void?)]))

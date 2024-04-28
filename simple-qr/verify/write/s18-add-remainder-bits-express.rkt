@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s18_add-remainder-bits_directory "../express/content/docs/s18_add_remainder_bits")
-(define-runtime-path index_md_file "../express/content/docs/s18_add_remainder_bits/_index.md")
+(define-runtime-path s18_add-remainder-bits_directory (build-path 'up "express" "content" "docs" "s18_add_remainder_bits"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s18_add_remainder_bits" "_index.md"))
 
 (provide (contract-out
           [s18-add-remainder-bits-express (-> natural? string? QR? void?)]))

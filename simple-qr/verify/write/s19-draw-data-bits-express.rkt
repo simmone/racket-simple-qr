@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s19_draw-data-bits_directory "../express/content/docs/s19_draw_data_bits")
-(define-runtime-path index_md_file "../express/content/docs/s19_draw_data_bits/_index.md")
+(define-runtime-path s19_draw-data-bits_directory (build-path 'up "express" "content" "docs" "s19_draw_data_bits"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s19_draw_data_bits" "_index.md"))
 
 (provide (contract-out
           [s19-draw-data-bits-express (-> string? list? QR? void?)]))

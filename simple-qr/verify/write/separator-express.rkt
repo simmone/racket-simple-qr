@@ -3,8 +3,8 @@
 (require racket/runtime-path
          "../../share/qr.rkt")
 
-(define-runtime-path s4_separator_directory "../express/content/docs/s4_separator")
-(define-runtime-path index_md_file "../express/content/docs/s4_separator/_index.md")
+(define-runtime-path s4_separator_directory (build-path 'up "express" "content" "docs" "s4_separator"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s4_separator" "_index.md"))
 
 (provide (contract-out
           [separator-express (-> QR? void?)]))

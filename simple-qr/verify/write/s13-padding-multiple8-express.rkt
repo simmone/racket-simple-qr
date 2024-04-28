@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s13_padding_multiple8_directory "../express/content/docs/s13_padding_multiple8")
-(define-runtime-path index_md_file "../express/content/docs/s13_padding_multiple8/_index.md")
+(define-runtime-path s13_padding_multiple8_directory (build-path 'up "express" "content" "docs" "s13_padding_multiple8"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s13_padding_multiple8" "_index.md"))
 
 (provide (contract-out
           [s13-padding-multiple8-express (-> string? QR? void?)]))

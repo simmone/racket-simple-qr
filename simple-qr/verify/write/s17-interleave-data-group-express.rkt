@@ -4,8 +4,8 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path s17_interleave-data-group_directory "../express/content/docs/s17_interleave_data_group")
-(define-runtime-path index_md_file "../express/content/docs/s17_interleave_data_group/_index.md")
+(define-runtime-path s17_interleave-data-group_directory (build-path 'up "express" "content" "docs" "s17_interleave_data_group"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s17_interleave_data_group" "_index.md"))
 
 (provide (contract-out
           [s17-interleave-data-group-express (-> list? string? QR? void?)]))
