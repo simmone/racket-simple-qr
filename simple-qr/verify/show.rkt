@@ -54,6 +54,7 @@
 (define-runtime-path format_information_file (build-path "express" "content" "docs" "s8_format_information" "format_information.svg"))
 (define-runtime-path version_information_file (build-path "express" "content" "docs" "s9_version_information" "version_information.svg"))
 (define-runtime-path data_bits_file (build-path "express" "content" "docs" "s19_draw_data_bits" "data_bits.svg"))
+(define-runtime-path mask_original_file (build-path "express" "content" "docs" "s20_draw_mask" "original.svg"))
 (define-runtime-path mask_bits_0_file (build-path "express" "content" "docs" "s20_draw_mask" "mask0.svg"))
 (define-runtime-path mask_bits_1_file (build-path "express" "content" "docs" "s20_draw_mask" "mask1.svg"))
 (define-runtime-path mask_bits_2_file (build-path "express" "content" "docs" "s20_draw_mask" "mask2.svg"))
@@ -300,19 +301,22 @@
                              mask_points_map))
                          '(0 1 2 3 4 5 6 7)))
 
-        (set! conditon_list (map
-                            (lambda (mask_points_map)
-                              (list
-                               (mask-on-condition1 (QR-modules qr) mask_points_map)
-                               (mask-on-condition2 mask_points_map)
-                               (mask-on-condition3 (QR-modules qr) mask_points_map)
-                               (mask-on-condition4 mask_points_map)))
-                            mask_list))
+        (set! condition_list (map
+                              (lambda (mask_points_map)
+                                (list
+                                 (mask-on-condition1 (QR-modules qr) mask_points_map)
+                                 (mask-on-condition2 mask_points_map)
+                                 (mask-on-condition3 (QR-modules qr) mask_points_map)
+                                 (mask-on-condition4 mask_points_map)))
+                              mask_list))
         
         (set! penalty_list (map (lambda (score_list) (foldr + 0 score_list)) condition_list))
         
         (set! reserved_point_val_map (QR-point_val_map qr))
         (s20-draw-mask-express mask_list condition_list penalty_list qr)
+        (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
+        (draw (QR-matrix qr) mask_original_file 'svg)
+
         (let loop ([mask_index 0])
           (when (< mask_index 8)
             (set-QR-point_val_map! qr (list-ref mask_list mask_index))
@@ -339,4 +343,4 @@
 
 ;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-(qr-write-express "HELLO WORLD" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+(qr-write-express "HELLO WORLD" "chenxiao.svg" #:mode 'A #:module_width 20 #:output_type 'svg)

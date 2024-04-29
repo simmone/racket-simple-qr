@@ -36,5 +36,15 @@ eight mask patterns and evaluate each one. Whichever mask pattern results in the
 score is the mask pattern that must be used for the final output.\n\n")
 
       (printf "## original image:\n\n")
-      (printf "![data bits image](../mask.svg \"Data Bits Filled\")\n")
+      (printf "![data bits image](original.svg \"Original Data Bits Filled\")\n")
+
+      (printf "## mask 0:\n\n")
+      (printf "mask func is: (= (modulo (+ row column) 2) 0)\n\n")
+      (printf "penalty score = condition1[~a] + condition2[~a] + condition3[~a] + condition4[~a] = ~a\n\n"
+              (list-ref (list-ref condition_list 0) 0)
+              (list-ref (list-ref condition_list 0) 1)
+              (list-ref (list-ref condition_list 0) 2)
+              (list-ref (list-ref condition_list 0) 3)
+              (list-ref penalty_list 0))
+      (printf "![mask 0 image](mask0.svg \"Mask 0\")\n")
       )))
