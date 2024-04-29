@@ -38,8 +38,20 @@ score is the mask pattern that must be used for the final output.\n\n")
       (printf "## original image:\n\n")
       (printf "![data bits image](original.svg \"Original Data Bits Filled\")\n")
 
-      (printf "## mask 0:\n\n")
-      (printf "mask func is: (= (modulo (+ row column) 2) 0)\n\n")
+      (let loop ([mask_index 0])
+        (when (< mask_index 8)
+          (printf "## mask ~a:\n\n" mask_index)
+          (printf "mask func is: ~a\n\n"
+                  (cond
+                   [(= mask_index 0) "(= (modulo (+ row column) 2) 0)"]
+                   [(= mask_index 1) "(= (modulo row 2) 0)"]
+                   [(= mask_index 2) "
+                   [(= mask_index 3) "
+                   [(= mask_index 4) "
+                   [(= mask_index 5) "
+                   [(= mask_index 6) "
+                   [(= mask_index 7) "
+
       (printf "penalty score = condition1[~a] + condition2[~a] + condition3[~a] + condition4[~a] = ~a\n\n"
               (list-ref (list-ref condition_list 0) 0)
               (list-ref (list-ref condition_list 0) 1)
