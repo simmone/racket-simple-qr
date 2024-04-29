@@ -9,9 +9,9 @@
 (define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s20_draw_mask" "_index.md"))
 
 (provide (contract-out
-          [s20-draw-mask-express (-> list? list? list? QR? void?)]))
+          [s20-draw-mask-express (-> list? list? list? natural? natural? QR? void?)]))
 
-(define (s20-draw-mask-express mask_list condition_list penalty_list  qr)
+(define (s20-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
   (make-directory* s20_draw-mask_directory)
 
   (with-output-to-file index_md_file
@@ -61,4 +61,9 @@ score is the mask pattern that must be used for the final output.\n\n")
           (printf "![mask 0 image](mask~a.svg \"Mask 0\")\n" mask_index)
           
           (loop (add1 mask_index))
-          )))))
+          ))
+
+      (printf "## min penalty is ~a:\n\n" min_penalty)
+
+      (printf "## selected mask index is  ~a:\n\n" mask_index)
+      )))

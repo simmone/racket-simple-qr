@@ -311,9 +311,13 @@
                               mask_list))
         
         (set! penalty_list (map (lambda (score_list) (foldr + 0 score_list)) condition_list))
+
+        (set! min_penalty (apply min penalty_list))
+
+        (set! mask_index (index-of penalty_list min_penalty))
         
         (set! reserved_point_val_map (QR-point_val_map qr))
-        (s20-draw-mask-express mask_list condition_list penalty_list qr)
+        (s20-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
         (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (draw (QR-matrix qr) mask_original_file 'svg)
 
