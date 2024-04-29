@@ -45,18 +45,20 @@ score is the mask pattern that must be used for the final output.\n\n")
                   (cond
                    [(= mask_index 0) "(= (modulo (+ row column) 2) 0)"]
                    [(= mask_index 1) "(= (modulo row 2) 0)"]
-                   [(= mask_index 2) "
-                   [(= mask_index 3) "
-                   [(= mask_index 4) "
-                   [(= mask_index 5) "
-                   [(= mask_index 6) "
-                   [(= mask_index 7) "
+                   [(= mask_index 2) "(= (modulo column 3) 0)"]
+                   [(= mask_index 3) "(= (modulo (+ row column) 3) 0)"]
+                   [(= mask_index 4) "(= (modulo (+ (floor (/ row 2)) (floor (/ column 3))) 2) 0)"]
+                   [(= mask_index 5) "(= (+ (modulo (* row column) 2) (modulo (* row column) 3)) 0)"]
+                   [(= mask_index 6) "(= (modulo (+ (modulo (* row column) 2) (modulo (* row column) 3)) 2) 0)"]
+                   [(= mask_index 7) "(= (modulo (+ (modulo (+ row column) 2) (modulo (* row column) 3)) 2) 0)"]))
 
-      (printf "penalty score = condition1[~a] + condition2[~a] + condition3[~a] + condition4[~a] = ~a\n\n"
-              (list-ref (list-ref condition_list 0) 0)
-              (list-ref (list-ref condition_list 0) 1)
-              (list-ref (list-ref condition_list 0) 2)
-              (list-ref (list-ref condition_list 0) 3)
-              (list-ref penalty_list 0))
-      (printf "![mask 0 image](mask0.svg \"Mask 0\")\n")
-      )))
+          (printf "penalty score = condition1[~a] + condition2[~a] + condition3[~a] + condition4[~a] = ~a\n\n"
+                  (list-ref (list-ref condition_list mask_index) 0)
+                  (list-ref (list-ref condition_list mask_index) 1)
+                  (list-ref (list-ref condition_list mask_index) 2)
+                  (list-ref (list-ref condition_list mask_index) 3)
+                  (list-ref penalty_list mask_index))
+          (printf "![mask 0 image](mask~a.svg \"Mask 0\")\n" mask_index)
+          
+          (loop (add1 mask_index))
+          )))))
