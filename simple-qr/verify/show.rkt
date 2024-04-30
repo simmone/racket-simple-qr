@@ -41,6 +41,7 @@
          "../write/mask-data.rkt"
          "write/s20-draw-mask-express.rkt"
          "../write/error-level.rkt"
+         "write/s21-draw-mask-and-format-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -64,7 +65,7 @@
 (define-runtime-path mask_bits_5_file (build-path "express" "content" "docs" "s20_draw_mask" "mask5.svg"))
 (define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s20_draw_mask" "mask6.svg"))
 (define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s20_draw_mask" "mask7.svg"))
-(define-runtime-path format_information_file (build-path "express" "content" "docs" "s21_format_information" "format_information.svg"))
+(define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s21_mask_and_format" "mask_and_format.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -338,13 +339,14 @@
                   'svg)
             (loop (add1 mask_index))))
 
+        ;; draw selected mask
+        (printf "t0\n")
         (set-QR-point_val_map! qr (list-ref mask_list mask_index))
-
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
         (draw-format-information format_str qr)
-        (s21-draw-format-information-express error_level mask_index format_str qr)
-        (draw (QR-matrix qr) format_information_file 'svg)
+        (s21-draw-mask-and-format-express error_level mask_index format_str qr)
+        (draw (QR-matrix qr) mask_and_format_file 'svg)
         )
       )
     )
