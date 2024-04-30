@@ -65,7 +65,7 @@
 (define-runtime-path mask_bits_5_file (build-path "express" "content" "docs" "s20_draw_mask" "mask5.svg"))
 (define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s20_draw_mask" "mask6.svg"))
 (define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s20_draw_mask" "mask7.svg"))
-(define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s21_mask_and_format" "mask_and_format.svg"))
+(define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s21_draw_mask_and_format" "mask_and_format.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -340,11 +340,12 @@
             (loop (add1 mask_index))))
 
         ;; draw selected mask
-        (printf "t0\n")
         (set-QR-point_val_map! qr (list-ref mask_list mask_index))
+        (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
         (draw-format-information format_str qr)
+        (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
         (s21-draw-mask-and-format-express error_level mask_index format_str qr)
         (draw (QR-matrix qr) mask_and_format_file 'svg)
         )

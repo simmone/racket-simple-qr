@@ -29,6 +29,9 @@ the separator.\n\n")
       (printf " - Near the top-right finder pattern, a one-module strip must be reserved below the separator.\n\n")
       (printf " - Near the bottom-left finder pattern, a one-module strip must be reserved to the right of the
 separator.\n\n")
+
+      (printf "## reserved format information\n\n")
+      (printf "use 111100011011100 to reserve the area.\n\n")
       (printf "![format_information image](format_information.svg \"Format_Information\")\n")
       )))
 
