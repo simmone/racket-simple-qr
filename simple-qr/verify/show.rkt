@@ -40,6 +40,7 @@
          "write/s19-draw-data-bits-express.rkt"
          "../write/mask-data.rkt"
          "write/s20-draw-mask-express.rkt"
+         "../write/error-level.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -63,6 +64,7 @@
 (define-runtime-path mask_bits_5_file (build-path "express" "content" "docs" "s20_draw_mask" "mask5.svg"))
 (define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s20_draw_mask" "mask6.svg"))
 (define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s20_draw_mask" "mask7.svg"))
+(define-runtime-path format_information_file (build-path "express" "content" "docs" "s21_format_information" "format_information.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -277,8 +279,7 @@
              [condition_list #f]
              [penalty_list #f]
              [min_penalty #f]
-             [mask_index #f]
-             [reserved_point_val_map #f])
+             [mask_index #f])
             
         (set! data_list
               (let loop ([loop_trace_list s22_trace_list]
@@ -316,7 +317,6 @@
 
         (set! mask_index (index-of penalty_list min_penalty))
         
-        (set! reserved_point_val_map (QR-point_val_map qr))
         (s20-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
         (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (draw (QR-matrix qr) mask_original_file 'svg)
@@ -337,6 +337,14 @@
                    [(= mask_index 7) mask_bits_7_file])
                   'svg)
             (loop (add1 mask_index))))
+
+        (set-QR-point_val_map! qr (list-ref mask_list mask_index))
+
+        (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
+
+        (draw-format-information format_str qr)
+        (s21-draw-format-information-express error_level mask_index format_str qr)
+        (draw (QR-matrix qr) format_information_file 'svg)
         )
       )
     )
@@ -347,4 +355,4 @@
 
 ;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-(qr-write-express "HELLO WORLD" "chenxiao.svg" #:mode 'A #:module_width 20 #:output_type 'svg)
+(qr-write-express "Hello world!" "chenxiao.svg" #:module_width 20 #:output_type 'svg)

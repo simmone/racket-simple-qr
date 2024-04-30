@@ -40,7 +40,7 @@ score is the mask pattern that must be used for the final output.\n\n")
 
       (let loop ([mask_index 0])
         (when (< mask_index 8)
-          (printf "## mask ~a:\n\n" mask_index)
+          (printf "## mask ~a: ~a\n\n" mask_index (list-ref penalty_list mask_index))
           (printf "mask func is: ~a\n\n"
                   (cond
                    [(= mask_index 0) "(= (modulo (+ row column) 2) 0)"]
