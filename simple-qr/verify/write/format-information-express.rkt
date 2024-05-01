@@ -31,7 +31,7 @@ the separator.\n\n")
 separator.\n\n")
 
       (printf "## reserved format information\n\n")
-      (printf "use 111100011011100 to reserve the area.\n\n")
+      (printf "use 101010101010101 to reserve the area.\n\n")
       (printf "![format_information image](format_information.svg \"Format_Information\")\n")
       )))
 

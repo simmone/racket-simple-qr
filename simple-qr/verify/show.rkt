@@ -42,6 +42,7 @@
          "write/s20-draw-mask-express.rkt"
          "../write/error-level.rkt"
          "write/s21-draw-mask-and-format-express.rkt"
+         "write/s22-qr-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -66,6 +67,7 @@
 (define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s20_draw_mask" "mask6.svg"))
 (define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s20_draw_mask" "mask7.svg"))
 (define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s21_draw_mask_and_format" "mask_and_format.svg"))
+(define-runtime-path qr_file (build-path "express" "content" "docs" "s22_qr" "qr.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -135,7 +137,7 @@
     (dark-module-express qr)
     (draw (QR-matrix qr) dark_module_file 'svg)
 
-    (draw-format-information "111100011011100" qr)
+    (draw-format-information "101010101010101" qr)
     (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
     (format-information-express qr)
     (draw (QR-matrix qr) format_information_file 'svg)
@@ -348,6 +350,11 @@
         (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
         (s21-draw-mask-and-format-express error_level mask_index format_str qr)
         (draw (QR-matrix qr) mask_and_format_file 'svg)
+
+        (s22-qr-express qr)
+        (fill-points-color (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("white" "white"))
+        (fill-type-points 'all '("black" . "white") qr)
+        (draw (QR-matrix qr) qr_file 'svg)
         )
       )
     )

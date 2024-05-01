@@ -27,7 +27,7 @@
           [QUIET_ZONE_BRICKS natural?]
           [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
           [add-raw-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
-          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) (cons/c string? string?) QR? void?)]
+          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data 'all) (cons/c string? string?) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
           ))
 
@@ -78,7 +78,7 @@
   (let loop ([type_points
               (filter
                (lambda (point)
-                 (eq? (hash-ref (QR-point_type_map qr) point) type))
+                 (or (eq? type 'all) (eq? (hash-ref (QR-point_type_map qr) point) type)))
                (hash-keys (QR-point_val_map qr)))])
     (when (not (null? type_points))
       (if (= (hash-ref (QR-point_val_map qr) (car type_points)) 1)

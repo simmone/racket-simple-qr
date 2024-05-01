@@ -18,7 +18,7 @@
     (lambda ()
       (printf "---\n")
       (printf "weight: 21\n")
-      (printf "title: \"Step21: Draw mask data and format string\"\n")
+      (printf "title: \"Step21: Draw mask & format\"\n")
       (printf "---\n\n")
       
       (printf "# format string\n\n")
