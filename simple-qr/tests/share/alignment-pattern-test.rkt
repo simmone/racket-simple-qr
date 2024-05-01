@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
-
-(require rackunit "../../share/alignment-pattern.rkt")
+(require rackunit/text-ui
+         rackunit
+         "../../share/alignment-pattern.rkt")
 
 (define test-alignment-pattern
   (test-suite 

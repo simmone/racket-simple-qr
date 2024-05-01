@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
-
-(require rackunit "../../share/data-group.rkt")
+(require rackunit/text-ui
+         rackunit
+         "../../share/data-group.rkt")
 
 (define test-data-group
   (test-suite 
