@@ -1,8 +1,8 @@
 #lang racket
 
-(require rackunit/text-ui)
-
-(require rackunit "../../share/qr.rkt")
+(require rackunit/text-ui
+         rackunit
+         "../../share/qr.rkt")
 
 (define test-qr
   (test-suite 
@@ -23,7 +23,7 @@
     "test-new-qr"
     
     (let ([qr (new-default-qr "chenxiao")])
-      (check-equal? (hash-count (QR-points_val_map qr)) 0)
+      (check-equal? (hash-count (QR-point_val_map qr)) 0)
       )
     )
 

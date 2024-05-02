@@ -1,13 +1,7 @@
 #lang racket
 
 (provide (contract-out
-     [get-group-width (-> exact-nonnegative-integer? string? list?)]
-     [defines->count-list (-> list? list?)]
-     [count_list->sequence_list (-> list? list?)]
-     [sequence_list->sequence (-> (listof list?) list?)]
-     [split-data->groups (-> string? natural? list?)]
-     [bit8->list (-> string? exact-nonnegative-integer? list?)]
-     [combine-data-sequence (-> (listof string?) (listof exact-nonnegative-integer?) (listof pair?))]
+     [get-group-width (-> natural? string? list?)]
      ))
 
 (define (get-group-width version error_level)
@@ -175,89 +169,3 @@
                 ("40-H" . ((20 . 15) (61 . 16))))])
 
   (hash-ref group_map (string-append (number->string version) "-" error_level))))
-
-(define (defines->count-list defines)
-  (let loop ([loop_defines defines]
-             [result_list '()])
-    (if (not (null? loop_defines))
-        (loop
-         (cdr loop_defines)
-         (append
-          (let loop-count ([occur_count (caar loop_defines)]
-                           [inner_list '()])
-            (if (> occur_count 0)
-                (loop-count
-                 (sub1 occur_count)
-                 (cons (cdar loop_defines) inner_list))
-                inner_list))
-          result_list))
-        (reverse result_list))))
-
-(define (count_list->sequence_list count_list)
-  (let loop ([loop_list count_list]
-             [count 0]
-             [result_list '()])
-    (if (not (null? loop_list))
-        (loop
-         (cdr loop_list)
-         (+ count (car loop_list))
-         (cons 
-          (let inner-loop ([loop_count (car loop_list)]
-                           [start_count count]
-                           [inner_result_list '()])
-            (if (> loop_count 0)
-                (inner-loop (sub1 loop_count) (add1 start_count) (cons start_count inner_result_list))
-                (reverse inner_result_list)))
-          result_list))
-        (reverse result_list))))
-
-(define (sequence_list->sequence sequence_list)
-  (let ([max_length (apply max (map (lambda (row) (length row)) sequence_list))])
-    (let loop ([col_index 0]
-               [result_list '()])
-      (if (< col_index max_length)
-          (loop
-           (add1 col_index)
-           (cons
-            (let inner-loop ([row_index 0]
-                             [inner_result_list '()])
-              (if (< row_index (length sequence_list))
-                  (if (< col_index (length (list-ref sequence_list row_index)))
-                      (inner-loop (add1 row_index) (cons (list-ref (list-ref sequence_list row_index) col_index) inner_result_list))
-                      (inner-loop (add1 row_index) inner_result_list))
-                  (reverse inner_result_list)))
-            result_list))
-          (flatten (reverse result_list))))))
-
-(define (bit8->list data_str group_count)
-  (let loop ([loop_count group_count]
-             [loop_str data_str]
-             [result_list '()])
-    (if (> loop_count 0)
-        (loop 
-         (sub1 loop_count)
-         (substring loop_str 8)
-         (cons (substring loop_str 0 8) result_list))
-        (reverse result_list))))
-
-(define (split-data->groups data_str group_count)
-  (let loop ([loop_count group_count]
-             [loop_str data_str]
-             [result_list '()])
-    (if (> loop_count 0)
-        (loop 
-         (sub1 loop_count)
-         (substring loop_str 8)
-         (cons (substring loop_str 0 8) result_list))
-        (reverse result_list))))
-
-(define (combine-data-sequence data_list sequence_list)
-  (let loop ([data_loop data_list]
-             [sequence_loop sequence_list]
-             [result_list '()])
-    (if (not (null? data_loop))
-        (loop
-         (cdr data_loop)
-         (cdr sequence_loop)
-         (cons (cons (car data_loop) (car sequence_loop)) result_list))
-        (reverse result_list))))

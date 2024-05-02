@@ -29,7 +29,7 @@
          "write/s12-terminator-express.rkt"
          "write/s13-padding-multiple8-express.rkt"
          "write/s14-repeat-pad-bits-express.rkt"
-         "../share/data-group.rkt"
+         "../write/data-group.rkt"
          "write/s15-split-to-groups-express.rkt"
          "../share/ec-count.rkt"
          "write/s16-error-correction-express.rkt"
