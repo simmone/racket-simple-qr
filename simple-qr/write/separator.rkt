@@ -7,6 +7,7 @@
 
 (provide (contract-out
           [draw-separator (-> QR? void?)]
+          [get-separator (-> list?)]
           ))
 
 (define (draw-separator qr)
@@ -32,3 +33,31 @@
         (add-point point 0 'separator qr))
       (transform-points-list (third (get-separator)) new_bottom_left_point))
      ))
+
+(define (get-separator)
+  '(
+    (                                                        (0 . 7)
+                                                             (1 . 7)
+                                                             (2 . 7)
+                                                             (3 . 7)
+                                                             (4 . 7)
+                                                             (5 . 7)
+                                                             (6 . 7)
+     (7 . 0) (7 . 1) (7 . 2) (7 . 3) (7 . 4) (7 . 5) (7 . 6) (7 . 7))
+    ((0 . 0)
+     (1 . 0)
+     (2 . 0)
+     (3 . 0)
+     (4 . 0)
+     (5 . 0)
+     (6 . 0)
+     (7 . 0) (7 . 1) (7 . 2) (7 . 3) (7 . 4) (7 . 5) (7 . 6) (7 . 7))
+    ((0 . 0) (0 . 1) (0 . 2) (0 . 3) (0 . 4) (0 . 5) (0 . 6) (0 . 7)
+                                                             (1 . 7)
+                                                             (2 . 7)
+                                                             (3 . 7)
+                                                             (4 . 7)
+                                                             (5 . 7)
+                                                             (6 . 7)
+                                                             (7 . 7))
+    ))
