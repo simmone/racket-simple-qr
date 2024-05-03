@@ -7,11 +7,13 @@
 (define QUIET_ZONE_BRICKS 4)
 
 (provide (contract-out
+          [QR-MODE? (or/c 'A 'N 'B)]
+          [QR-ERROR-LEVEL? (or/c 'L 'M 'Q 'H)]
           [struct QR
                   (
                    (data string?)
-                   (mode (or/c 'A 'N 'B))
-                   (error_level (or/c 'L 'M 'Q 'H))
+                   (mode QR-MODE?)
+                   (error_level QR-ERROR-LEVEL?)
                    (version natural?)
                    (modules natural?)
                    (point_val_map (hash/c (cons/c natural? natural?) (or/c 0 1)))
@@ -21,7 +23,7 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [new-qr (-> string? natural? (or/c 'A 'N 'B) (or/c 'L 'M 'Q 'H) string? string? QR?)]
+          [new-qr (-> string? natural? QR-MODE? QR-ERROR-LEVEL? string? string? QR?)]
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]

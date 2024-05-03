@@ -1,7 +1,9 @@
 #lang racket
 
+(require "../share/qr.rkt")
+
 (provide (contract-out
-     [get-bits-width (-> natural? (or/c 'L 'M 'Q 'H) natural?)]
+     [get-bits-width (-> natural? QR-ERROR-LEVEL? natural?)]
      ))
 
 (define (get-bits-width version error_level)

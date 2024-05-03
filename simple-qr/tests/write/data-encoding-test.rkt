@@ -16,9 +16,9 @@
            [mode 'B]
            [error_level 'H]
            [character_count (string-length url)]
-           [version (get-version url mode error_level)]
+           [version (get-version character_count mode error_level)]
            [count_bit_width (get-character-bit-width version mode)]
-           [character_count_indicator (~r s2_character_count #:base 2 #:min-width count_bit_width #:pad-string "0")]
+           [character_count_indicator (~r character_count #:base 2 #:min-width count_bit_width #:pad-string "0")]
            )
       (check-equal? character_count_indicator "00010100")))
 
@@ -65,16 +65,16 @@
    (test-case
     "test-get-character-bit-width"
 
-    (check-equal? (get-character-bit-width 1 "N") 10)
-    (check-equal? (get-character-bit-width 1 "A") 9)
-    (check-equal? (get-character-bit-width 1 "B") 8)
-    (check-equal? (get-character-bit-width 1 "K") 8)
+    (check-equal? (get-character-bit-width 1 'N) 10)
+    (check-equal? (get-character-bit-width 1 'A) 9)
+    (check-equal? (get-character-bit-width 1 'B) 8)
+    (check-equal? (get-character-bit-width 1 'K) 8)
 
-    (check-equal? (get-character-bit-width 10 "N") 12)
-    (check-equal? (get-character-bit-width 26 "A") 11)
+    (check-equal? (get-character-bit-width 10 'N) 12)
+    (check-equal? (get-character-bit-width 26 'A) 11)
 
-    (check-equal? (get-character-bit-width 27 "N") 14)
-    (check-equal? (get-character-bit-width 40 "A") 13)
+    (check-equal? (get-character-bit-width 27 'N) 14)
+    (check-equal? (get-character-bit-width 40 'A) 13)
     )
 
    ))
