@@ -2,7 +2,6 @@
 
 (require racket/draw
          "../share/lib.rkt"
-         "../share/timing-pattern.rkt"
          "../share/qr.rkt")
 
 (provide (contract-out

@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-     [get-group-width (-> natural? string? list?)]
+     [get-group-width (-> natural? (or/c 'L 'M 'Q 'H) list?)]
      ))
 
 (define (get-group-width version error_level)
@@ -168,4 +168,4 @@
                 ("40-Q" . ((34 . 24) (34 . 25)))
                 ("40-H" . ((20 . 15) (61 . 16))))])
 
-  (hash-ref group_map (string-append (number->string version) "-" error_level))))
+  (hash-ref group_map (format "~a-~a" version error_level))))

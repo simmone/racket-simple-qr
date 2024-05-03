@@ -4,7 +4,7 @@
   [get-version (->
                 natural?
                 (or/c 'A 'N 'B)
-                string?
+                (or/c 'L 'M 'Q 'H)
                 natural?)]
   ))
 
@@ -14,7 +14,7 @@
         (if (<= char_count (cdar loop_list))
             (caar loop_list)
             (loop (cdr loop_list)))
-        (error (string-append "no such version: mode[" mode "]error_level[" error_level "]char_count[" (number->string char_count) "]")))))
+        (error (format "no such version: mode[~a]error_level[~a]char_count[~a]" mode error_level char_count)))))
 
 (define *capacity_table*
   '#hash(

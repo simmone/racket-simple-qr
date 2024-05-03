@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-     [get-ec-count (-> natural? string? natural?)]
+     [get-ec-count (-> natural? (or/c 'L 'M 'Q 'H) natural?)]
      ))
 
 (define (get-ec-count version error_level)

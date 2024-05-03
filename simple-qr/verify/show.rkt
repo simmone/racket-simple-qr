@@ -22,7 +22,7 @@
          "write/format-information-express.rkt"
          "../write/version-information.rkt"
          "write/version-information-express.rkt"
-         "../write/data-encoding/data-encoding.rkt"
+         "../write/data-encoding.rkt"
          "write/s10-data-encoding-express.rkt"
          "write/s11-head-bits-express.rkt"
          "../write/bits-width.rkt"
@@ -71,7 +71,7 @@
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
-                          #:error_level [error_level "H"]
+                          #:error_level [error_level 'H]
                           #:module_width [module_width 5]
                           #:color [color '("black" . "white")]
                           #:output_type [output_type 'png]
@@ -91,7 +91,7 @@
       
       (printf "1. output file name: **~a**\n" file_name)
       (printf "2. mode: **~a**[default: 'B]\n" mode)
-      (printf "3. error level: **~a**[default: ~a]\n" error_level "H")
+      (printf "3. error level: **~a**[default: ~a]\n" error_level 'H)
       (printf "4. module width: **~a**[default: ~a]\n" module_width 5)
       (printf "5. color: **~a**[default: ~a]\n" color '("black" . "white"))
       (printf "6. output image type: **~a**[default: ~a]\n" output_type "'png")

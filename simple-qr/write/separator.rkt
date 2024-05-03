@@ -1,8 +1,7 @@
 #lang racket
 
 (require "../share/lib.rkt"
-         "../share/finder-pattern.rkt"
-         "../share/separator.rkt"
+         "finder-pattern.rkt"
          "../share/qr.rkt")
 
 (provide (contract-out

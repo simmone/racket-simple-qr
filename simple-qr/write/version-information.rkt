@@ -36,6 +36,7 @@
               (add-point (car trace_list) 1 'version qr))
           (loop (cdr loop_list) (cdr trace_list)))))))
 
+(define (get-version-points)
   '(
     ((0 . 0) (0 . 1) (0 . 2)
      (1 . 0) (1 . 1) (1 . 2)

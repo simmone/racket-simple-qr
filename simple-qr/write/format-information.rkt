@@ -2,7 +2,7 @@
 
 (require "../share/lib.rkt"
          "../share/qr.rkt"
-         "../share/finder-pattern.rkt"
+         "finder-pattern.rkt"
          )
 
 (require racket/format)

@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-     [get-bits-width (-> natural? string? natural?)]
+     [get-bits-width (-> natural? (or/c 'L 'M 'Q 'H) natural?)]
      ))
 
 (define (get-bits-width version error_level)
