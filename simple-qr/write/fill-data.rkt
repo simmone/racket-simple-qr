@@ -62,10 +62,14 @@
 
         (if (hash-has-key? skip_hash loop_point)
             (if (equal? next_point end_point)
-                (reverse result_list)
+                (if (hash-has-key? skip_hash next_point)
+                    (reverse result_list)
+                    (reverse (cons next_point result_list)))
                 (loop next_point next_move result_list))
             (if (equal? next_point end_point)
-                (reverse (cons loop_point result_list))
+                (if (hash-has-key? skip_hash next_point)
+                    (reverse (cons loop_point result_list))
+                    (reverse (cons next_point (cons loop_point result_list))))
                 (loop next_point next_move (cons loop_point result_list))))))))
 
 (define (in-range? point modules)

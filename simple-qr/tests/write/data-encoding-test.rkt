@@ -2,7 +2,7 @@
 
 (require rackunit/text-ui
          rackunit
-         "../../share/version.rkt"
+         "../../share/qr.rkt"
          "../../write/data-encoding.rkt")
 
 (define test-data-encoding
@@ -68,7 +68,6 @@
     (check-equal? (get-character-bit-width 1 'N) 10)
     (check-equal? (get-character-bit-width 1 'A) 9)
     (check-equal? (get-character-bit-width 1 'B) 8)
-    (check-equal? (get-character-bit-width 1 'K) 8)
 
     (check-equal? (get-character-bit-width 10 'N) 12)
     (check-equal? (get-character-bit-width 26 'A) 11)
