@@ -1,7 +1,9 @@
 #lang racket
 
+(require "../share/qr.rkt")
+
 (provide (contract-out
-     [get-ec-count (-> natural? (or/c 'L 'M 'Q 'H) natural?)]
+     [get-ec-count (-> natural? QR-ERROR-LEVEL? natural?)]
      ))
 
 (define (get-ec-count version error_level)

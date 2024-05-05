@@ -1,14 +1,14 @@
 #lang racket
 
 (require "lib.rkt"
-         "version.rkt"
+         "capacity.rkt"
          "draw/matrix.rkt")
 
 (define QUIET_ZONE_BRICKS 4)
 
 (provide (contract-out
-          [QR-MODE? (or/c 'A 'N 'B)]
-          [QR-ERROR-LEVEL? (or/c 'L 'M 'Q 'H)]
+          [QR-MODE? (-> symbol? boolean?)]
+          [QR-ERROR-LEVEL? (-> symbol? boolean?)]
           [struct QR
                   (
                    (data string?)
@@ -31,6 +31,7 @@
           [add-raw-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
           [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data 'all) (cons/c string? string?) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
+          [get-version (-> natural? QR-MODE? QR-ERROR-LEVEL? natural?)]
           ))
 
 (struct QR
@@ -48,6 +49,12 @@
          )
         #:transparent
         )
+
+(define (QR-MODE? mode)
+  (if (not (memq mode '(A N B))) #f #t))
+
+(define (QR-ERROR-LEVEL? error_level)
+  (if (not (memq error_level '(L M Q H))) #f #t))
 
 (define (new-qr data module_width mode error_level one_color zero_color)
   (let* ([version (get-version (string-length data) mode error_level)]
@@ -87,6 +94,14 @@
           (fill-point-color (QR-matrix qr) (car type_points) (car color_pair))
           (fill-point-color (QR-matrix qr) (car type_points) (cdr color_pair)))
       (loop (cdr type_points)))))
+
+(define (get-version char_count mode error_level)
+  (let loop ([loop_list (hash-ref *capacity_table* (format "~a-~a" mode error_level))])
+    (if (not (null? loop_list))
+        (if (<= char_count (cdar loop_list))
+            (caar loop_list)
+            (loop (cdr loop_list)))
+        (error (format "no such version: mode[~a]error_level[~a]char_count[~a]" mode error_level char_count)))))
 
 (define (add-quiet-zone-offset point)
   (cons

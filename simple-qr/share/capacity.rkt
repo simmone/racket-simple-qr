@@ -1,20 +1,8 @@
 #lang racket
 
 (provide (contract-out
-  [get-version (->
-                natural?
-                (or/c 'A 'N 'B)
-                (or/c 'L 'M 'Q 'H)
-                natural?)]
-  ))
-
-(define (get-version char_count mode error_level)
-  (let loop ([loop_list (hash-ref *capacity_table* (format "~a-~a" mode error_level))])
-    (if (not (null? loop_list))
-        (if (<= char_count (cdar loop_list))
-            (caar loop_list)
-            (loop (cdr loop_list)))
-        (error (format "no such version: mode[~a]error_level[~a]char_count[~a]" mode error_level char_count)))))
+          [*capacity_table* (hash/c string? list?)]
+          ))
 
 (define *capacity_table*
   '#hash(

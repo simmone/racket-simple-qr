@@ -8,7 +8,7 @@
 (define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s21_draw_mask_and_format" "_index.md"))
 
 (provide (contract-out
-          [s21-draw-mask-and-format-express (-> (or/c 'L 'M 'Q 'H) natural? string? QR? void?)]))
+          [s21-draw-mask-and-format-express (-> QR-ERROR-LEVEL? natural? string? QR? void?)]))
 
 (define (s21-draw-mask-and-format-express error_level mask_index format_str qr)
   (make-directory* s21_draw-mask-and-format_directory)

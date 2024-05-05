@@ -5,7 +5,6 @@
          "../share/draw/matrix.rkt"
          "../share/draw/draw.rkt"
          "../share/lib.rkt"
-         "../share/version.rkt"
          "write/get-version-express.rkt"
          "write/version-to-module-express.rkt"
          "../write/finder-pattern.rkt"

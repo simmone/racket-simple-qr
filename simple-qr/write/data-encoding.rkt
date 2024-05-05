@@ -1,11 +1,12 @@
 #lang racket
 
 (require "../share/lib.rkt"
+         "../share/qr.rkt"
          "data-group.rkt"
         racket/format)
 
 (provide (contract-out
-          [get-character-bit-width (-> natural? (or/c 'A 'B 'K 'N) natural?)]
+          [get-character-bit-width (-> natural? QR-MODE? natural?)]
           [encode-b (-> string? string?)]
           [encode-n (-> string? string?)]
           [string-split (-> string? natural? list?)]

@@ -1,7 +1,9 @@
 #lang racket
 
+(require "../share/qr.rkt")
+
 (provide (contract-out
-     [get-group-width (-> natural? (or/c 'L 'M 'Q 'H) list?)]
+     [get-group-width (-> natural? QR-ERROR-LEVEL? list?)]
      ))
 
 (define (get-group-width version error_level)
