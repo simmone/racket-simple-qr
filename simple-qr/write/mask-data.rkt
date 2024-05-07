@@ -1,6 +1,8 @@
 #lang racket
 
-(require "../share/qr.rkt")
+(require "../share/qr.rkt"
+         "../share/draw/matrix.rkt"
+         "../share/lib.rkt")
 
 (provide (contract-out
           [mask-func (-> list? natural? list?)]
@@ -11,7 +13,7 @@
           [mask-on-condition2 (-> hash? natural?)]
           [mask-condition3 (-> list? natural?)]
           [mask-on-condition3 (-> natural? hash? natural?)]
-          [mask-on-condition4 (-> hash? natural?)]
+          [mask-on-condition4 (-> natural? hash? natural?)]
           ))
 
 (define (get-mask-proc mask)
@@ -150,15 +152,26 @@
       (get-all-data-rows modules)
       (get-all-data-cols modules))))))
 
-(define (mask-on-condition4 points_map)
-  (let ([sum_count (hash-count points_map)]
-        [dark_count (foldr + 0 (hash-values points_map))]
-        [bili #f]
-        [low_val #f]
-        [high_val #f]
-        [low_result #f]
-        [high_result #f])
+(define (mask-on-condition4 modules points_map)
+  (let* ([qr_area_points
+          (get-points-between
+           (cons QUIET_ZONE_BRICKS QUIET_ZONE_BRICKS)
+           (cons (- (+ modules QUIET_ZONE_BRICKS) 1) (- (+ modules QUIET_ZONE_BRICKS) 1))
+           #:direction 'cross)]
+         [sum_count (length qr_area_points)]
+         [dark_count (foldr + 0
+                            (map
+                             (lambda (point)
+                               (hash-ref points_map point))
+                             qr_area_points))]
+         [bili #f]
+         [low_val #f]
+         [high_val #f]
+         [low_result #f]
+         [high_result #f])
+
     (set! bili (* (/ dark_count sum_count) 100))
+    (printf "bili = dark_count[~a] / sum_count[~a] =  ~a\n" dark_count sum_count (exact->inexact bili))
 
     (set! low_val (* (floor (/ bili 5)) 5))
 

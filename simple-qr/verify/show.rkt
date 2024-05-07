@@ -310,7 +310,7 @@
                                  (mask-on-condition1 (QR-modules qr) mask_points_map)
                                  (mask-on-condition2 mask_points_map)
                                  (mask-on-condition3 (QR-modules qr) mask_points_map)
-                                 (mask-on-condition4 mask_points_map)))
+                                 (mask-on-condition4 (QR-modules qr) mask_points_map)))
                               mask_list))
         
         (set! penalty_list (map (lambda (score_list) (foldr + 0 score_list)) condition_list))
