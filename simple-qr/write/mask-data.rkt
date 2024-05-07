@@ -171,15 +171,13 @@
          [high_result #f])
 
     (set! bili (* (/ dark_count sum_count) 100))
-    (printf "bili = dark_count[~a] / sum_count[~a] =  ~a\n" dark_count sum_count (exact->inexact bili))
 
     (set! low_val (* (floor (/ bili 5)) 5))
 
     (set! high_val (* (ceiling (/ bili 5)) 5))
 
     (set! low_result (/ (abs (- low_val 50)) 5))
+
     (set! high_result (/ (abs (- high_val 50)) 5))
 
-    (if (< low_result high_result)
-        (* low_result 10)
-        (* high_result 10))))
+    (* (min low_result high_result) 10)))
