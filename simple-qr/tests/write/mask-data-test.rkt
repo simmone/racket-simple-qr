@@ -192,7 +192,7 @@
       ))
 
    (test-case
-    "test-conditon1-3"
+    "test-conditon-1"
 
     (let ([points_map (make-hash)])
       (for-each
@@ -256,6 +256,70 @@
       (check-equal? (mask-on-condition4 21 points_map) 0)
       ))
 
+  (test-case
+    "test-conditon-2"
+
+    (let ([points_map (make-hash)])
+      (for-each
+       (lambda (rec)
+         (for-each
+          (lambda (point)
+            (hash-set! points_map point 0))
+          rec))
+       (get-all-data-rows 21))
+      
+      (for-each
+       (lambda (point)
+         (hash-set! points_map point 1))
+       (let loop-row ([rows
+                   '(
+                     (1 1 1 1 1 1 1 0 0 0 0 1 0 0 1 1 1 1 1 1 1)
+                     (1 0 0 0 0 0 1 0 1 1 0 0 1 0 1 0 0 0 0 0 1)
+                     (1 0 1 1 1 0 1 0 0 1 0 1 1 0 1 0 1 1 1 0 1)
+                     (1 0 1 1 1 0 1 0 1 1 1 1 1 0 1 0 1 1 1 0 1)
+                     (1 0 1 1 1 0 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1)
+                     (1 0 0 0 0 0 1 0 0 1 0 0 1 0 1 0 0 0 0 0 1)
+                     (1 1 1 1 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 1 1)
+                     (0 0 0 0 0 0 0 0 1 1 0 1 1 0 0 0 0 0 0 0 0)
+                     (0 1 0 1 1 1 1 0 1 1 0 0 1 1 1 0 1 1 0 1 0)
+                     (1 0 1 1 1 1 0 1 0 0 0 0 1 1 1 1 0 1 1 1 0)
+                     (0 0 1 0 1 0 1 1 0 0 0 1 0 0 1 1 0 0 0 0 0)
+                     (1 0 1 1 0 1 0 0 0 1 0 1 1 0 0 0 1 1 0 0 0)
+                     (1 1 0 1 1 1 1 1 1 1 1 0 1 1 1 0 1 1 1 1 1)
+                     (0 0 0 0 0 0 0 0 1 0 0 0 1 0 0 1 0 1 0 0 0)
+                     (1 1 1 1 1 1 1 0 0 1 1 0 0 1 1 0 0 1 1 1 1)
+                     (1 0 0 0 0 0 1 0 1 0 1 0 0 1 0 0 1 0 1 1 1)
+                     (1 0 1 1 1 0 1 0 1 1 0 1 0 0 1 0 0 0 1 1 1)
+                     (1 0 1 1 1 0 1 0 1 0 1 1 1 0 0 0 1 0 1 0 0)
+                     (1 0 1 1 1 0 1 0 0 1 0 1 1 0 1 0 0 0 0 1 1)
+                     (1 0 0 0 0 0 1 0 1 1 1 0 1 1 1 1 0 0 1 1 0)
+                     (1 1 1 1 1 1 1 0 0 1 0 0 1 0 0 0 0 0 0 1 0)
+                     )]
+                  [row 4]
+                  [row_result_list '()])
+         (if (not (null? rows))
+             (loop-row
+              (cdr rows)
+              (add1 row)
+              `(
+                ,@(let loop-col ([col 4]
+                                 [col_result_list '()])
+                    (if (<= col 24)
+                        (if (= (list-ref (car rows) (- col 4)) 0)
+                            (loop-col (add1 col) col_result_list)
+                            (loop-col (add1 col) (cons (cons row col) col_result_list)))
+                        (reverse col_result_list)))
+                ,@row_result_list))
+             (reverse row_result_list))))
+
+      (check-equal? (mask-on-condition1 21 points_map) 171)
+
+      (check-equal? (mask-on-condition2 points_map) 102)
+
+      (check-equal? (mask-on-condition3 21 points_map) 80)
+
+      (check-equal? (mask-on-condition4 21 points_map) 0)
+      ))
 
    (test-case
     "test-condition4"
