@@ -4,22 +4,22 @@
          "../../share/qr.rkt"
          "../../share/lib.rkt")
 
-(define-runtime-path data_bits_file (build-path 'up "express" "content" "docs" "s19_draw_data_bits" "data_bits.svg"))
-(define-runtime-path s20_draw-mask_directory (build-path 'up "express" "content" "docs" "s20_draw_mask"))
-(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s20_draw_mask" "_index.md"))
+(define-runtime-path data_bits_file (build-path 'up "express" "content" "docs" "s21_draw_data_bits" "data_bits.svg"))
+(define-runtime-path s21_draw-mask_directory (build-path 'up "express" "content" "docs" "s21_draw_mask"))
+(define-runtime-path index_md_file (build-path 'up "express" "content" "docs" "s21_draw_mask" "_index.md"))
 
 (provide (contract-out
-          [s20-draw-mask-express (-> list? list? list? natural? natural? QR? void?)]))
+          [s21-draw-mask-express (-> list? list? list? natural? natural? QR? void?)]))
 
-(define (s20-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
-  (make-directory* s20_draw-mask_directory)
+(define (s21-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
+  (make-directory* s21_draw-mask_directory)
 
   (with-output-to-file index_md_file
     #:exists 'replace
     (lambda ()
       (printf "---\n")
-      (printf "weight: 20\n")
-      (printf "title: \"Step20: Mask data\"\n")
+      (printf "weight: 21\n")
+      (printf "title: \"Step21: Mask data\"\n")
       (printf "---\n\n")
       
       (printf "# Mask data\n\n")

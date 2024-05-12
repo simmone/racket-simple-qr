@@ -38,11 +38,11 @@
          "../write/fill-data.rkt"
          "write/s19-draw-data-bits-express.rkt"
          "../write/mask-data.rkt"
-         "write/s20s-mask-showcase-express.rkt"
-         "write/s20-draw-mask-express.rkt"
+         "write/s20-draw-mask-showcase-express.rkt"
+         "write/s21-draw-mask-express.rkt"
          "../write/error-level.rkt"
-         "write/s21-draw-mask-and-format-express.rkt"
-         "write/s22-qr-express.rkt"
+         "write/s22-draw-mask-and-format-express.rkt"
+         "write/s23-qr-express.rkt"
          racket/runtime-path
          reed-solomon)
 
@@ -57,26 +57,26 @@
 (define-runtime-path format_information_file (build-path "express" "content" "docs" "s8_format_information" "format_information.svg"))
 (define-runtime-path version_information_file (build-path "express" "content" "docs" "s9_version_information" "version_information.svg"))
 (define-runtime-path data_bits_file (build-path "express" "content" "docs" "s19_draw_data_bits" "data_bits.svg"))
-(define-runtime-path mask_showcase_init_file (build-path "express" "content" "docs" "s20s_mask_showcase" "original.svg"))
-(define-runtime-path mask_showcase_bits_0_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask0.svg"))
-(define-runtime-path mask_showcase_bits_1_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask1.svg"))
-(define-runtime-path mask_showcase_bits_2_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask2.svg"))
-(define-runtime-path mask_showcase_bits_3_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask3.svg"))
-(define-runtime-path mask_showcase_bits_4_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask4.svg"))
-(define-runtime-path mask_showcase_bits_5_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask5.svg"))
-(define-runtime-path mask_showcase_bits_6_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask6.svg"))
-(define-runtime-path mask_showcase_bits_7_file (build-path "express" "content" "docs" "s20s_mask_showcase" "mask7.svg"))
-(define-runtime-path mask_original_file (build-path "express" "content" "docs" "s20_draw_mask" "original.svg"))
-(define-runtime-path mask_bits_0_file (build-path "express" "content" "docs" "s20_draw_mask" "mask0.svg"))
-(define-runtime-path mask_bits_1_file (build-path "express" "content" "docs" "s20_draw_mask" "mask1.svg"))
-(define-runtime-path mask_bits_2_file (build-path "express" "content" "docs" "s20_draw_mask" "mask2.svg"))
-(define-runtime-path mask_bits_3_file (build-path "express" "content" "docs" "s20_draw_mask" "mask3.svg"))
-(define-runtime-path mask_bits_4_file (build-path "express" "content" "docs" "s20_draw_mask" "mask4.svg"))
-(define-runtime-path mask_bits_5_file (build-path "express" "content" "docs" "s20_draw_mask" "mask5.svg"))
-(define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s20_draw_mask" "mask6.svg"))
-(define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s20_draw_mask" "mask7.svg"))
-(define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s21_draw_mask_and_format" "mask_and_format.svg"))
-(define-runtime-path qr_file (build-path "express" "content" "docs" "s22_qr" "qr.svg"))
+(define-runtime-path mask_showcase_init_file (build-path "express" "content" "docs" "s20_mask_showcase" "original.svg"))
+(define-runtime-path mask_showcase_bits_0_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask0.svg"))
+(define-runtime-path mask_showcase_bits_1_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask1.svg"))
+(define-runtime-path mask_showcase_bits_2_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask2.svg"))
+(define-runtime-path mask_showcase_bits_3_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask3.svg"))
+(define-runtime-path mask_showcase_bits_4_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask4.svg"))
+(define-runtime-path mask_showcase_bits_5_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask5.svg"))
+(define-runtime-path mask_showcase_bits_6_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask6.svg"))
+(define-runtime-path mask_showcase_bits_7_file (build-path "express" "content" "docs" "s20_mask_showcase" "mask7.svg"))
+(define-runtime-path mask_original_file (build-path "express" "content" "docs" "s21_draw_mask" "original.svg"))
+(define-runtime-path mask_bits_0_file (build-path "express" "content" "docs" "s21_draw_mask" "mask0.svg"))
+(define-runtime-path mask_bits_1_file (build-path "express" "content" "docs" "s21_draw_mask" "mask1.svg"))
+(define-runtime-path mask_bits_2_file (build-path "express" "content" "docs" "s21_draw_mask" "mask2.svg"))
+(define-runtime-path mask_bits_3_file (build-path "express" "content" "docs" "s21_draw_mask" "mask3.svg"))
+(define-runtime-path mask_bits_4_file (build-path "express" "content" "docs" "s21_draw_mask" "mask4.svg"))
+(define-runtime-path mask_bits_5_file (build-path "express" "content" "docs" "s21_draw_mask" "mask5.svg"))
+(define-runtime-path mask_bits_6_file (build-path "express" "content" "docs" "s21_draw_mask" "mask6.svg"))
+(define-runtime-path mask_bits_7_file (build-path "express" "content" "docs" "s21_draw_mask" "mask7.svg"))
+(define-runtime-path mask_and_format_file (build-path "express" "content" "docs" "s22_draw_mask_and_format" "mask_and_format.svg"))
+(define-runtime-path qr_file (build-path "express" "content" "docs" "s23_qr" "qr.svg"))
 
 (define (qr-write-express data file_name
                           #:mode [mode 'B]
@@ -285,22 +285,44 @@
       (draw (QR-matrix qr) data_bits_file 'svg)
       
       ;; mask func showcase
-      (let ([mask_qr (new-qr data module_width mode error_level (car color) (cdr color))]
-            [mask_list (map
-                        (lambda (mask_number)
-                          (let ([mask_points_map (hash-copy (QR-point_val_map mask_qr))])
-                            (for-each
-                             (lambda (item)
-                               (hash-set! mask_points_map (car item) (cdr item)))
-                             (mask-func data_list mask_number))
-                            mask_points_map))
-                        '(0 1 2 3 4 5 6 7))])
+      (let* ([mask_qr (new-qr data module_width mode error_level (car color) (cdr color))]
+             [trace_list
+              (get-points-between
+               (cons QUIET_ZONE_BRICKS QUIET_ZONE_BRICKS)
+               (cons (- (MATRIX-bricks (QR-matrix mask_qr)) QUIET_ZONE_BRICKS 1) (- (MATRIX-bricks (QR-matrix mask_qr)) QUIET_ZONE_BRICKS 1))
+               #:direction 'cross)]
+             [data_bits (map (lambda (point) 1) trace_list)]
+             [data_list
+              (let loop ([loop_trace_list trace_list]
+                         [loop_data_list data_bits]
+                         [result_list '()])
+                (if (not (null? loop_trace_list))
+                    (loop
+                     (cdr loop_trace_list)
+                     (cdr loop_data_list)
+                     (cons (cons (car loop_trace_list) (car loop_data_list)) result_list))
+                    (reverse result_list)))]
+             [mask_list (map
+                         (lambda (mask_number)
+                           (let ([mask_points_map (hash-copy (QR-point_val_map mask_qr))])
+                             (for-each
+                              (lambda (item)
+                                (hash-set! mask_points_map (car item) (cdr item)))
+                              (mask-func data_list mask_number))
+                             mask_points_map))
+                         '(0 1 2 3 4 5 6 7))])
+
+        (draw-data (list->string (map (lambda (c) (integer->char (+ c 48))) data_bits)) trace_list mask_qr)
+
+        (s20-draw-mask-showcase-express mask_list qr)
+        (fill-points-color (QR-matrix mask_qr) (MATRIX-points (QR-matrix mask_qr)) '("grey" "white"))
+        (draw (QR-matrix mask_qr) mask_showcase_init_file 'svg)
 
         (let loop ([mask_index 0])
           (when (< mask_index 8)
             (set-QR-point_val_map! mask_qr (list-ref mask_list mask_index))
-            (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
-            (draw (QR-matrix qr)
+            (fill-type-points 'data '("red" . "green") mask_qr)
+            (draw (QR-matrix mask_qr)
                   (cond
                    [(= mask_index 0) mask_showcase_bits_0_file]
                    [(= mask_index 1) mask_showcase_bits_1_file]
@@ -312,11 +334,6 @@
                    [(= mask_index 7) mask_showcase_bits_7_file])
                   'svg)
             (loop (add1 mask_index))))
-
-        (fill-points-color (QR-matrix mask_qr) (MATRIX-points (QR-matrix mask_qr)) '("black" "white"))
-        (draw (QR-matrix mask_qr) mask_init_file 'svg)
-
-        (s20s-draw-mask-showcase-express mask_list qr)
         )
 
       ;; mask data
@@ -364,7 +381,7 @@
 
         (set! mask_index (index-of penalty_list min_penalty))
         
-        (s20-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
+        (s21-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
         (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (draw (QR-matrix qr) mask_original_file 'svg)
 
@@ -392,10 +409,10 @@
 
         (draw-format-information format_str qr)
         (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
-        (s21-draw-mask-and-format-express error_level mask_index format_str qr)
+        (s22-draw-mask-and-format-express error_level mask_index format_str qr)
         (draw (QR-matrix qr) mask_and_format_file 'svg)
 
-        (s22-qr-express qr)
+        (s23-qr-express qr)
         (fill-points-color (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("white" "white"))
         (fill-type-points 'all '("black" . "white") qr)
         (draw (QR-matrix qr) qr_file 'svg)

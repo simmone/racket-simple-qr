@@ -40,7 +40,7 @@
                  [bit (cdar loop_list)])
              (loop
               (cdr loop_list)
-              (cons (cons point_pair (if (mask-lb (car point_pair) (cdr point_pair)) (switch-bit bit) bit)) result_list)))
+              (cons (cons point_pair (if (mask-lb (- (car point_pair) QUIET_ZONE_BRICKS) (- (cdr point_pair) QUIET_ZONE_BRICKS)) (switch-bit bit) bit)) result_list)))
            result_list)))))
 
 (define (switch-bit bit)
