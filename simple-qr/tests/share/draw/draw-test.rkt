@@ -6,7 +6,7 @@
          "../../../share/lib.rkt"
          "../../../share/qr.rkt"
          "../../../share/draw/draw.rkt"
-         "../../../share/finder-pattern.rkt"
+         "../../../write/finder-pattern.rkt"
          racket/runtime-path)
 
 (define-runtime-path png_1X1_file "png_1X1.png")
@@ -30,7 +30,7 @@
         (lambda () (void))
         (lambda ()
           (let ([matrix (new-matrix 1 50)])
-            (fill-points matrix '((0 . 0)) "red")
+            (fill-point-color matrix '(0 . 0) "red")
             (draw matrix png_1X1_file 'png)
             (draw matrix svg_1X1_file 'svg)
             ))
@@ -47,8 +47,8 @@
         (lambda () (void))
         (lambda ()
           (let ([matrix (new-matrix 2 50)])
-            (fill-points matrix '((0 . 0) (1 . 1)) "red")
-            (fill-points matrix '((0 . 1) (1 . 0)) "yellow")
+            (fill-points-color matrix '((0 . 0) (1 . 1)) "red")
+            (fill-points-color matrix '((0 . 1) (1 . 0)) "yellow")
             (draw matrix png_2X2_file 'png)
             (draw matrix svg_2X2_file 'svg)
             ))
@@ -69,8 +69,8 @@
                        [index 1])
               (when (not (null? points))
                 (if (odd? index)
-                    (fill-points matrix (list (car points)) "red")
-                    (fill-points matrix (list (car points)) "yellow"))
+                    (fill-points-color matrix (list (car points)) "red")
+                    (fill-points-color matrix (list (car points)) "yellow"))
                 (loop (cdr points) (add1 index))))
             (draw matrix png_3X3_file 'png)
             (draw matrix svg_3X3_file 'svg)
@@ -88,7 +88,7 @@
         (lambda () (void))
         (lambda ()
           (let ([matrix (new-matrix 1 60)])
-            (fill-points matrix '((0 . 0)) 'pattern1)
+            (fill-points-color matrix '((0 . 0)) 'pattern1)
             (draw matrix svg_1X1_pattern1_file 'svg)
             ))
         (lambda ()
@@ -108,11 +108,11 @@
               (when (not (null? points))
                 (cond
                  [(= (remainder index 3) 1)
-                  (fill-points matrix (list (car points)) "red")]
+                  (fill-points-color matrix (list (car points)) "red")]
                  [(= (remainder index 3) 2)
-                  (fill-points matrix (list (car points)) 'pattern1)]
+                  (fill-points-color matrix (list (car points)) 'pattern1)]
                  [(= (remainder index 3) 0)
-                  (fill-points matrix (list (car points)) "yellow")])
+                  (fill-points-color matrix (list (car points)) "yellow")])
                 (loop (cdr points) (add1 index))))
             (draw matrix png_5X5_file 'png)
             (draw matrix svg_5X5_file 'svg)
