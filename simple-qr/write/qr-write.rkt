@@ -44,10 +44,6 @@
                   )
 
   (let ([qr (new-qr data module_width mode error_level (car color) (cdr color))])
-    (get-version-express qr)
-
-    (fill-points-color (QR-matrix qr) (MATRIX-points (QR-matrix qr)) (list (cdr color)))
-
     (draw-finder-pattern qr)
 
     (draw-separator qr)
@@ -93,7 +89,6 @@
         (set! s1_data_bits (encode-b data))]
        [(eq? mode 'N)
         (set! s1_data_bits (encode-n data))])
-      (s10-data-encoding-express s1_data_bits qr)
 
       ;; add mode and count indicator
       (set! s2_character_count (string-length data))
@@ -169,7 +164,6 @@
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
       (draw-data s20_padded_remainder_bits s22_trace_list qr)
-      (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
 
       ;; mask data
       (let* ([format_str #f]
@@ -216,28 +210,10 @@
 
         (set! mask_index (index-of penalty_list min_penalty))
 
-        (let loop ([mask_index 0])
-          (when (< mask_index 8)
-            (set-QR-point_val_map! qr (list-ref mask_list mask_index))
-            (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
-            (draw (QR-matrix qr)
-                  (cond
-                   [(= mask_index 0) mask_bits_0_file]
-                   [(= mask_index 1) mask_bits_1_file]
-                   [(= mask_index 2) mask_bits_2_file]
-                   [(= mask_index 3) mask_bits_3_file]
-                   [(= mask_index 4) mask_bits_4_file]
-                   [(= mask_index 5) mask_bits_5_file]
-                   [(= mask_index 6) mask_bits_6_file]
-                   [(= mask_index 7) mask_bits_7_file])
-                  'svg)
-            (loop (add1 mask_index))))
-
         ;; draw selected mask
         (set-QR-point_val_map! qr (list-ref mask_list mask_index))
-        (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
-        (draw-format-information format_str qr)
+        (draw-format-information format_str qr)))
 
-        (draw (QR-matrix qr) qr_file output_type)))))
+    (draw (QR-matrix qr) file_name output_type)))
