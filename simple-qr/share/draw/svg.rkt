@@ -1,8 +1,7 @@
 #lang racket
 
-(require simple-svg)
-
-(require "matrix.rkt"
+(require simple-svg
+         "matrix.rkt"
          "../lib.rkt")
 
 (provide (contract-out

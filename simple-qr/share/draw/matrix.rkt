@@ -33,7 +33,8 @@
     (MATRIX width bricks brick_width points (make-hash))))
 
 (define (fill-point-color matrix point color)
-  (hash-set! (MATRIX-points_color_map matrix) point color))
+  (when (not (eq? color 'transparent))
+    (hash-set! (MATRIX-points_color_map matrix) point color)))
 
 (define (fill-points-color matrix points colors)
   (let loop-point ([loop_points points]

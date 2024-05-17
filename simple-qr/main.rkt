@@ -1,7 +1,6 @@
 #lang racket
 
 (require "write/qr-write.rkt")
-(require "read/qr-read.rkt")
 
 (provide (contract-out
           [qr-write (->* (string? path-string?) 
@@ -13,5 +12,4 @@
                           #:output_type (or/c 'png 'svg)
                           )
                          any)]
-          [qr-read (-> path-string? string?)]
           ))
