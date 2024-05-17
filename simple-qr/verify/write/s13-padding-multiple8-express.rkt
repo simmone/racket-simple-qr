@@ -20,7 +20,7 @@
       (printf "weight: 13\n")
       (printf "title: \"Step13: Padding multiple 8 0s\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Padding multiple 8 0s\n\n")
 
       (printf "After adding the terminator, if the number of bits in the string is not a multiple of 8, first pad the string

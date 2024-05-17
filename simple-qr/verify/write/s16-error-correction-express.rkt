@@ -20,7 +20,7 @@
       (printf "weight: 16\n")
       (printf "title: \"Step16: Error correction encoding\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Error correction encoding\n\n")
 
       (printf "Error correction codewords allow QR code readers to detect and correct errors in QR codes.The error correction codewords will be generated using a method called Reed-Solomon Error correction..\n\n")

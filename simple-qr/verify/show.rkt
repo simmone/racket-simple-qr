@@ -89,15 +89,15 @@
     #:exists 'replace
     (lambda ()
       (printf "# Explain each step of QR code write\n\n")
-      
+
       (printf "## qr-write\n")
 
       (printf "## encoding data:\n")
-      
+
       (printf "\n    ~a\n\n" data)
 
       (printf "## Options:\n")
-      
+
       (printf "1. output file name: **~a**\n" file_name)
       (printf "2. mode: **~a**[default: 'B]\n" mode)
       (printf "3. error level: **~a**[default: ~a]\n" error_level 'H)
@@ -191,10 +191,10 @@
 
       ;; add mode and count indicator
       (set! s2_character_count (string-length data))
-      
+
       (set! s2_1_count_bit_width (get-character-bit-width (QR-version qr) (QR-mode qr)))
 
-      (set! s3_character_count_indicator 
+      (set! s3_character_count_indicator
             (~r s2_character_count #:base 2 #:min-width s2_1_count_bit_width #:pad-string "0"))
 
       (set! s4_mode_indicator
@@ -236,15 +236,15 @@
 
       ;; group data
       (set! s12_split_contract (get-group-width (QR-version qr) (QR-error_level qr)))
-          
+
       ;; split decimal list on contract
       (set! s13_origin_data_group (split-decimal-list-on-contract s11_decimal_list s12_split_contract))
-      
+
       (s15-split-to-groups-express s11_decimal_list s12_split_contract s13_origin_data_group qr)
 
       ;; calculate error code
       (set! s14_ec_count (get-ec-count (QR-version qr) (QR-error_level qr)))
-          
+
       (set! s16_error_code_group
             (list
              (map
@@ -263,7 +263,7 @@
 
       ;; interleave data group
       (set! s17_interleave_data_group (interleave-data-group s16_error_code_group))
-          
+
       (set! s18_interleave_data_bits (decimal-list-to-string s17_interleave_data_group))
 
       (s17-interleave-data-group-express s17_interleave_data_group s18_interleave_data_bits qr)
@@ -283,7 +283,7 @@
       (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
       (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
       (draw (QR-matrix qr) data_bits_file 'svg)
-      
+
       ;; mask func showcase
       (let* ([mask_qr (new-qr data module_width mode error_level (car color) (cdr color))]
              [trace_list
@@ -344,7 +344,7 @@
              [penalty_list #f]
              [min_penalty #f]
              [mask_index #f])
-            
+
         (set! data_list
               (let loop ([loop_trace_list s22_trace_list]
                          [loop_data_list (map (lambda (bit_char) (- (char->integer bit_char) 48)) (string->list s20_padded_remainder_bits))]
@@ -355,7 +355,7 @@
                      (cdr loop_data_list)
                      (cons (cons (car loop_trace_list) (car loop_data_list)) result_list))
                     (reverse result_list))))
-            
+
         (set! mask_list (map
                          (lambda (mask_number)
                            (let ([mask_points_map (hash-copy (QR-point_val_map qr))])
@@ -374,13 +374,13 @@
                                  (mask-on-condition3 (QR-modules qr) mask_points_map)
                                  (mask-on-condition4 (QR-modules qr) mask_points_map)))
                               mask_list))
-        
+
         (set! penalty_list (map (lambda (score_list) (foldr + 0 score_list)) condition_list))
 
         (set! min_penalty (apply min penalty_list))
 
         (set! mask_index (index-of penalty_list min_penalty))
-        
+
         (s21-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
         (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (draw (QR-matrix qr) mask_original_file 'svg)

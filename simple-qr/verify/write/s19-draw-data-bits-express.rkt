@@ -20,7 +20,7 @@
       (printf "weight: 19\n")
       (printf "title: \"Step19: Draw data bits\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw data bits\n\n")
 
       (printf "The data bits are placed starting at the bottom-right of the matrix and proceeding upward in a column

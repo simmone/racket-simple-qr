@@ -19,9 +19,9 @@
       (printf "weight: 3\n")
       (printf "title: \"Step3: Finder pattern\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Finder Pattern\n\n")
-      
+
       (printf "## Locate 3 finder patterns:\n\n")
       (printf "![finder pattern image](finder_pattern.svg \"Finder Pattern Filled\")\n")
       )))

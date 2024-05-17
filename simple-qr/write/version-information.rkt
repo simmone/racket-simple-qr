@@ -19,7 +19,7 @@
            [data_list (reverse (string->list version_str))]
            [lower_left_list (transform-points-list (second (get-version-points)) new_lower_left_point)]
            [upper_right_list (transform-points-list (first (get-version-points)) new_upper_right_point)])
-    
+
       (let loop ([loop_list data_list]
                  [trace_list lower_left_list])
         (when (and (not (null? loop_list)) (not (null? trace_list)))

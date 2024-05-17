@@ -21,7 +21,7 @@
       (printf "weight: 21\n")
       (printf "title: \"Step21: Mask data\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Mask data\n\n")
 
       (printf "The purpose of this step is to modify the QR code to make it as easy for a QR code reader to scan as possible.\n\n")
@@ -59,7 +59,7 @@ score is the mask pattern that must be used for the final output.\n\n")
                   (list-ref (list-ref condition_list mask_index) 3)
                   (list-ref penalty_list mask_index))
           (printf "![mask 0 image](mask~a.svg \"Mask 0\")\n" mask_index)
-          
+
           (loop (add1 mask_index))
           ))
 

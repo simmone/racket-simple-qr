@@ -30,10 +30,10 @@
 
    (test-case
     "test-encode-n"
-    
+
     (check-equal? (encode-n "1234567") "000111101101110010000111")
     )
-   
+
    (test-case
     "test-string-split"
 
@@ -58,7 +58,7 @@
 
    (test-case
     "test-encode-a"
-    
+
     (check-equal? (encode-a "HEA") "01100001011001010")
     )
 

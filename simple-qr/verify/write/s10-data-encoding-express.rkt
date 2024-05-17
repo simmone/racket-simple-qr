@@ -20,9 +20,9 @@
       (printf "weight: 10\n")
       (printf "title: \"Step10: Data to bits\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Data to bits\n\n")
-      
+
       (printf "## data_encoding\n\n")
       (printf "convert [~a] to bits on mode[~a]\n\n" (QR-data qr) (QR-mode qr))
       (printf "data string to bits:\n~a\n" (string-to-bits-markdown-table (QR-data qr) bits_str))

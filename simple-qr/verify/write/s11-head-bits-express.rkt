@@ -20,12 +20,12 @@
       (printf "weight: 11\n")
       (printf "title: \"Step11: Head bits\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Add head bits\n\n")
 
       (printf "## mode indicator\n\n")
       (printf "mode indicator:[~a]\n\n" s4_mode_indicator)
-      
+
       (printf "## character count bits\n\n")
       (printf "character count:[~a]\n\n" character_count)
       (printf "character count bit width:[~a]\n\n" count_bit_width)

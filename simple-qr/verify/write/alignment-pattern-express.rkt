@@ -19,9 +19,9 @@
       (printf "weight: 6\n")
       (printf "title: \"Step6: Alignment-pattern\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Alignment-Pattern\n\n")
-      
+
       (printf "## alignment-pattern\n\n")
       (printf "Each Alignment Pattern may be viewed as three superimposed concentric squares and is constructed of dark 5  5
 modules, light 3  3 modules and a single central dark module. The number of Alignment Patterns depends on the

@@ -20,7 +20,7 @@
       (printf "weight: 15\n")
       (printf "title: \"Step15: Split data to groups\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Split data to groups\n\n")
 
       (printf "Before generating error correction codewords, it may be necessary to break up the data codewords

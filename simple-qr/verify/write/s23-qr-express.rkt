@@ -20,7 +20,7 @@
       (printf "weight: 23\n")
       (printf "title: \"Step23: QR code\"\n")
       (printf "---\n\n")
-      
+
       (printf "# QR code\n\n")
 
       (printf "![qr_image](qr.svg \"Result\")\n")

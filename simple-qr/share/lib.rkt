@@ -32,7 +32,7 @@
          (when (<= count (sub1 (length item_list)))
                (set! temp_list `(,@temp_list ,(list-ref item_list count)))))
        data_list)
-      
+
       (if (null? temp_list)
           result_list
           (loop (add1 count) `(,@result_list ,@temp_list))))))
@@ -162,7 +162,7 @@
            #t]
           [else
            #f])])
-        
+
     (if (not is_valid?)
         '()
         (let loop-x ([loop_x (car start_point)]

@@ -19,9 +19,9 @@
       (printf "weight: 4\n")
       (printf "title: \"Step4: Separator\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Separator\n\n")
-      
+
       (printf "## separator\n\n")
       (printf "separator is a light color band to separate finder pattern from other areas:\n\n")
       (printf "![separator image](separator.svg \"Separator\")\n")

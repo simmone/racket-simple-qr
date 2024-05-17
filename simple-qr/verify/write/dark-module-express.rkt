@@ -19,9 +19,9 @@
       (printf "weight: 7\n")
       (printf "title: \"Step7: Dark_module\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Dark_Module\n\n")
-      
+
       (printf "## dark_module\n\n")
       (printf "The dark module is a single black module that is always placed beside the bottom left finder pattern.
 The sections below explain in greater detail how to position the function patterns.More specifically, the dark module is always located at the coordinate ([(4 * V) + 9], 8) where V

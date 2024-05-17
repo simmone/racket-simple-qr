@@ -40,6 +40,6 @@
   (let loop-point ([loop_points points]
                    [index 0])
     (when (not (null? loop_points))
-      (fill-point-color matrix 
+      (fill-point-color matrix
                         (car loop_points) (list-ref colors (remainder index (length colors))))
       (loop-point (cdr loop_points) (add1 index)))))

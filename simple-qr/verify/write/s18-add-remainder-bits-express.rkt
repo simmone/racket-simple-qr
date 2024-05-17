@@ -20,7 +20,7 @@
       (printf "weight: 18\n")
       (printf "title: \"Step18: Add remainder bits\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Add remainder bits\n\n")
 
       (printf "For some QR versions, the final binary message is not long enough to fill the required number of bits.

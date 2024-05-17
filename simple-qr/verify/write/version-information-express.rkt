@@ -19,9 +19,9 @@
       (printf "weight: 9\n")
       (printf "title: \"Step9: Version information\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Version_Information\n\n")
-      
+
       (printf "## version_information\n\n")
       (printf "If the QR Code is version 7 or larger, you must include an 18-bit version information string in the
 bottom left and top right corners of the QR code. (For a full list of all possible version information

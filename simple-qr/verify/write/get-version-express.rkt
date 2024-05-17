@@ -19,10 +19,10 @@
       (printf "weight: 1\n")
       (printf "title: \"Step1: Decide Version\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Decide version(capacity)\n")
       (printf "capacity controlled by char count, mode and error level\n\n")
-      
+
       (printf "## Elements\n")
       (printf "1. char count: ~a\n" (string-length (QR-data qr)))
       (printf "2. mode: ~a\n" (QR-mode qr))

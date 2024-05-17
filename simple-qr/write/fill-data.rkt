@@ -2,7 +2,7 @@
 
 (require "../share/qr.rkt")
 
-(provide (contract-out 
+(provide (contract-out
           [draw-data (-> string? list? QR? void?)]
           [get-data-socket-list (->* (natural?) (#:skip_points_hash hash?) list?)]
           ))

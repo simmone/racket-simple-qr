@@ -20,7 +20,7 @@
       (printf "weight: 13\n")
       (printf "title: \"Step13: Append terminator\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Append terminator at the end\n\n")
 
       (printf "If the bit string is shorter than the total number of required bits, a terminator of up to four 0s must be
@@ -29,7 +29,7 @@ number of bits, add four 0s to the end. If the bit string is fewer than four bit
 number of 0s that are needed to reach the required number of bits.\n\n")
 
       (printf "## charactor capacity is [~a] decided by version and error level.\n\n" capacity_char_count)
-      
+
       (printf "## capacity bits = capacity count X 8 = [~a]\n\n" capacity_bits_width)
 
       (printf "## append terminator to the end:\n\n")

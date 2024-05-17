@@ -20,12 +20,12 @@
 (define-runtime-path svg_5X5_file "svg_5X5.svg")
 
 (define test-func
-  (test-suite 
+  (test-suite
    "test-func"
 
    (test-case
     "test-draw-1X1"
-    
+
     (dynamic-wind
         (lambda () (void))
         (lambda ()
@@ -42,7 +42,7 @@
 
    (test-case
     "test-draw-2X2"
-    
+
     (dynamic-wind
         (lambda () (void))
         (lambda ()
@@ -60,7 +60,7 @@
 
    (test-case
     "test-draw-3X3"
-    
+
     (dynamic-wind
         (lambda () (void))
         (lambda ()
@@ -83,7 +83,7 @@
 
    (test-case
     "test-draw-1X1-pattern1"
-    
+
     (dynamic-wind
         (lambda () (void))
         (lambda ()
@@ -98,7 +98,7 @@
 
    (test-case
     "test-draw-5X5"
-    
+
     (dynamic-wind
         (lambda () (void))
         (lambda ()

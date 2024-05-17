@@ -20,7 +20,7 @@
       (printf "weight: 17\n")
       (printf "title: \"Step17: Interleave data group\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Interleave data group\n\n")
 
       (printf "The blocks are interleaved by doing the following:\n")

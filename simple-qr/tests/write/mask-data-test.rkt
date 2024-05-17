@@ -5,58 +5,58 @@
          "../../write/mask-data.rkt")
 
 (define test-mask-data
-  (test-suite 
+  (test-suite
    "test-mask-data"
 
    (test-case
     "test-mask-func"
 
     (let ([data '(((6 . 7) . 1) ((7 . 8) . 0) ((8 . 9) . 1) ((10 . 11) . 0) ((11 . 11) . 1) ((6 . 8) . 0))])
-      (check-equal? 
+      (check-equal?
        (mask-func data 0)
        '(((6 . 7) . 1) ((7 . 8) . 0) ((8 . 9) . 1) ((10 . 11) . 0) ((11 . 11) . 0) ((6 . 8) . 1)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 1)
        '(((6 . 7) . 0) ((7 . 8) . 0) ((8 . 9) . 0) ((10 . 11) . 1) ((11 . 11) . 1) ((6 . 8) . 1)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 2)
        '(((6 . 7) . 0) ((7 . 8) . 0) ((8 . 9) . 1) ((10 . 11) . 0) ((11 . 11) . 1) ((6 . 8) . 0)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 3)
        '(((6 . 7) . 1) ((7 . 8) . 0) ((8 . 9) . 0) ((10 . 11) . 0) ((11 . 11) . 1) ((6 . 8) . 1)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 4)
        '(((6 . 7) . 0) ((7 . 8) . 1) ((8 . 9) . 1) ((10 . 11) . 0) ((11 . 11) . 1) ((6 . 8) . 1)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 5)
        '(((6 . 7) . 0) ((7 . 8) . 1) ((8 . 9) . 1) ((10 . 11) . 1) ((11 . 11) . 1) ((6 . 8) . 0)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 6)
        '(((6 . 7) . 0) ((7 . 8) . 1) ((8 . 9) . 0) ((10 . 11) . 1) ((11 . 11) . 0) ((6 . 8) . 1)))
 
-      (check-equal? 
+      (check-equal?
        (mask-func data 7)
        '(((6 . 7) . 1) ((7 . 8) . 0) ((8 . 9) . 1) ((10 . 11) . 0) ((11 . 11) . 1) ((6 . 8) . 1)))
       )
 
-    (let ([data '(((21 . 21) . 0) ((21 . 20) . 0) ((20 . 21) . 0) ((20 . 20) . 1) 
+    (let ([data '(((21 . 21) . 0) ((21 . 20) . 0) ((20 . 21) . 0) ((20 . 20) . 1)
                   ((19 . 21) . 0) ((19 . 20) . 0) ((18 . 21) . 0) ((18 . 20) . 0))])
-      (check-equal? 
+      (check-equal?
        (mask-func data 3)
-       '(((21 . 21) . 0) ((21 . 20) . 1) ((20 . 21) . 1) ((20 . 20) . 1) 
+       '(((21 . 21) . 0) ((21 . 20) . 1) ((20 . 21) . 1) ((20 . 20) . 1)
          ((19 . 21) . 0) ((19 . 20) . 0) ((18 . 21) . 0) ((18 . 20) . 1)))
     )
     )
 
    (test-case
     "test-get-all-data-rows/cols"
-    
+
     (check-equal?
      (get-all-data-rows 2)
      '(((4 . 4) (4 . 5))
@@ -121,17 +121,17 @@
     (check-equal? (mask-condition1 '(1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0)) 13)
     (check-equal? (mask-condition1 '(1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0)) 14)
     )
-   
+
    (test-case
     "test-on-condition2"
-    
+
     (let ([points_map (make-hash)])
       (hash-set! points_map '(1 . 1) 1) (hash-set! points_map '(1 . 2) 1) (hash-set! points_map '(1 . 3) 1)
       (hash-set! points_map '(2 . 1) 1) (hash-set! points_map '(2 . 2) 1) (hash-set! points_map '(2 . 3) 1)
       (hash-set! points_map '(3 . 1) 1) (hash-set! points_map '(3 . 2) 1) (hash-set! points_map '(3 . 3) 1)
 
       (check-equal? (mask-on-condition2 points_map) 12)
-      
+
       (hash-set! points_map '(3 . 3) 0)
 
       (check-equal? (mask-on-condition2 points_map) 9)
@@ -155,7 +155,7 @@
 
    (test-case
     "test-on-condition4"
-    
+
     (let ([points_map (make-hash)])
       (hash-set! points_map '(4 . 4) 1) (hash-set! points_map '(4 . 5) 1) (hash-set! points_map '(4 . 6) 1)
       (hash-set! points_map '(5 . 4) 1) (hash-set! points_map '(5 . 5) 1) (hash-set! points_map '(5 . 6) 1)
@@ -202,7 +202,7 @@
             (hash-set! points_map point 0))
           rec))
        (get-all-data-rows 21))
-      
+
       (for-each
        (lambda (point)
          (hash-set! points_map point 1))
@@ -267,7 +267,7 @@
             (hash-set! points_map point 0))
           rec))
        (get-all-data-rows 21))
-      
+
       (for-each
        (lambda (point)
          (hash-set! points_map point 1))

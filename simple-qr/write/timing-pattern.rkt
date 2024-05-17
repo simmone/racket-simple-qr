@@ -33,7 +33,7 @@
 
 (define (locate-timing-pattern-joints modules)
   (let ([joint (- modules 9)])
-    (list 
+    (list
      (list (cons 6  8) (cons 6 joint))
      (list (cons 8  6) (cons joint 6)))))
 

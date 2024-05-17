@@ -29,7 +29,7 @@
       (printf "weight: 20\n")
       (printf "title: \"Step20: Mask Func\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Mask Func\n\n")
 
       (printf "## original image:\n\n")

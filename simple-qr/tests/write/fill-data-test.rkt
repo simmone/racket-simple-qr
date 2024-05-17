@@ -5,13 +5,13 @@
          "../../write/fill-data.rkt")
 
 (define test-fill-data
-  (test-suite 
+  (test-suite
    "test-fill-data"
 
    (test-case
     "test-get-get-data-socket-list"
 
-    (check-equal? 
+    (check-equal?
      (get-data-socket-list 9)
      '(
        (12 . 12) (12 . 11) (11 . 12) (11 . 11) (10 . 12) (10 . 11)  (9 . 12)  (9 . 11)  (8 . 12)  (8 . 11)  (7 . 12)  (7 . 11)  (6 . 12)  (6 . 11)  (5 . 12)  (5 . 11)  (4 . 12)  (4 . 11)
@@ -28,7 +28,7 @@
       (hash-set! skip_hash '(9 . 8) #t)
       (hash-set! skip_hash '(7 . 4) #t)
       (hash-set! skip_hash '(12 . 4) #t)
-      (check-equal? 
+      (check-equal?
        (get-data-socket-list 9 #:skip_points_hash skip_hash)
        '(
          (12 . 12) (12 . 11) (11 . 12) (11 . 11) (10 . 12) (10 . 11)  (9 . 12)  (9 . 11)  (8 . 12)  (8 . 11)  (7 . 12)  (7 . 11)  (6 . 12)  (6 . 11)  (5 . 12)  (5 . 11)  (4 . 12)  (4 . 11)

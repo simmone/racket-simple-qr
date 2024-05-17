@@ -19,9 +19,9 @@
       (printf "weight: 5\n")
       (printf "title: \"Step5: Timing-pattern\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Timing-Pattern\n\n")
-      
+
       (printf "## timing-pattern\n\n")
       (printf "The horizontal and vertical Timing Patterns respectively consist of a one module wide row or column of alternating
 dark and light modules, commencing and ending with a dark module. The horizontal Timing Pattern runs across

@@ -20,7 +20,7 @@
             (let ([basic_brick (svg-def-shape (new-rect (MATRIX-brick_width matrix) (MATRIX-brick_width matrix)))]
                   [color_style_map (make-hash)]
                   [pattern1_id (def-pattern1 (MATRIX-brick_width matrix))])
-              
+
               (for-each
                (lambda (color)
                  (hash-set! color_style_map color #f))

@@ -20,7 +20,7 @@
       (printf "weight: 14\n")
       (printf "title: \"Step14: Add pad bytes\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Add pad bytes\n\n")
 
       (printf "If the string is still not long enough to fill the maximum capacity, add the following bytes to the end of

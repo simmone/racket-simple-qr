@@ -1,7 +1,7 @@
 #lang racket
 
 (provide (contract-out
-          [qr-write (->* (string? path-string?) 
+          [qr-write (->* (string? path-string?)
                          (
                           #:mode string?
                           #:error_level string?
@@ -97,10 +97,10 @@
 
       ;; add mode and count indicator
       (set! s2_character_count (string-length data))
-      
+
       (set! s2_1_count_bit_width (get-character-bit-width (QR-version qr) (QR-mode qr)))
 
-      (set! s3_character_count_indicator 
+      (set! s3_character_count_indicator
             (~r s2_character_count #:base 2 #:min-width s2_1_count_bit_width #:pad-string "0"))
 
       (set! s4_mode_indicator
@@ -133,13 +133,13 @@
 
       ;; group data
       (set! s12_split_contract (get-group-width (QR-version qr) (QR-error_level qr)))
-          
+
       ;; split decimal list on contract
       (set! s13_origin_data_group (split-decimal-list-on-contract s11_decimal_list s12_split_contract))
-      
+
       ;; calculate error code
       (set! s14_ec_count (get-ec-count (QR-version qr) (QR-error_level qr)))
-          
+
       (set! s16_error_code_group
             (list
              (map
@@ -156,7 +156,7 @@
 
       ;; interleave data group
       (set! s17_interleave_data_group (interleave-data-group s16_error_code_group))
-          
+
       (set! s18_interleave_data_bits (decimal-list-to-string s17_interleave_data_group))
 
       ;; padded remainder bits
@@ -170,7 +170,7 @@
 
       (draw-data s20_padded_remainder_bits s22_trace_list qr)
       (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
-      
+
       ;; mask data
       (let* ([format_str #f]
              [data_list #f]
@@ -179,7 +179,7 @@
              [penalty_list #f]
              [min_penalty #f]
              [mask_index #f])
-            
+
         (set! data_list
               (let loop ([loop_trace_list s22_trace_list]
                          [loop_data_list (map (lambda (bit_char) (- (char->integer bit_char) 48)) (string->list s20_padded_remainder_bits))]
@@ -190,7 +190,7 @@
                      (cdr loop_data_list)
                      (cons (cons (car loop_trace_list) (car loop_data_list)) result_list))
                     (reverse result_list))))
-            
+
         (set! mask_list (map
                          (lambda (mask_number)
                            (let ([mask_points_map (hash-copy (QR-point_val_map qr))])
@@ -209,16 +209,12 @@
                                  (mask-on-condition3 (QR-modules qr) mask_points_map)
                                  (mask-on-condition4 (QR-modules qr) mask_points_map)))
                               mask_list))
-        
+
         (set! penalty_list (map (lambda (score_list) (foldr + 0 score_list)) condition_list))
 
         (set! min_penalty (apply min penalty_list))
 
         (set! mask_index (index-of penalty_list min_penalty))
-        
-        (s21-draw-mask-express mask_list condition_list penalty_list min_penalty mask_index qr)
-        (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
-        (draw (QR-matrix qr) mask_original_file 'svg)
 
         (let loop ([mask_index 0])
           (when (< mask_index 8)
@@ -243,22 +239,5 @@
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
         (draw-format-information format_str qr)
-        (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
-        (s22-draw-mask-and-format-express error_level mask_index format_str qr)
-        (draw (QR-matrix qr) mask_and_format_file 'svg)
 
-        (s23-qr-express qr)
-        (fill-points-color (QR-matrix qr) (MATRIX-points (QR-matrix qr)) '("white" "white"))
-        (fill-type-points 'all '("black" . "white") qr)
-        (draw (QR-matrix qr) qr_file 'svg)
-        )
-      )
-    )
-  )
-
-(delete-directory/files (build-path "express" "content"))
-(make-directory* (build-path "express" "content" "docs"))
-
-;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
-
-(qr-write-express "Hello world!" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+        (draw (QR-matrix qr) qr_file output_type)))))

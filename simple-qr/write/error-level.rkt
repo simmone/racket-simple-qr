@@ -50,7 +50,7 @@
     data_map))
 
 (define (get-error-level format_information_list)
-  (let ([format_information_str 
+  (let ([format_information_str
             (foldr (lambda (a b) (string-append a b)) "" (map (lambda (item) (number->string item)) format_information_list))]
         [code_error_hash (get-code-error-hash)])
     (if (hash-has-key? code_error_hash format_information_str)

@@ -19,7 +19,7 @@
   (let loop ([points_list
               (sort (hash-keys points_map) (lambda (c d) (< (+ (car c) (cdr c)) (+ (car d) (cdr d)))))])
     (when (not (null? points_list))
-      (draw-module 
+      (draw-module
        dc
        (hash-ref points_map (car points_list))
        (locate-brick module_width (car points_list))
@@ -35,7 +35,7 @@
     (send dc set-pen (hex_color->racket_color "000000") 1 'solid)
     (send dc set-brush (hex_color->racket_color "000000") 'solid)
     (draw-points dc (MATRIX-brick_width matrix) (MATRIX-points_color_map matrix) "black" "white")
-    
+
     (send target save-file file_name output_type)
-    
+
     (void)))

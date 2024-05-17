@@ -3,7 +3,7 @@
 (require "write/qr-write.rkt")
 
 (provide (contract-out
-          [qr-write (->* (string? path-string?) 
+          [qr-write (->* (string? path-string?)
                          (
                           #:mode string?
                           #:error_level string?

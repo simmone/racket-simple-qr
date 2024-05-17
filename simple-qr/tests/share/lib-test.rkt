@@ -5,7 +5,7 @@
          "../../share/lib.rkt")
 
 (define test-func
-  (test-suite 
+  (test-suite
    "test-func"
 
    (test-case
@@ -14,7 +14,7 @@
     (let* ([points_list
             '((1 . 2) (3 . 4) (4 . 3))]
            [transformed_points_list #f])
-      
+
       (set! transformed_points_list
             (transform-points-list points_list '(0 . 0)))
       (check-equal? transformed_points_list '((1 . 2) (3 . 4) (4 . 3)))
@@ -25,9 +25,9 @@
 
       ))
 
-   (test-case 
+   (test-case
     "test-locate-brick"
-    
+
     (let ([place_pair (locate-brick 1 (cons 0 0))])
       (check-equal? place_pair '(0 . 0)))
 
@@ -94,7 +94,7 @@
 
    (test-case
     "test-string-to-bits-markdown-table"
-    
+
     (check-equal? (string-to-bits-markdown-table
                    "chenxiao"
                    "0110001101101000011001010110111001111000011010010110000101101111")

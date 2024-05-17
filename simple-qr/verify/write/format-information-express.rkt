@@ -19,9 +19,9 @@
       (printf "weight: 8\n")
       (printf "title: \"Step8: Format information\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Draw Format_Information\n\n")
-      
+
       (printf "## format_information\n\n")
       (printf "A strip of modules beside the separators must be reserved for the format information area as follows:\n\n")
       (printf " - Near the top-left finder pattern, a one-module strip must be reserved below and to the right of

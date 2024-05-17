@@ -19,13 +19,13 @@
       (printf "weight: 2\n")
       (printf "title: \"Step2: Modules(bricks) count\"\n")
       (printf "---\n\n")
-      
+
       (printf "# Decide modules from version\n\n")
-      
+
       (printf "## modules\n\n")
       (printf "modules = (+ 21 (* 4 (sub1 ~a))) = ~a\n\n" (QR-version qr) (QR-modules qr))
       (printf "flowing steps will fill a **~a**X**~a** points map\n\n" (QR-modules qr) (QR-modules qr))
-      
+
       (printf "## init image:\n\n")
       (printf "![init image](init.svg \"Init Svg Image\")\n")
       )))

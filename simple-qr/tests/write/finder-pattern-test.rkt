@@ -6,7 +6,7 @@
          "../../write/finder-pattern.rkt")
 
 (define test-finder-pattern
-  (test-suite 
+  (test-suite
    "test-finder-pattern"
 
    (test-case
@@ -20,12 +20,12 @@
 
    (test-case
     "test-draw-finder-pattern"
-    
+
     (let ([qr (new-default-qr "chenxiao")])
       (draw-finder-pattern qr)
 
       (check-equal? (hash-count (QR-point_val_map qr)) 147)
-      
+
       (check-equal? (hash-ref (QR-point_val_map qr) '(4 . 4)) 1)
       (check-equal? (hash-ref (QR-point_val_map qr) '(10 . 10)) 1)
       (check-equal? (hash-ref (QR-point_val_map qr) '(5 . 5)) 0)

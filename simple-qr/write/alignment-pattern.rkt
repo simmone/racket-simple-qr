@@ -29,7 +29,7 @@
           (add-point point 1 'alignment qr))
         (third alignment_points))))
      (get-alignment-pattern-center-points (QR-version qr) (QR-point_val_map qr) (QR-point_type_map qr))))
-  
+
 (define (get-version-alignment-pattern-list)
   '#hash((1 . ())
          (2 .  (6 18))
@@ -110,8 +110,8 @@
              [result_list '()])
     (if (not (null? center_points))
         (let* ([center_point (car center_points)]
-               [alignment_points 
-                (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '() 
+               [alignment_points
+                (foldr (lambda (a b) (quasiquote ((unquote-splicing a) (unquote-splicing b)))) '()
                        (fill-alignment-pattern-points (add-quiet-zone-offset center_point)))])
 
           ;; find if occupied with exists points, exclude "timing pattern" points
