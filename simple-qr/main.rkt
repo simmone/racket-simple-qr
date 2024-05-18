@@ -7,9 +7,9 @@
                          (
                           #:mode string?
                           #:error_level string?
-                          #:module_width exact-nonnegative-integer?
-                          #:color (cons/c string? string?)
+                          #:module_width natural?
+                          #:color (cons/c string? (or/c string? 'transparent))
                           #:output_type (or/c 'png 'svg)
-                          )
+                         )
                          any)]
           ))

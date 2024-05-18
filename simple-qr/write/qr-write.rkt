@@ -216,4 +216,6 @@
 
         (draw-format-information format_str qr)))
 
+    (fill-type-points 'all (cons (QR-one_color qr) (QR-zero_color qr)) qr)
+
     (draw (QR-matrix qr) file_name output_type)))

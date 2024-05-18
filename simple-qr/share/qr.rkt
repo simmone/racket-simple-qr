@@ -22,13 +22,13 @@
                    (zero_color (or/c string? 'transparent))
                    )
                   ]
-          [new-qr (-> string? natural? QR-MODE? QR-ERROR-LEVEL? string? string? QR?)]
+          [new-qr (-> string? natural? QR-MODE? QR-ERROR-LEVEL? string? (or/c string? 'transparent) QR?)]
           [new-default-qr (-> string? QR?)]
           [version->modules (-> natural? natural?)]
           [QUIET_ZONE_BRICKS natural?]
           [add-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
           [add-raw-point (-> (cons/c natural? natural?) (or/c 0 1) (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data) QR? void?)]
-          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data 'all) (cons/c string? string?) QR? void?)]
+          [fill-type-points (-> (or/c 'finder 'separator 'timing 'alignment 'dark 'format 'version 'data 'all) (cons/c string? (or/c string? 'transparent)) QR? void?)]
           [add-quiet-zone-offset (-> (cons/c natural? natural?) (cons/c natural? natural?))]
           [get-version (-> natural? QR-MODE? QR-ERROR-LEVEL? natural?)]
           ))
