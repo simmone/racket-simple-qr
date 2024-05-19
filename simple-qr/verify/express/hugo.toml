@@ -1,0 +1,5 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'simple-qr'
+
+theme = ['hugo-book']

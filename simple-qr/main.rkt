@@ -1,19 +1,15 @@
 #lang racket
 
 (require "write/qr-write.rkt")
-(require "read/qr-read.rkt")
 
 (provide (contract-out
-          [qr-write (->* (string? path-string?) 
+          [qr-write (->* (string? path-string?)
                          (
                           #:mode string?
                           #:error_level string?
-                          #:module_width exact-nonnegative-integer?
-                          #:color (cons/c string? string?)
-                          #:express? boolean?
-                          #:express_path path-string?
+                          #:module_width natural?
+                          #:color (cons/c string? (or/c string? 'transparent))
                           #:output_type (or/c 'png 'svg)
-                          )
+                         )
                          any)]
-          [qr-read (->* (path-string?) (#:express? boolean? #:express_path path-string?) string?)]
           ))

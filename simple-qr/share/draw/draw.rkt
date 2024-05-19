@@ -1,21 +1,18 @@
 #lang racket
 
-(require "lib.rkt")
-(require "png.rkt")
-(require "svg.rkt")
+(require "../lib.rkt"
+         "matrix.rkt"
+         "png.rkt"
+         "svg.rkt")
 
 (provide (contract-out
-          [draw (-> natural? natural? hash? hash? (cons/c string? string?) path-string? void?)]
-          [*output_type* parameter?]
+          [draw (-> MATRIX? path-string? (or/c 'svg 'png 'jpeg 'bmp) void?)]
           ))
 
-(define (draw modules module_width points_map color_map color file_name)
+(define (draw matrix file_name output_type)
   (cond
-   [(eq? (*output_type*) 'svg)
-    (draw-svg modules module_width points_map color_map color file_name)]
-   [(eq? (*output_type*) 'png)
-    (draw-png modules module_width points_map color_map color file_name)]
+   [(eq? output_type 'svg)
+    (draw-svg matrix file_name)]
    [else
-    (draw-png modules module_width points_map color_map color file_name)]
+    (draw-png matrix file_name output_type)]
    ))
-

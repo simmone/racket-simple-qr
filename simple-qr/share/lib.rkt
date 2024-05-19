@@ -1,0 +1,260 @@
+#lang racket
+
+(require racket/draw
+         file/sha1)
+
+(provide (contract-out
+          [transform-points-list (-> list? pair? list?)]
+          [locate-brick (-> (or/c 'png 'svg) natural? pair? pair?)]
+          [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
+          [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical 'cross) list?)]
+          [split-string (-> string? natural? list?)]
+          [string-to-bits-markdown-table (-> string? string? string?)]
+          [bits-to-markdown-table (-> string? natural? string?)]
+          [list-to-markdown-table (-> list? natural? string?)]
+          [dual-list-to-markdown-table (-> list? list? natural? string?)]
+          [add-terminator (-> string? natural? string?)]
+          [add-multi-eight (-> string? string?)]
+          [repeat-right-pad-string (-> string? natural? string? string?)]
+          [split-bit-string-to-decimal (-> string? list?)]
+          [split-decimal-list-on-contract (-> list? list? list?)]
+          [interleave-list (-> list? list?)]
+          [interleave-data-group (-> list? list?)]
+          [decimal-list-to-string (-> list? string?)]
+          ))
+
+(define (interleave-list data_list)
+  (let loop ([count 0]
+             [result_list '()])
+    (let ([temp_list '()])
+      (for-each
+       (lambda (item_list)
+         (when (<= count (sub1 (length item_list)))
+               (set! temp_list `(,@temp_list ,(list-ref item_list count)))))
+       data_list)
+
+      (if (null? temp_list)
+          result_list
+          (loop (add1 count) `(,@result_list ,@temp_list))))))
+
+(define (interleave-data-group data_group)
+  (let ([data_list
+         (quasiquote
+          (
+           (unquote-splicing (map car (car data_group)))
+           (unquote-splicing (map car (cadr data_group)))))]
+        [ec_list
+         (quasiquote
+          (
+          (unquote-splicing (map cadr (car data_group)))
+          (unquote-splicing (map cadr (cadr data_group)))))])
+    `(,@(interleave-list data_list) ,@(interleave-list ec_list))))
+
+(define (decimal-list-to-string decimal_list)
+  (with-output-to-string
+    (lambda ()
+      (for-each
+       (lambda (num)
+         (printf "~a" (~r num #:base 2 #:min-width 8 #:pad-string "0")))
+       decimal_list))))
+
+(define (split-decimal-list-on-contract num_list contract)
+  (let ([group1_block_count (car (first contract))]
+        [group1_count_per_block (cdr (first contract))]
+        [group2_block_count (car (second contract))]
+        [group2_count_per_block (cdr (second contract))]
+        [remain_list #f])
+
+    (list
+     (let loop ([loop_list num_list]
+                [loop_block_count group1_block_count]
+                [loop_count group1_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (begin
+             (set! remain_list loop_list)
+             (reverse result_list))
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group1_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list))))
+
+     (let loop ([loop_list remain_list]
+                [loop_block_count group2_block_count]
+                [loop_count group2_count_per_block]
+                [temp_result_list '()]
+                [result_list '()])
+       (if (= loop_block_count 0)
+           (reverse result_list)
+           (if (= loop_count 1)
+               (loop (cdr loop_list) (sub1 loop_block_count) group2_count_per_block '() (cons (reverse (cons (car loop_list) temp_result_list)) result_list))
+               (loop (cdr loop_list) loop_block_count (sub1 loop_count) (cons (car loop_list) temp_result_list) result_list)))))))
+
+(define (split-bit-string-to-decimal bit_str)
+  (reverse
+   (let loop ([loop_str bit_str]
+              [result_list '()])
+     (if (not (string=? loop_str ""))
+         (loop (substring loop_str 8) (cons (string->number (string-append "#b" (substring loop_str 0 8))) result_list))
+         result_list))))
+
+(define (repeat-right-pad-string content limit_length pad_str)
+  (with-output-to-string
+    (lambda ()
+      (let loop ([loop_content content])
+        (if (>= (string-length loop_content) limit_length)
+            (printf "~a" loop_content)
+            (let loop_inner ([inner_loop_content loop_content]
+                             [pad_list (string->list pad_str)])
+              (if (not (null? pad_list))
+                  (if (>= (string-length inner_loop_content) limit_length)
+                      (printf "~a" inner_loop_content)
+                      (loop_inner (format "~a~a" inner_loop_content (car pad_list)) (cdr pad_list)))
+                  (loop inner_loop_content))))))))
+
+(define (add-multi-eight content)
+  (let* ([content_length (string-length content)]
+         [eight_length (* 8 (ceiling (/ content_length 8)))])
+    (~a content #:min-width eight_length #:right-pad-string "0")))
+
+(define (add-terminator content limit_length)
+  (let* ([content_length (string-length content)]
+         [gap (- limit_length content_length)])
+    (if (<= gap 0)
+        content
+        (if (<= gap 4)
+            (~a content #:min-width (+ content_length gap) #:right-pad-string "0")
+            (~a content #:min-width (+ content_length 4) #:right-pad-string "0")))))
+
+(define (transform-points-list points_list start_point_pair)
+  (map
+   (lambda (point)
+     (cons (+ (car start_point_pair) (car point)) (+ (cdr start_point_pair) (cdr point))))
+   points_list))
+
+;; svg's (x y) means (colunm row)
+(define (locate-brick image_type module_width place_pair)
+  (cond
+   [(eq? image_type 'png)
+    (cons
+     (* (car place_pair) module_width)
+     (* (cdr place_pair) module_width))]
+   [(eq? image_type 'svg)
+    (cons
+     (* (cdr place_pair) module_width)
+     (* (car place_pair) module_width))]))
+
+(define (hex_color->racket_color hex_color)
+  (if (regexp-match #px"^#([0-9a-zA-Z]{6})$" hex_color)
+      (let ([rgb_list (bytes->list (hex-string->bytes (substring hex_color 1)))])
+        (make-object color% (first rgb_list) (second rgb_list) (third rgb_list)))
+      hex_color))
+
+(define (get-points-between start_point end_point #:direction direction)
+  (let ([is_valid?
+         (cond
+          [(and
+            (eq? direction 'horizontal)
+            (= (car start_point) (car end_point))
+            (<= (cdr start_point) (cdr end_point)))
+           #t]
+          [(and
+            (eq? direction 'vertical)
+            (<= (car start_point) (car end_point))
+            (= (cdr start_point) (cdr end_point)))
+           #t]
+          [(and
+            (eq? direction 'cross)
+            (<= (car start_point) (car end_point))
+            (<= (cdr start_point) (cdr end_point)))
+           #t]
+          [else
+           #f])])
+
+    (if (not is_valid?)
+        '()
+        (let loop-x ([loop_x (car start_point)]
+                     [result_points '()])
+          (if (<= loop_x (car end_point))
+              (loop-x (add1 loop_x)
+                      (append
+                       result_points
+                       (let loop-y ([loop_y (cdr start_point)]
+                                    [y_result '()])
+                         (if (<= loop_y (cdr end_point))
+                             (loop-y (add1 loop_y) (cons (cons loop_x loop_y) y_result))
+                             (reverse y_result)))))
+              result_points)))))
+
+(define (split-string bit_str width)
+  (let loop ([loop_str bit_str]
+             [result_list '()])
+    (if (not (string=? loop_str ""))
+        (if (>= (string-length loop_str) width)
+            (loop (substring loop_str width) (cons (substring loop_str 0 width) result_list))
+            (loop "" (cons loop_str result_list)))
+        (reverse result_list))))
+
+(define (string-to-bits-markdown-table data bits)
+  (with-output-to-string
+    (lambda ()
+      (printf "|char|byte|\n|---|---|\n")
+      (let loop ([chars (string->list data)]
+                 [bytes (split-string bits 8)])
+        (when (not (null? bytes))
+          (printf "|~a|~a|\n" (car chars) (car bytes))
+          (loop (cdr chars) (cdr bytes)))))))
+
+(define (bits-to-markdown-table bits line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|bits(~a)|\n|---|---|\n" line_width)
+      (let loop ([bytes (split-string bits line_width)]
+                 [index 1])
+        (when (not (null? bytes))
+          (printf "|~a|~a|\n" index (car bytes))
+          (loop (cdr bytes) (add1 index)))))))
+
+(define (list-to-markdown-table items_list line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|items(~a)|\n|---|---|\n" line_width)
+      (let loop ([groups
+                  (let loop-group ([items items_list]
+                                   [result_list '()])
+                    (if (not (null? items))
+                        (if (> (length items) line_width)
+                            (loop-group (list-tail items line_width) (cons (take items line_width) result_list))
+                            (loop-group '() (cons items result_list)))
+                        (reverse result_list)))]
+                 [index 1])
+        (when (not (null? groups))
+          (printf "|~a|~a|\n" index (car groups))
+          (loop (cdr groups) (add1 index)))))))
+
+(define (dual-list-to-markdown-table items1_list items2_list line_width)
+  (with-output-to-string
+    (lambda ()
+      (printf "|index|items(~a)|\n|---|---|\n" line_width)
+      (let loop (
+                 [groups1
+                  (let loop-group ([items1 items1_list]
+                                   [result_list '()])
+                    (if (not (null? items1))
+                        (if (> (length items1) line_width)
+                            (loop-group (list-tail items1 line_width) (cons (take items1 line_width) result_list))
+                            (loop-group '() (cons items1 result_list)))
+                        (reverse result_list)))]
+                 [groups2
+                  (let loop-group ([items2 items2_list]
+                                   [result_list '()])
+                    (if (not (null? items2))
+                        (if (> (length items2) line_width)
+                            (loop-group (list-tail items2 line_width) (cons (take items2 line_width) result_list))
+                            (loop-group '() (cons items2 result_list)))
+                        (reverse result_list)))]
+                 [index 1])
+        (when (not (null? groups1))
+          (printf "|~a|~a|\n" index (car groups1))
+          (printf "|~a|~a|\n" index (if (null? groups2) "" (car groups2)))
+          (loop (cdr groups1) (if (null? groups2) '() (cdr groups2)) (add1 index)))))))
