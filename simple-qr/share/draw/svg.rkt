@@ -45,12 +45,12 @@
                        [(eq? color 'pattern1)
                         (svg-place-widget
                          pattern1_id
-                         #:at (locate-brick (MATRIX-brick_width matrix) point))]
+                         #:at (locate-brick 'svg (MATRIX-brick_width matrix) point))]
                        [else
                         (svg-place-widget
                          basic_brick
                          #:style style
-                         #:at (locate-brick (MATRIX-brick_width matrix) point))])))
+                         #:at (locate-brick 'svg (MATRIX-brick_width matrix) point))])))
                   (loop (cdr points)))))))))))
 
 (define (def-pattern1 brick_width)

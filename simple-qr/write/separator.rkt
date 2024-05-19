@@ -5,11 +5,11 @@
          "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-separator (-> QR? void?)]
+          [fill-separator (-> QR? void?)]
           [get-separator (-> list?)]
           ))
 
-(define (draw-separator qr)
+(define (fill-separator qr)
   (let* ([finder_pattern_start_points (locate-finder-pattern (QR-modules qr))]
          [top_left_point (first finder_pattern_start_points)]
          [top_right_point (second finder_pattern_start_points)]

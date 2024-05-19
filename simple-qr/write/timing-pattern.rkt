@@ -5,12 +5,12 @@
          "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-timing-pattern (-> QR? void?)]
+          [fill-timing-pattern (-> QR? void?)]
           [locate-timing-pattern-joints (-> natural? list?)]
           [get-timing-pattern-points (-> natural? (listof list?))]
           ))
 
-(define (draw-timing-pattern qr)
+(define (fill-timing-pattern qr)
   (let ([timing_pattern_points (get-timing-pattern-points (QR-modules qr))])
 
     (let loop ([points (first timing_pattern_points)]

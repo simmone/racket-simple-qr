@@ -5,10 +5,10 @@
          "finder-pattern.rkt")
 
 (provide (contract-out
-          [draw-version-information (-> QR? void?)]
+          [fill-version-information (-> QR? void?)]
           ))
 
-(define (draw-version-information qr)
+(define (fill-version-information qr)
   (when (>= (QR-version qr) 7)
     (let* ([version_str (hash-ref (get-version-hash) (QR-version qr))]
            [finder_pattern_start_points (locate-finder-pattern (QR-modules qr))]

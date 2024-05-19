@@ -44,19 +44,19 @@
                   )
 
   (let ([qr (new-qr data module_width mode error_level (car color) (cdr color))])
-    (draw-finder-pattern qr)
+    (fill-finder-pattern qr)
 
-    (draw-separator qr)
+    (fill-separator qr)
 
-    (draw-timing-pattern qr)
+    (fill-timing-pattern qr)
 
-    (draw-alignment-pattern qr)
+    (fill-alignment-pattern qr)
 
-    (draw-dark-module qr)
+    (fill-dark-module qr)
 
-    (draw-format-information "101010101010101" qr)
+    (fill-format-information "101010101010101" qr)
 
-    (draw-version-information qr)
+    (fill-version-information qr)
 
     (let ([s1_data_bits #f]
           [s2_character_count #f]
@@ -163,7 +163,7 @@
       ;; fill data bits, skip reserved points
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
-      (draw-data s20_padded_remainder_bits s22_trace_list qr)
+      (fill-data s20_padded_remainder_bits s22_trace_list qr)
 
       ;; mask data
       (let* ([format_str #f]
@@ -209,13 +209,12 @@
         (set! min_penalty (apply min penalty_list))
 
         (set! mask_index (index-of penalty_list min_penalty))
-
-        ;; draw selected mask
+        
         (set-QR-point_val_map! qr (list-ref mask_list mask_index))
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
-        (draw-format-information format_str qr)))
+        (fill-format-information format_str qr)
 
-    (fill-type-points 'all (cons (QR-one_color qr) (QR-zero_color qr)) qr)
+        (fill-type-points 'all (cons (QR-one_color qr) (QR-zero_color qr)) qr)
 
-    (draw (QR-matrix qr) file_name output_type)))
+        (draw (QR-matrix qr) file_name output_type)))))

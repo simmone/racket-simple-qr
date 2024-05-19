@@ -121,37 +121,37 @@
                        '(pattern1))
     (draw (QR-matrix qr) init_file 'svg)
 
-    (draw-finder-pattern qr)
+    (fill-finder-pattern qr)
     (fill-type-points 'finder '("#32CD32" . "#ADFF2F") qr)
     (finder-pattern-express qr)
     (draw (QR-matrix qr) finder_pattern_file 'svg)
 
-    (draw-separator qr)
+    (fill-separator qr)
     (fill-type-points 'separator '("black" . "orange") qr)
     (separator-express qr)
     (draw (QR-matrix qr) separator_file 'svg)
 
-    (draw-timing-pattern qr)
+    (fill-timing-pattern qr)
     (fill-type-points 'timing '("#FF00FF" . "#DDA0DD") qr)
     (timing-pattern-express qr)
     (draw (QR-matrix qr) timing_pattern_file 'svg)
 
-    (draw-alignment-pattern qr)
+    (fill-alignment-pattern qr)
     (fill-type-points 'alignment '("#1E90FF" . "#B0C4DE") qr)
     (alignment-pattern-express qr)
     (draw (QR-matrix qr) alignment_pattern_file 'svg)
 
-    (draw-dark-module qr)
+    (fill-dark-module qr)
     (fill-type-points 'dark '("#330099" . "#330099") qr)
     (dark-module-express qr)
     (draw (QR-matrix qr) dark_module_file 'svg)
 
-    (draw-format-information "101010101010101" qr)
+    (fill-format-information "101010101010101" qr)
     (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
     (format-information-express qr)
     (draw (QR-matrix qr) format_information_file 'svg)
 
-    (draw-version-information qr)
+    (fill-version-information qr)
     (fill-type-points 'version '("#0E29F0" . "#5866C8") qr)
     (version-information-express qr)
     (draw (QR-matrix qr) version_information_file 'svg)
@@ -279,7 +279,7 @@
       ;; fill data bits, skip reserved points
       (set! s22_trace_list (get-data-socket-list (QR-modules qr) #:skip_points_hash (QR-point_type_map qr)))
 
-      (draw-data s20_padded_remainder_bits s22_trace_list qr)
+      (fill-data s20_padded_remainder_bits s22_trace_list qr)
       (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
       (s19-draw-data-bits-express s20_padded_remainder_bits s22_trace_list qr)
       (draw (QR-matrix qr) data_bits_file 'svg)
@@ -312,7 +312,7 @@
                              mask_points_map))
                          '(0 1 2 3 4 5 6 7))])
 
-        (draw-data (list->string (map (lambda (c) (integer->char (+ c 48))) data_bits)) trace_list mask_qr)
+        (fill-data (list->string (map (lambda (c) (integer->char (+ c 48))) data_bits)) trace_list mask_qr)
 
         (s20-draw-mask-showcase-express mask_list qr)
         (fill-points-color (QR-matrix mask_qr) (MATRIX-points (QR-matrix mask_qr)) '("grey" "white"))
@@ -407,7 +407,7 @@
         (fill-type-points 'data '("#2F4F4F" . "#C0C0C0") qr)
         (set! format_str (hash-ref (get-error-code-hash) (format "~a-~a" error_level mask_index)))
 
-        (draw-format-information format_str qr)
+        (fill-format-information format_str qr)
         (fill-type-points 'format '("#1E8449" . "#D4EFDF") qr)
         (s22-draw-mask-and-format-express error_level mask_index format_str qr)
         (draw (QR-matrix qr) mask_and_format_file 'svg)
@@ -426,4 +426,4 @@
 
 ;(qr-write-express "Life is too short to put up unnecessory stress on everyday, you must work in a place that fuel your personal passion." "chenxiao.svg" #:module_width 20 #:output_type 'svg)
 
-(qr-write-express "Hello world!" "chenxiao.svg" #:module_width 20 #:output_type 'svg)
+(qr-write-express "https://github.com/simmone" "chenxiao.svg" #:module_width 20 #:output_type 'svg)

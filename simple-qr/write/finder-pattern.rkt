@@ -4,11 +4,11 @@
          "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-finder-pattern (-> QR? void?)]
+          [fill-finder-pattern (-> QR? void?)]
           [locate-finder-pattern (-> natural? list?)]
           ))
 
-(define (draw-finder-pattern qr)
+(define (fill-finder-pattern qr)
   (for-each
    (lambda (start_point)
      (for-each

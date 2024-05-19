@@ -5,7 +5,7 @@
 
 (provide (contract-out
           [transform-points-list (-> list? pair? list?)]
-          [locate-brick (-> natural? pair? pair?)]
+          [locate-brick (-> (or/c 'png 'svg) natural? pair? pair?)]
           [hex_color->racket_color (-> string? (or/c string? (is-a?/c color%)))]
           [get-points-between (-> pair? pair? #:direction (or/c 'horizontal 'vertical 'cross) list?)]
           [split-string (-> string? natural? list?)]
@@ -132,9 +132,17 @@
      (cons (+ (car start_point_pair) (car point)) (+ (cdr start_point_pair) (cdr point))))
    points_list))
 
-(define (locate-brick module_width place_pair)
-  (cons (* (cdr place_pair) module_width)
-        (* (car place_pair) module_width)))
+;; svg's (x y) means (colunm row)
+(define (locate-brick image_type module_width place_pair)
+  (cond
+   [(eq? image_type 'png)
+    (cons
+     (* (car place_pair) module_width)
+     (* (cdr place_pair) module_width))]
+   [(eq? image_type 'svg)
+    (cons
+     (* (cdr place_pair) module_width)
+     (* (car place_pair) module_width))]))
 
 (define (hex_color->racket_color hex_color)
   (if (regexp-match #px"^#([0-9a-zA-Z]{6})$" hex_color)

@@ -3,11 +3,11 @@
 (require "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-data (-> string? list? QR? void?)]
+          [fill-data (-> string? list? QR? void?)]
           [get-data-socket-list (->* (natural?) (#:skip_points_hash hash?) list?)]
           ))
 
-(define (draw-data bits_string trace_list qr)
+(define (fill-data bits_string trace_list qr)
   (let loop ([loop_data_list (string->list bits_string)]
              [loop_trace_list trace_list])
     (when (not (null? loop_trace_list))

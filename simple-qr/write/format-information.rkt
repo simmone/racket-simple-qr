@@ -8,10 +8,10 @@
 (require racket/format)
 
 (provide (contract-out
-          [draw-format-information (-> string? QR? void?)]
+          [fill-format-information (-> string? QR? void?)]
           ))
 
-(define (draw-format-information format_string qr)
+(define (fill-format-information format_string qr)
   (let* ([finder_pattern_start_points (locate-finder-pattern (QR-modules qr))]
          [top_left_point (first finder_pattern_start_points)]
          [top_right_point (second finder_pattern_start_points)]

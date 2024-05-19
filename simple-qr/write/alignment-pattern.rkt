@@ -4,13 +4,13 @@
          "../share/qr.rkt")
 
 (provide (contract-out
-          [draw-alignment-pattern (-> QR? void?)]
+          [fill-alignment-pattern (-> QR? void?)]
           [get-center-point-sets (-> list? list?)]
           [fill-alignment-pattern-points (-> pair? (listof pair?))]
           [get-alignment-pattern-center-points (-> natural? hash? hash? (listof pair?))]
           ))
 
-(define (draw-alignment-pattern qr)
+(define (fill-alignment-pattern qr)
   (for-each
    (lambda (center_point)
      (let ([alignment_points (fill-alignment-pattern-points center_point)])

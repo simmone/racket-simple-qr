@@ -18,6 +18,8 @@
 (define-runtime-path svg_1X1_pattern1_file "svg_1X1_pattern1.svg")
 (define-runtime-path png_5X5_file "png_5X5.png")
 (define-runtime-path svg_5X5_file "svg_5X5.svg")
+(define-runtime-path png_locate_file "png_locate.png")
+(define-runtime-path svg_locate_file "svg_locate.svg")
 
 (define test-func
   (test-suite
@@ -122,6 +124,30 @@
           (delete-file svg_5X5_file)
           (delete-file png_5X5_file)
           )))
+
+   (test-case
+    "test-locate"
+
+    (dynamic-wind
+        (lambda () (void))
+        (lambda ()
+          (let ([matrix (new-matrix 10 50)])
+            (let loop ([points (MATRIX-points matrix)])
+              (when (not (null? points))
+                (if (= (modulo (+ (caar points) (cdar points)) 2) 0)
+                    (fill-points-color matrix (list (car points)) '("black"))
+                    (fill-points-color matrix (list (car points)) '("white")))
+                (loop (cdr points))))
+
+            (fill-point-color matrix '(3 . 7) "red")
+            (draw matrix png_locate_file 'png)
+            (draw matrix svg_locate_file 'svg)))
+        (lambda ()
+          (void)
+          ;(delete-file svg_locate_file)
+          ;(delete-file png_locate_file)
+          )))
+
    ))
 
 (run-tests test-func)

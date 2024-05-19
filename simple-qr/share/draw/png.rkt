@@ -22,7 +22,7 @@
       (draw-module
        dc
        (hash-ref points_map (car points_list))
-       (locate-brick module_width (car points_list))
+       (locate-brick 'png module_width (car points_list))
        module_width)
       (loop (cdr points_list)))))
 
