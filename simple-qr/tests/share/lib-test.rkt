@@ -28,22 +28,25 @@
    (test-case
     "test-locate-brick"
 
-    (let ([place_pair (locate-brick 1 (cons 0 0))])
+    (let ([place_pair (locate-brick 'png 1 (cons 0 0))])
       (check-equal? place_pair '(0 . 0)))
 
-    (let ([place_pair (locate-brick 2 (cons 0 0))])
+    (let ([place_pair (locate-brick 'svg 2 (cons 0 0))])
       (check-equal? place_pair '(0 . 0)))
 
-    (let ([place_pair (locate-brick 2 (cons 1 1))])
+    (let ([place_pair (locate-brick 'png 2 (cons 1 1))])
       (check-equal? place_pair '(2 . 2)))
 
-    (let ([place_pair (locate-brick 2 (cons 4 4))])
+    (let ([place_pair (locate-brick 'svg 2 (cons 4 4))])
       (check-equal? place_pair '(8 . 8)))
 
-    (let ([place_pair (locate-brick 3 (cons 4 4))])
+    (let ([place_pair (locate-brick 'png 3 (cons 4 4))])
       (check-equal? place_pair '(12 . 12)))
 
-    (let ([place_pair (locate-brick 3 (cons 4 6))])
+    (let ([place_pair (locate-brick 'png 3 (cons 4 6))])
+      (check-equal? place_pair '(12 . 18)))
+
+    (let ([place_pair (locate-brick 'svg 3 (cons 4 6))])
       (check-equal? place_pair '(18 . 12)))
     )
 

@@ -22,7 +22,7 @@
     "test-draw-finder-pattern"
 
     (let ([qr (new-default-qr "chenxiao")])
-      (draw-finder-pattern qr)
+      (fill-finder-pattern qr)
 
       (check-equal? (hash-count (QR-point_val_map qr)) 147)
 
